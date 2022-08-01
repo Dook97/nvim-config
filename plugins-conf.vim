@@ -1,6 +1,7 @@
 " you need to have the Plug plugin manager installed
 " use :PlugInstall to download these
 call plug#begin('~/.config/nvim/plugged')
+	Plug 'tpope/vim-repeat'						" enables . command for some plugins
 	Plug 'tpope/vim-surround'					" super useful to (un)surround stuff
 	Plug 'preservim/nerdtree'					" integrated file manager
 	Plug 'itchyny/lightline.vim'					" statusline plugin
@@ -9,9 +10,6 @@ call plug#begin('~/.config/nvim/plugged')
 	Plug 'unblevable/quick-scope'					" easier f/F navigation
 	Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}	" a lot of functionality with ASTs
 	Plug 'nvim-treesitter/nvim-treesitter-textobjects'		" define bindings for actions with AST text objects
-	Plug 'tpope/vim-repeat'						" enables . command for some plugins
-	Plug 'glts/vim-magnum' 						" library needed for vim-radical
-	Plug 'glts/vim-radical'						" number conversions
 call plug#end()
 
 " nerdtree
@@ -23,15 +21,56 @@ let NERDTreeCascadeSingleChildDir	= 0
 let NERDTreeCascadeOpenSingleChildDir	= 0
 
 " lightline
-let g:lightline				= { 'colorscheme' : 'powerline_transparent' }
+function! GetPluginName()
+	return &filetype ==# 'nerdtree' ? 'NERD'
+	\ : &filetype ==# 'vim-plug' ? 'PLUG'
+	\ : ''
+endfunction
+
+function! LightlineFileinfo()
+	return GetPluginName() !=# '' || winwidth(0) < 80 ? ''
+	\ : &fileformat . ' | ' . &fileencoding . ' | ' .  &filetype
+endfunction
+
+function! LightlineMode()
+	return GetPluginName() !=# '' || winwidth(0) < 50 ? '' : lightline#mode()
+endfunction
+
+function! LightlineLineinfo()
+	return GetPluginName() !=# '' || winwidth(0) < 50 ? '' : printf('%3s:%-2s', line('.'), col('.'))
+endfunction
+
+function! LightlineFilename()
+	return GetPluginName() !=# '' ? GetPluginName()
+	\ : expand('%') ==# '' ? '[NO NAME]'
+	\ : (winwidth(0) > 60 ? expand('%:p:~')
+	\ : expand('%:t')) . (&modified ? ' +' : '')
+endfunction
+
+function! LightlineReadonly()
+	return &readonly && &filetype !=# 'nerdtree' ? 'RO' : ''
+endfunction
+
+let g:lightline = {
+	\ 'colorscheme' : 'powerline_transparent',
+	\ 'component_function': {
+		\ 'mode': 'LightlineMode',
+		\ 'readonly': 'LightlineReadonly',
+		\ 'fileinfo' : 'LightlineFileinfo',
+		\ 'filename': 'LightlineFilename',
+		\ 'lineinfo': 'LightlineLineinfo',
+	\ },
+\ }
+
+let g:lightline.active = {
+	\ 'left':  [[ 'mode', 'paste' ], [ 'readonly', 'filename' ]],
+	\ 'right': [[ 'lineinfo' ], [ 'fileinfo' ]]
+\ }
+
+let g:lightline.inactive		= { 'left':  [[ 'filename']], 'right': [[ ]] }
 let g:lightline.tabline			= { 'left' : [[ 'tabs' ]], 'right' : [[ ]] }
 let g:lightline.tabline_separator	= { 'left': '', 'right': '' }
 let g:lightline.tabline_subseparator	= { 'left': '', 'right': '' }
-let g:lightline.inactive = { 'left':  [[ 'filename']], 'right': [[ 'lineinfo' ]] }
-let g:lightline.active = {
-	\ 'left':  [[ 'mode', 'paste' ], [ 'readonly', 'absolutepath', 'modified' ]],
-	\ 'right': [[ 'lineinfo' ], [ 'fileformat', 'fileencoding', 'filetype' ]]
-\}
 
 " quick-scope
 hi QuickScopePrimary   cterm=reverse
@@ -56,13 +95,14 @@ require'nvim-treesitter.configs'.setup {
 		additional_vim_regex_highlighting = false,
 	},
 
-	incremental_selection = {
-		enable = true,
-		keymaps = {
-			init_selection = '<CR>',
-			scope_incremental = '<CR>',
-			node_incremental = '<TAB>',
-			node_decremental = '<S-TAB>',
+	require'nvim-treesitter.configs'.setup {
+		incremental_selection = {
+			enable = true,
+			keymaps = {
+				init_selection = "<leader><leader>",
+				node_incremental = "<leader>i",
+				node_decremental = "<leader>d",
+			},
 		},
 	},
 

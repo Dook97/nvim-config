@@ -2,7 +2,7 @@
 hi inactive ctermfg=242
 hi active   ctermfg=Magenta
 
-" set initial
+" set highlight groups
 hi LineNr      ctermfg=Magenta
 hi LineNrAbove ctermfg=Magenta
 hi LineNrBelow ctermfg=Magenta
@@ -33,6 +33,5 @@ set list lcs=tab:\ \ ,
 " display tabs 4 characters wide
 set tabstop=4
 set shiftwidth=4
-
 " ...with some exceptions
-au FileType c,vim setlocal tabstop=8 shiftwidth=8
+au FileType c,cpp,vim setlocal tabstop=8 shiftwidth=8

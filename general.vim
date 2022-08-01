@@ -2,7 +2,7 @@ set smartindent
 set fileencoding=utf-8
 
 " only show statusline when theres more than one window
-" set laststatus=1
+set laststatus=1
 
 " unncessary since were using lightline plugin
 set noruler
