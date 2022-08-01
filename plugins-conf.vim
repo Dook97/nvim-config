@@ -27,6 +27,11 @@ let g:lightline				= { 'colorscheme' : 'powerline_transparent' }
 let g:lightline.tabline			= { 'left' : [[ 'tabs' ]], 'right' : [[ ]] }
 let g:lightline.tabline_separator	= { 'left': '', 'right': '' }
 let g:lightline.tabline_subseparator	= { 'left': '', 'right': '' }
+let g:lightline.inactive = { 'left':  [[ 'filename']], 'right': [[ 'lineinfo' ]] }
+let g:lightline.active = {
+	\ 'left':  [[ 'mode', 'paste' ], [ 'readonly', 'absolutepath', 'modified' ]],
+	\ 'right': [[ 'lineinfo' ], [ 'fileformat', 'fileencoding', 'filetype' ]]
+\}
 
 " quick-scope
 hi QuickScopePrimary   cterm=reverse

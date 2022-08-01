@@ -21,9 +21,6 @@ augroup linetoggle
 	au BufLeave,WinLeave,FocusLost   * setlocal nocursorline | set winhl=LineNr:inactive
 augroup END
 
-" only show statusline when theres more than one window
-set laststatus=1
-
 " hide vertical split line and end-of-buffer tildes
 hi VertSplit    ctermfg=240  ctermbg=None cterm=None
 hi StatusLine   ctermfg=None ctermbg=None cterm=None

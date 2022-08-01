@@ -40,10 +40,7 @@ nnoremap \ <C-w><
 nnoremap ' <C-w>>
 
 " split to empty buffer
-noremap  <C-w>s <C-w>n
-nnoremap <C-w><C-s> <C-w>n
 nnoremap <C-w>v :vnew<CR>
-nnoremap <C-w><C-v> :vnew<CR>
 
 " easy tabs
 nnoremap <leader>a gt
@@ -65,14 +62,5 @@ nnoremap <leader>n :NERDTreeToggle<CR>
 " Check file in shellcheck:
 nnoremap <leader>s :!clear && shellcheck -x %<CR>
 
-" Compile latex document
-nnoremap <leader>l :!pdflatex %<CR>
-
 " slightly easier commenting
 noremap <leader>c :Commentary<CR>
-
-" add/remove empty lines above/below cursor
-nnoremap <silent><leader>] :set paste<CR>m`o<Esc>``:set nopaste<CR>
-nnoremap <silent><leader>[ :set paste<CR>m`O<Esc>``:set nopaste<CR>
-nnoremap <silent><leader>} m`:silent +g/\m^\s*$/d<CR>``:noh<CR>
-nnoremap <silent><leader>{ m`:silent -g/\m^\s*$/d<CR>``:noh<CR>
