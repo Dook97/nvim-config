@@ -64,3 +64,6 @@ nnoremap <leader>s :!clear && shellcheck -x %<CR>
 
 " slightly easier commenting
 noremap <leader>c :Commentary<CR>
+
+noremap gh ^
+noremap gl $
