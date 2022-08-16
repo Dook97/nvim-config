@@ -10,6 +10,7 @@ call plug#begin('~/.config/nvim/plugged')
 	Plug 'unblevable/quick-scope'					" easier f/F navigation
 	Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}	" a lot of functionality with ASTs
 	Plug 'nvim-treesitter/nvim-treesitter-textobjects'		" define bindings for actions with AST text objects
+	Plug 'nvim-treesitter/playground'				" :TSHighlightCapturesUnderCursor
 call plug#end()
 
 " nerdtree
@@ -152,10 +153,18 @@ require'nvim-treesitter.configs'.setup {
 }
 
 require"nvim-treesitter.highlight".set_custom_captures {
-	["parameter"] = "Normal",
-	["property"]  = "Normal",
-	["operator"]  = "Normal",
-	["function"]  = "Normal",
-	["method"]    = "Normal",
+	["constant.builtin"] = "Normal",
+	["function.builtin"] = "TSFunction",
+	["constructor"]      = "TSFunction",
+	["method.call"]      = "TSFunction",
+	["namespace"]        = "Normal",
+	["parameter"]        = "Normal",
+	["property"]         = "Normal",
+	["operator"]         = "Normal",
+	["function"]         = "Normal",
+	["method"]           = "TSFunction",
 }
 EOF
+
+hi TSField ctermfg=81
+hi goTSConstant ctermfg=7
