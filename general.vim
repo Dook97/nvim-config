@@ -14,6 +14,13 @@ set scrolloff=1
 " Splits open at the bottom and right
 set splitbelow splitright
 
+" persistent undo
+set undofile
+
+" search is case insensitive unless upper case character is in the query
+set ignorecase
+set smartcase
+
 " lazy redraw - screen will not be redrawn while executing macros etc
 set lz
 
@@ -29,9 +36,6 @@ augroup numbertoggle
 	au TermOpen * setlocal nonu nornu
 augroup END
 
-" Disables automatic commenting on newline:
-au FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
-
 " Runs a script that cleans out tex build files whenever I close out of a .tex file.
 autocmd VimLeave *.tex !texclear %
 
@@ -43,6 +47,3 @@ au BufWritePre * let currPos = getpos(".")
 au BufWritePre * %s/\s\+$//e
 au BufWritePre * %s/\n\+\%$//e
 au BufWritePre * cal cursor(currPos[1], currPos[2])
-
-" dont force tab expansion in python
-let g:python_recommended_style = 0

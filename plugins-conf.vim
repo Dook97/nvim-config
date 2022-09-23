@@ -3,7 +3,6 @@
 call plug#begin('~/.config/nvim/plugged')
 	Plug 'tpope/vim-repeat'						" enables . command for some plugins
 	Plug 'tpope/vim-surround'					" super useful to (un)surround stuff
-	Plug 'preservim/nerdtree'					" integrated file manager
 	Plug 'itchyny/lightline.vim'					" statusline plugin
 	Plug 'tpope/vim-commentary'					" comment stuff
 	Plug 'ap/vim-css-color'						" show colors in css files
@@ -13,13 +12,9 @@ call plug#begin('~/.config/nvim/plugged')
 	Plug 'nvim-treesitter/playground'				" :TSHighlightCapturesUnderCursor
 call plug#end()
 
-" nerdtree
-let NERDTreeMinimalUI			= 1
-let NERDTreeDirArrows			= 1
-let NERDTreeAutoDeleteBuffer		= 1
-let NERDTreeShowHidden			= 1
-let NERDTreeCascadeSingleChildDir	= 0
-let NERDTreeCascadeOpenSingleChildDir	= 0
+" netrw settings
+let g:netrw_liststyle = 3
+let g:netrw_banner = 0
 
 " lightline
 function! GetPluginName()

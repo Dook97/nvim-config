@@ -3,6 +3,13 @@ let mapleader=" "
 " Alternate way to save
 nnoremap <leader>w :up<CR>
 
+" Parens auto-close
+inoremap ( ()<Esc>i
+inoremap { {}<Esc>i
+inoremap [ []<Esc>i
+inoremap " ""<Esc>i
+inoremap ` ``<Esc>i
+
 " Alternate way to quit
 nnoremap <leader>q :q!<CR>
 nnoremap <leader>Q :qa!<CR>
@@ -19,14 +26,6 @@ vnoremap > >gv
 noremap <C-x> <C-e>
 noremap <C-z> <C-y>
 
-" parens auto-close
-inoremap ( ()<Esc>i
-inoremap [ []<Esc>i
-inoremap { {}<Esc>i
-inoremap " ""<Esc>i
-inoremap ' ''<Esc>i
-inoremap ` ``<Esc>i
-
 " easy moving between windows
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
@@ -39,8 +38,12 @@ nnoremap - <C-w>-
 nnoremap \ <C-w><
 nnoremap ' <C-w>>
 
+" counterpart to <C-a> - substracts one from number
+nnoremap <C-s> <C-x>
+
 " split to empty buffer
 nnoremap <C-w>v :vnew<CR>
+nnoremap <C-w>s :new<CR>
 
 " easy tabs
 nnoremap <leader>a gt
@@ -56,8 +59,8 @@ nnoremap YY "+yy
 " no-highlight shortcut
 nnoremap <leader>h :noh<CR>
 
-" Nerd tree
-nnoremap <leader>n :NERDTreeToggle<CR>
+" netrw (file explorer)
+nnoremap <leader>n :Explore<CR>
 
 " Check file in shellcheck:
 nnoremap <leader>s :!clear && shellcheck -x %<CR>
@@ -65,5 +68,6 @@ nnoremap <leader>s :!clear && shellcheck -x %<CR>
 " slightly easier commenting
 noremap <leader>c :Commentary<CR>
 
-noremap gh ^
-noremap gl $
+" jump to beggining/end of line
+nnoremap gh ^
+nnoremap gl $
