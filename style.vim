@@ -34,5 +34,5 @@ set list lcs=tab:\ \ ,
 set tabstop=4
 set shiftwidth=4
 " ...with some exceptions
-au FileType c,cpp,go,vim setlocal tabstop=8 shiftwidth=8
+au FileType c,cpp,go,vim,make setlocal tabstop=8 shiftwidth=8
 au FileType html setlocal tabstop=2 shiftwidth=2

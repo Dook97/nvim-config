@@ -146,20 +146,30 @@ require'nvim-treesitter.configs'.setup {
 		},
 	},
 }
-
-require"nvim-treesitter.highlight".set_custom_captures {
-	["constant.builtin"] = "Normal",
-	["function.builtin"] = "TSFunction",
-	["constructor"]      = "TSFunction",
-	["method.call"]      = "TSFunction",
-	["namespace"]        = "Normal",
-	["parameter"]        = "Normal",
-	["property"]         = "Normal",
-	["operator"]         = "Normal",
-	["function"]         = "Normal",
-	["method"]           = "TSFunction",
-}
 EOF
 
-hi TSField ctermfg=81
+" require"nvim-treesitter.highlight".set_custom_captures {
+" 	["constant.builtin"] = "Normal",
+" 	["function.builtin"] = "TSFunction",
+" 	["constructor"]      = "TSFunction",
+" 	["method.call"]      = "TSFunction",
+" 	["namespace"]        = "Normal",
+" 	["parameter"]        = "Normal",
+" 	["property"]         = "Normal",
+" 	["operator"]         = "Normal",
+" }
+
 hi goTSConstant ctermfg=7
+hi link TSParameter Normal
+hi link TSKeywordOperator Keyword
+hi link TSOperator Normal
+hi link TSFunction Normal
+hi link TSFuncMacro Normal
+hi link TSProperty Normal
+hi link TSField Normal
+hi link number Normal
+hi link TSConstBuiltin Constant
+hi link TSMethodCall  TSFunctionCall
+hi link TSFuncBuiltin TSFunctionCall
+hi link TSConstructor TSFunctionCall
+hi TSFunctionCall ctermfg=81
