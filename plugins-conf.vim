@@ -5,6 +5,7 @@ call plug#begin('~/.config/nvim/plugged')
 	Plug 'tpope/vim-surround'					" super useful to (un)surround stuff
 	Plug 'itchyny/lightline.vim'					" statusline plugin
 	Plug 'tpope/vim-commentary'					" comment stuff
+	Plug 'tpope/vim-sleuth'						" automatic indentation mode detection
 	Plug 'ap/vim-css-color'						" show colors in css files
 	Plug 'unblevable/quick-scope'					" easier f/F navigation
 	Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}	" a lot of functionality with ASTs
