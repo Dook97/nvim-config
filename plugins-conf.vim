@@ -4,10 +4,9 @@ call plug#begin('~/.config/nvim/plugged')
 	Plug 'tpope/vim-repeat'						" enables . command for some plugins
 	Plug 'tpope/vim-surround'					" super useful to (un)surround stuff
 	Plug 'itchyny/lightline.vim'					" statusline plugin
-	Plug 'tpope/vim-commentary'					" comment stuff
+	Plug 'numToStr/Comment.nvim'					" comment stuff
 	Plug 'tpope/vim-sleuth'						" automatic indentation mode detection
 	Plug 'ap/vim-css-color'						" show colors in css files
-	Plug 'unblevable/quick-scope'					" easier f/F navigation
 	Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}	" a lot of functionality with ASTs
 	Plug 'nvim-treesitter/nvim-treesitter-textobjects'		" define bindings for actions with AST text objects
 	Plug 'nvim-treesitter/playground'				" :TSHighlightCapturesUnderCursor
@@ -69,13 +68,10 @@ let g:lightline.tabline			= { 'left' : [[ 'tabs' ]], 'right' : [[ ]] }
 let g:lightline.tabline_separator	= { 'left': '', 'right': '' }
 let g:lightline.tabline_subseparator	= { 'left': '', 'right': '' }
 
-" quick-scope
-hi QuickScopePrimary   cterm=reverse
-hi QuickScopeSecondary cterm=reverse
-let g:qs_highlight_on_keys = ['f', 'F']
-
 " tree-sitter config
 lua << EOF
+require('Comment').setup()
+
 require'nvim-treesitter.configs'.setup {
 	-- A list of parser names, or "all"
 	ensure_installed = {
@@ -86,21 +82,8 @@ require'nvim-treesitter.configs'.setup {
 	sync_install = false,
 
 	highlight = {
-		-- `false` will disable the whole extension
 		enable = true,
-		-- Setting this to true will run `:h syntax` and tree-sitter at the same time.
 		additional_vim_regex_highlighting = false,
-	},
-
-	require'nvim-treesitter.configs'.setup {
-		incremental_selection = {
-			enable = true,
-			keymaps = {
-				init_selection = "<leader><leader>",
-				node_incremental = "<leader>i",
-				node_decremental = "<leader>d",
-			},
-		},
 	},
 
 	textobjects = {
@@ -109,15 +92,10 @@ require'nvim-treesitter.configs'.setup {
 			-- Automatically jump forward to textobj, similar to targets.vim
 			lookahead = true,
 			keymaps = {
-				-- You can use the capture groups defined in textobjects.scm
 				["af"] = "@function.outer",
 				["if"] = "@function.inner",
 				["ac"] = "@class.outer",
 				["ic"] = "@class.inner",
-				["ab"] = "@block.outer",
-				["ib"] = "@block.inner",
-				["aL"] = "@loop.outer",
-				["iL"] = "@loop.inner",
 				["aP"] = "@parameter.outer",
 				["iP"] = "@parameter.inner",
 			},
@@ -148,29 +126,3 @@ require'nvim-treesitter.configs'.setup {
 	},
 }
 EOF
-
-" require"nvim-treesitter.highlight".set_custom_captures {
-" 	["constant.builtin"] = "Normal",
-" 	["function.builtin"] = "TSFunction",
-" 	["constructor"]      = "TSFunction",
-" 	["method.call"]      = "TSFunction",
-" 	["namespace"]        = "Normal",
-" 	["parameter"]        = "Normal",
-" 	["property"]         = "Normal",
-" 	["operator"]         = "Normal",
-" }
-
-hi goTSConstant ctermfg=7
-hi link TSParameter Normal
-hi link TSKeywordOperator Keyword
-hi link TSOperator Normal
-hi link TSFunction Normal
-hi link TSFuncMacro Normal
-hi link TSProperty Normal
-hi link TSField Normal
-hi link number Normal
-hi link TSConstBuiltin Constant
-hi link TSMethodCall  TSFunctionCall
-hi link TSFuncBuiltin TSFunctionCall
-hi link TSConstructor TSFunctionCall
-hi TSFunctionCall ctermfg=81

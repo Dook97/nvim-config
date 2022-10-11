@@ -9,7 +9,7 @@ hi LineNrBelow ctermfg=Magenta
 
 " highlight current line
 set cursorline
-hi CursorLine   cterm=None ctermbg=239
+hi CursorLine   cterm=None ctermbg=240
 hi CursorLineNr cterm=None ctermfg=Yellow
 
 " remove line highlighting on defocus
@@ -36,3 +36,20 @@ set shiftwidth=4
 " ...with some exceptions
 au FileType c,cpp,go,vim,make setlocal tabstop=8 shiftwidth=8
 au FileType html setlocal tabstop=2 shiftwidth=2
+
+" syntax highlighting tweaks
+hi goTSConstant ctermfg=7
+hi TSFuncMacro ctermfg=7
+hi TSFunctionCall ctermfg=81
+hi link TSParameter Normal
+hi link TSKeywordOperator Keyword
+hi link TSOperator Normal
+hi link TSFunction Normal
+hi link TSProperty Normal
+hi link TSField Normal
+hi link number Normal
+hi link TSConstBuiltin Constant
+hi link TSMethodCall  TSFunctionCall
+hi link TSFuncBuiltin TSFunctionCall
+hi link TSConstructor TSFunctionCall
+hi link CurSearch Search

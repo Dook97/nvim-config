@@ -49,9 +49,6 @@ nnoremap <C-w>s :new<CR>
 nnoremap <leader>a gt
 nnoremap <leader>t :tabe<CR>
 
-" built in terminal escape to normal mode
-tnoremap <C-x> <C-\><C-N>
-
 " copy to system clipboard
 noremap Y "+y
 nnoremap YY "+yy
@@ -61,13 +58,3 @@ nnoremap <leader>h :noh<CR>
 
 " netrw (file explorer)
 nnoremap <leader>n :Explore<CR>
-
-" Check file in shellcheck:
-nnoremap <leader>s :!clear && shellcheck -x %<CR>
-
-" slightly easier commenting
-noremap <leader>c :Commentary<CR>
-
-" jump to beggining/end of line
-nnoremap gh ^
-nnoremap gl $
