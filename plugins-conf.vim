@@ -10,6 +10,8 @@ call plug#begin('~/.config/nvim/plugged')
 	Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}	" a lot of functionality with ASTs
 	Plug 'nvim-treesitter/nvim-treesitter-textobjects'		" define bindings for actions with AST text objects
 	Plug 'nvim-treesitter/playground'				" :TSHighlightCapturesUnderCursor
+	Plug 'neovim/nvim-lspconfig'					" preconfigure lsp servers
+	Plug 'josa42/nvim-lightline-lsp'				" add err and warning sign to lightline
 call plug#end()
 
 " netrw settings
@@ -54,24 +56,86 @@ let g:lightline = {
 		\ 'readonly': 'LightlineReadonly',
 		\ 'fileinfo' : 'LightlineFileinfo',
 		\ 'filename': 'LightlineFilename',
-		\ 'lineinfo': 'LightlineLineinfo',
+	\ 'lineinfo': 'LightlineLineinfo',
 	\ },
 \ }
 
 let g:lightline.active = {
-	\ 'left':  [[ 'mode', 'paste' ], [ 'readonly', 'filename' ]],
+	\ 'left':  [[ 'mode', 'paste' ], [ 'readonly', 'filename', 'lsp_errors', 'lsp_warnings' ]],
 	\ 'right': [[ 'lineinfo' ], [ 'fileinfo' ]]
 \ }
+
+let g:lightline#lsp#indicator_warnings = 'W '
+let g:lightline#lsp#indicator_errors = 'E '
+
+hi LightlineLeft_active_error ctermfg=white ctermbg=red
+
+call lightline#lsp#register()
 
 let g:lightline.inactive		= { 'left':  [[ 'filename']], 'right': [[ ]] }
 let g:lightline.tabline			= { 'left' : [[ 'tabs' ]], 'right' : [[ ]] }
 let g:lightline.tabline_separator	= { 'left': '', 'right': '' }
 let g:lightline.tabline_subseparator	= { 'left': '', 'right': '' }
 
-" tree-sitter config
 lua << EOF
+-- load commentary plugin
 require('Comment').setup()
 
+-- change color of number row based on error detection
+vim.cmd [[
+  highlight! DiagnosticLineNrError ctermbg=red
+  highlight! DiagnosticLineNrWarn  ctermbg=136
+
+  sign define DiagnosticSignError text= texthl=DiagnosticSignError linehl= numhl=DiagnosticLineNrError
+  sign define DiagnosticSignWarn  text= texthl=DiagnosticSignWarn  linehl= numhl=DiagnosticLineNrWarn
+]]
+
+-- rounded border around diagnostic messages
+vim.diagnostic.config {
+	float = { border = "rounded" },
+	severity_sort = true,
+}
+
+-- rounded corners around floating windows
+local handlers =  {
+  ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {border = 'rounded'}),
+  ["textDocument/show_line_diagnostics"] = vim.lsp.with(vim.lsp.handlers.hover, {border = 'rounded'}),
+}
+
+-- set LSP keymaps
+local opts = { noremap=true, silent=true }
+vim.keymap.set('n', '[e', vim.diagnostic.goto_prev, opts)
+vim.keymap.set('n', ']e', vim.diagnostic.goto_next, opts)
+vim.keymap.set('n', '<space>e', vim.diagnostic.setloclist, opts)
+local on_attach = function(client, bufnr)
+	vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
+	vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
+	vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
+	vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
+	vim.keymap.set('n', '<space>r', vim.lsp.buf.rename, bufopts)
+	vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
+end
+
+-- set up language server for c/cpp
+require('lspconfig')['ccls'].setup{
+	on_attach = on_attach,
+	handlers=handlers,
+	init_options = {
+		cache = {
+			-- only keep cache in memory - dont write to disk
+			-- slower but doesnt generate any clutter
+			directory = "",
+		},
+	},
+}
+
+-- set up language server for python
+require('lspconfig')['pyright'].setup{
+	on_attach = on_attach,
+	handlers=handlers,
+}
+
+-- treesitter config
 require'nvim-treesitter.configs'.setup {
 	-- A list of parser names, or "all"
 	ensure_installed = {

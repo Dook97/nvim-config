@@ -4,11 +4,11 @@ let mapleader=" "
 nnoremap <leader>w :up<CR>
 
 " Parens auto-close
-inoremap ( ()<Esc>i
-inoremap { {}<Esc>i
-inoremap [ []<Esc>i
-inoremap " ""<Esc>i
-inoremap ` ``<Esc>i
+inoremap ( ()<Left>
+inoremap { {}<Left>
+inoremap [ []<Left>
+inoremap " ""<Left>
+inoremap ` ``<Left>
 
 " Alternate way to quit
 nnoremap <leader>q :q!<CR>

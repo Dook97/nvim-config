@@ -9,7 +9,7 @@ hi LineNrBelow ctermfg=Magenta
 
 " highlight current line
 set cursorline
-hi CursorLine   cterm=None ctermbg=240
+hi CursorLine   cterm=None ctermbg=238
 hi CursorLineNr cterm=None ctermfg=Yellow
 
 " remove line highlighting on defocus
@@ -37,6 +37,9 @@ set shiftwidth=4
 au FileType c,cpp,go,vim,make setlocal tabstop=8 shiftwidth=8
 au FileType html setlocal tabstop=2 shiftwidth=2
 
+" remove annoying error/warning column
+set scl=no
+
 " syntax highlighting tweaks
 hi goTSConstant ctermfg=7
 hi TSFuncMacro ctermfg=7
@@ -53,3 +56,7 @@ hi link TSMethodCall  TSFunctionCall
 hi link TSFuncBuiltin TSFunctionCall
 hi link TSConstructor TSFunctionCall
 hi link CurSearch Search
+
+highlight FloatBorder ctermfg=grey
+hi NormalFloat cterm=bold ctermfg=white
+hi Error ctermfg=red
