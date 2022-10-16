@@ -11,6 +11,9 @@ set noshowmode
 " reserved number of lines from top and bottom of viewport
 set scrolloff=1
 
+" don't wrap long lines
+set nowrap
+
 " Splits open at the bottom and right
 set splitbelow splitright
 
@@ -25,7 +28,7 @@ set smartcase
 set lz
 
 " no mouse
-set mouse=""
+set mouse=
 
 " hybrid numbers - relative in normal mode, absolute in insert mode
 set nu rnu

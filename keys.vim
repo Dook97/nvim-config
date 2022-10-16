@@ -41,9 +41,8 @@ nnoremap ' <C-w>>
 " counterpart to <C-a> - substracts one from number
 nnoremap <C-s> <C-x>
 
-" split to empty buffer
-nnoremap <C-w>v :vnew<CR>
-nnoremap <C-w>s :new<CR>
+" vertical split shortcut
+nnoremap <C-w>v :vsplit<CR>
 
 " easy tabs
 nnoremap <leader>a gt
@@ -58,3 +57,9 @@ nnoremap <leader>h :noh<CR>
 
 " netrw (file explorer)
 nnoremap <leader>n :Explore<CR>
+
+" switch to next buffer
+nnoremap <Tab> :bn<CR>
+
+" easier terminal mode escape
+tnoremap <C-x> <C-\><C-n>
