@@ -11,8 +11,8 @@ set noshowmode
 " reserved number of lines from top and bottom of viewport
 set scrolloff=1
 
-" don't wrap long lines
-set nowrap
+" dont indent switch cases and private/public/protected specifiers
+set cinoptions+=:0,g0
 
 " Splits open at the bottom and right
 set splitbelow splitright
@@ -38,9 +38,6 @@ augroup numbertoggle
 	au BufLeave,InsertEnter,WinLeave,FocusLost   * if &nu                  | set nornu | endif
 	au TermOpen * setlocal nonu nornu
 augroup END
-
-" Runs a script that cleans out tex build files whenever I close out of a .tex file.
-autocmd VimLeave *.tex !texclear %
 
 " Save file as sudo on files that require root permission
 cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!

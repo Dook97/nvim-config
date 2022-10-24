@@ -7,6 +7,8 @@ hi LineNr      ctermfg=Magenta
 hi LineNrAbove ctermfg=Magenta
 hi LineNrBelow ctermfg=Magenta
 
+hi MatchParen ctermfg=232 ctermbg=81 cterm=bold
+
 " highlight current line
 set cursorline
 hi CursorLine   cterm=None ctermbg=238
@@ -44,19 +46,21 @@ set scl=no
 hi goTSConstant ctermfg=7
 hi TSFuncMacro ctermfg=7
 hi TSFunctionCall ctermfg=81
-hi link TSParameter Normal
-hi link TSKeywordOperator Keyword
-hi link TSOperator Normal
-hi link TSFunction Normal
-hi link TSProperty Normal
-hi link TSField Normal
 hi link number Normal
-hi link TSConstBuiltin Constant
-hi link TSMethodCall  TSFunctionCall
-hi link TSFuncBuiltin TSFunctionCall
-hi link TSConstructor TSFunctionCall
 hi link CurSearch Search
+hi link @function Normal
+hi link @field Normal
+hi link @parameter Normal
+hi link @function.call TSFunctionCall
+hi link @method.call TSFunctionCall
+hi link @constructor Normal
+hi link @function.builtin TSFunction
+hi link @special Normal
+hi link @constant.builtin Constant
+hi link @operator Normal
+hi link @property Normal
+hi link @keyword.operator Keyword
+hi @method ctermfg=white
 
-highlight FloatBorder ctermfg=grey
+" make floating windows not hideous
 hi NormalFloat cterm=bold ctermfg=white
-hi Error ctermfg=red

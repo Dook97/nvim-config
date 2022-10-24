@@ -9,8 +9,8 @@ call plug#begin('~/.config/nvim/plugged')
 	Plug 'ap/vim-css-color'						" show colors in css files
 	Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}	" a lot of functionality with ASTs
 	Plug 'nvim-treesitter/nvim-treesitter-textobjects'		" define bindings for actions with AST text objects
-	Plug 'nvim-treesitter/playground'				" :TSHighlightCapturesUnderCursor
 	Plug 'neovim/nvim-lspconfig'					" preconfigure lsp servers
+	Plug 'nvim-treesitter/playground'
 	Plug 'josa42/nvim-lightline-lsp'				" add err and warning sign to lightline
 call plug#end()
 
