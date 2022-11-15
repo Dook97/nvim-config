@@ -46,9 +46,10 @@ set scl=no
 hi goTSConstant ctermfg=7
 hi TSFuncMacro ctermfg=7
 hi TSFunctionCall ctermfg=81
-hi link number Normal
+hi @function ctermfg=7
+hi @variable ctermfg=7
+hi @method ctermfg=7
 hi link CurSearch Search
-hi link @function Normal
 hi link @field Normal
 hi link @parameter Normal
 hi link @function.call TSFunctionCall
@@ -60,7 +61,6 @@ hi link @constant.builtin Constant
 hi link @operator Normal
 hi link @property Normal
 hi link @keyword.operator Keyword
-hi @method ctermfg=white
 
 " make floating windows not hideous
 hi NormalFloat cterm=bold ctermfg=white

@@ -11,7 +11,7 @@ inoremap " ""<Left>
 inoremap ` ``<Left>
 
 " Alternate way to quit
-nnoremap <leader>q :q!<CR>
+nnoremap <leader>q :bd!<CR>
 nnoremap <leader>Q :qa!<CR>
 
 " Chop line into shorter lines
