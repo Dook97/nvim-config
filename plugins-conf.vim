@@ -120,13 +120,13 @@ end
 require('lspconfig')['ccls'].setup{
 	on_attach = on_attach,
 	handlers=handlers,
-	init_options = {
-		cache = {
-			-- only keep cache in memory - dont write to disk
-			-- slower but doesnt generate any clutter
-			directory = "",
-		},
-	},
+--	init_options = {
+--		cache = {
+--			-- only keep cache in memory - dont write to disk
+--			-- slower but doesnt generate any clutter
+--			directory = "",
+--		},
+--	},
 }
 
 -- set up language server for python

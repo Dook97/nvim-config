@@ -46,10 +46,14 @@ set scl=no
 hi goTSConstant ctermfg=7
 hi TSFuncMacro ctermfg=7
 hi TSFunctionCall ctermfg=81
+hi Identifier cterm=none ctermfg=81
+hi @Include ctermfg=81
 hi @function ctermfg=7
 hi @variable ctermfg=7
 hi @method ctermfg=7
+hi link cssBraces Normal
 hi link CurSearch Search
+hi link @PreProc Keyword
 hi link @field Normal
 hi link @parameter Normal
 hi link @function.call TSFunctionCall
@@ -61,6 +65,7 @@ hi link @constant.builtin Constant
 hi link @operator Normal
 hi link @property Normal
 hi link @keyword.operator Keyword
+hi link @storageclass Keyword
 
 " make floating windows not hideous
 hi NormalFloat cterm=bold ctermfg=white
