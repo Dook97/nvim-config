@@ -59,7 +59,8 @@ nnoremap <leader>h :noh<CR>
 nnoremap <leader>n :Explore<CR>
 
 " switch to next buffer
-nnoremap <Tab> :bn<CR>
+nnoremap <C-n> :bn<CR>
+nnoremap <C-p> :bp<CR>
 
 " easier terminal mode escape
 tnoremap <C-x> <C-\><C-n>
