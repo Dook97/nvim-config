@@ -29,7 +29,6 @@ set lz
 
 " no mouse
 set mouse=
-set mousescroll=ver:0,hor:0
 
 " hybrid numbers - relative in normal mode, absolute in insert mode
 set nu rnu
