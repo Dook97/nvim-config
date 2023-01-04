@@ -23,10 +23,12 @@ augroup linetoggle
 	au BufLeave,WinLeave,FocusLost   * setlocal nocursorline | set winhl=LineNr:inactive
 augroup END
 
-" hide vertical split line and end-of-buffer tildes
+" style vertical split line
 hi VertSplit    ctermfg=240  ctermbg=None cterm=None
 hi StatusLine   ctermfg=None ctermbg=None cterm=None
 hi StatusLineNC ctermfg=None ctermbg=None cterm=None
+
+" hide end-of-buffer tildes
 set fillchars+=eob:\ ,
 
 " hack to put cursor at the beggining of a tab instead of the end
@@ -51,10 +53,10 @@ hi @Include ctermfg=81
 hi @function ctermfg=7
 hi @variable ctermfg=7
 hi @method ctermfg=7
+hi @string.escape ctermfg=7
 hi link cssBraces Normal
 hi link CurSearch Search
 hi link Number Normal
-" hi link String Normal
 hi link @PreProc Keyword
 hi link @field Normal
 hi link @parameter Normal
@@ -68,8 +70,6 @@ hi link @operator Normal
 hi link @property Normal
 hi link @keyword.operator Keyword
 hi link @storageclass Keyword
-hi link @boolean Normal
-hi link @conditional.ternary Normal
 
 " make floating windows not hideous
 hi NormalFloat cterm=bold ctermfg=white
