@@ -46,6 +46,7 @@ nnoremap <C-w>v :vsplit<CR>
 
 " easy tabs
 nnoremap <leader>a gt
+nnoremap <leader>A gT
 nnoremap <leader>t :tabe<CR>
 
 " copy to system clipboard

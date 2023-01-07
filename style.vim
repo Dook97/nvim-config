@@ -45,13 +45,18 @@ set shiftwidth=4
 au FileType c,cpp,go,vim,make,lex,yacc setlocal tabstop=8 shiftwidth=8
 au FileType html setlocal tabstop=2 shiftwidth=2
 
-" remove annoying error/warning column
+" remove annoying LSP error/warning column
 set scl=no
 
 " syntax highlighting tweaks
-hi! TSFunctionCall ctermfg=81
-hi! Identifier cterm=none ctermfg=81
-hi! @Include ctermfg=81
+hi lightBlue ctermfg=81
+hi! Normal ctermfg=254
+hi! link @text.literal Normal
+hi! @punctuation.special ctermfg=11
+hi! link Title lightBlue
+hi! link TSFunctionCall lightBlue
+hi! link Identifier lightBlue
+hi! link @Include lightBlue
 hi! link Special Normal
 hi! link goTSConstant Normal
 hi! link TSFuncMacro Normal

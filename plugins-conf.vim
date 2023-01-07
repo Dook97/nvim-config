@@ -139,7 +139,8 @@ require('lspconfig')['pyright'].setup{
 require'nvim-treesitter.configs'.setup {
 	-- A list of parser names, or "all"
 	ensure_installed = {
-		"c", "cpp", "go", "javascript", "json", "latex", "python", "typescript", "lua", "c_sharp", "haskell"
+		"c", "cpp", "go", "javascript", "json", "latex", "python",
+		"typescript", "lua", "c_sharp", "haskell", "markdown", "markdown_inline"
 	},
 
 	-- Install parsers synchronously (only applied to `ensure_installed`)
