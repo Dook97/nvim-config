@@ -3,6 +3,10 @@ let mapleader=" "
 " Alternate way to save
 nnoremap <leader>w :up<CR>
 
+" make F and T inclusive operators (include character under cursor)
+onoremap F vF
+onoremap T vT
+
 " Parens auto-close
 inoremap ( ()<Left>
 inoremap { {}<Left>

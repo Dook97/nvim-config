@@ -53,7 +53,7 @@ hi lightBlue ctermfg=81
 hi! Normal ctermfg=254
 hi! link @text.literal Normal
 hi! @punctuation.special ctermfg=11
-hi! link Title lightBlue
+hi! Title ctermfg=Magenta
 hi! link TSFunctionCall lightBlue
 hi! link Identifier lightBlue
 hi! link @Include lightBlue
@@ -80,6 +80,6 @@ hi! link @operator Normal
 hi! link @property Normal
 hi! link @keyword.operator Keyword
 hi! link @storageclass Keyword
-
+hi! link @text.literal lightBlue
 " make floating windows not hideous
 hi! NormalFloat cterm=bold ctermfg=white
