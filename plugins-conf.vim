@@ -10,7 +10,7 @@ call plug#begin('~/.config/nvim/plugged')
 	Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}	" a lot of functionality with ASTs
 	Plug 'nvim-treesitter/nvim-treesitter-textobjects'		" define bindings for actions with AST text objects
 	Plug 'neovim/nvim-lspconfig'					" preconfigure lsp servers
-	Plug 'nvim-treesitter/playground'
+	Plug 'nvim-treesitter/playground'				" allows displaying treesitter capture groups
 	Plug 'josa42/nvim-lightline-lsp'				" add err and warning sign to lightline
 call plug#end()
 
@@ -131,6 +131,12 @@ require('lspconfig')['ccls'].setup{
 
 -- set up language server for python
 require('lspconfig')['pyright'].setup{
+	on_attach = on_attach,
+	handlers=handlers,
+}
+
+-- set up language server for c#
+require('lspconfig')['csharp_ls'].setup{
 	on_attach = on_attach,
 	handlers=handlers,
 }
