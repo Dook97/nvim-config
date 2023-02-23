@@ -42,7 +42,7 @@ set list lcs=tab:\ \ ,
 set tabstop=4
 set shiftwidth=4
 " ...with some exceptions
-au FileType c,cpp,go,vim,make,lex,yacc setlocal tabstop=8 shiftwidth=8
+au FileType c,cpp,go,make,lex,yacc setlocal tabstop=8 shiftwidth=8
 au FileType html setlocal tabstop=2 shiftwidth=2
 
 " remove annoying LSP error/warning column
@@ -81,5 +81,16 @@ hi! link @property Normal
 hi! link @keyword.operator Keyword
 hi! link @storageclass Keyword
 hi! link @text.literal lightBlue
+"
 " make floating windows not hideous
-hi! NormalFloat cterm=bold ctermfg=white
+hi! NormalFloat cterm=bold ctermfg=white ctermbg=238
+hi! Pmenu cterm=none ctermfg=245 ctermbg=235
+hi! PmenuSel ctermfg=cyan ctermbg=240
+hi! PmenuThumb ctermbg=245
+hi! link PmenuSbar Normal
+
+" remove annoying LSP underline
+hi! clear DiagnosticUnderlineError
+hi! clear DiagnosticUnderlineWarn
+hi! clear DiagnosticUnderlineInfo
+hi! clear DiagnosticUnderlineHint
