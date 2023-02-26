@@ -103,8 +103,8 @@ vim.diagnostic.config {
 -- rounded corners around floating windows
 -- also no underlines under LSP errors/warnings
 local handlers =  {
-  ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {border = 'rounded'}),
-  ["textDocument/show_line_diagnostics"] = vim.lsp.with(vim.lsp.handlers.hover, {border = 'rounded'}),
+  -- ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {border = 'rounded'}),
+  -- ["textDocument/show_line_diagnostics"] = vim.lsp.with(vim.lsp.handlers.hover, {border = 'rounded'}),
   ["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, { underline = false }),
 }
 
@@ -118,7 +118,7 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
   vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
   vim.keymap.set('n', '<space>r', vim.lsp.buf.rename, bufopts)
-  vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
+  vim.keymap.set('n', '<space>A', vim.lsp.buf.code_action, bufopts)
 end
 
 -- set up language server for c/cpp
@@ -151,7 +151,7 @@ require'nvim-treesitter.configs'.setup {
   -- A list of parser names, or "all"
   ensure_installed = {
     "c", "cpp", "go", "javascript", "json", "latex", "python",
-    "typescript", "lua", "c_sharp", "haskell", "markdown", "markdown_inline"
+    "typescript", "lua", "c_sharp", "haskell", "markdown", "markdown_inline",
   },
 
   -- Install parsers synchronously (only applied to `ensure_installed`)
@@ -174,6 +174,10 @@ require'nvim-treesitter.configs'.setup {
         ["ic"] = "@class.inner",
         ["aP"] = "@parameter.outer",
         ["iP"] = "@parameter.inner",
+        ["ib"] = "@block.inner",
+        ["ab"] = "@block.outer",
+        ["iC"] = "@comment.inner",
+        ["aC"] = "@comment.outer",
       },
     },
 

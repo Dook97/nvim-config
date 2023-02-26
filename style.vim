@@ -83,7 +83,7 @@ hi! link @storageclass Keyword
 hi! link @text.literal lightBlue
 "
 " make floating windows not hideous
-hi! NormalFloat cterm=bold ctermfg=white ctermbg=238
+hi! NormalFloat cterm=bold ctermfg=white ctermbg=235
 hi! Pmenu cterm=none ctermfg=245 ctermbg=235
 hi! PmenuSel ctermfg=cyan ctermbg=240
 hi! PmenuThumb ctermbg=245
