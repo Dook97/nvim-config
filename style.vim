@@ -1,17 +1,7 @@
-" number colors for (in)active windows
-hi inactive ctermfg=242
-hi active   ctermfg=Magenta
-
 " set highlight groups
-hi LineNr      ctermfg=Magenta
-hi LineNrAbove ctermfg=Magenta
-hi LineNrBelow ctermfg=Magenta
-
-" matching paren highlighting
-hi MatchParenActive ctermfg=232 ctermbg=81 cterm=bold
-hi! link MatchParen MatchParenActive
-au InsertEnter * hi clear MatchParen
-au InsertLeave * hi! link MatchParen MatchParenActive
+hi LineNr      ctermfg=242
+hi LineNrAbove ctermfg=242
+hi LineNrBelow ctermfg=242
 
 " highlight current line
 set cursorline
@@ -21,11 +11,15 @@ hi CursorLineNr cterm=None ctermfg=Yellow
 " remove line highlighting on defocus
 augroup linetoggle
 	au!
-	au BufEnter,InsertEnter * set winhl=LineNr:active
-	au BufLeave,InsertLeave * set winhl=LineNr:inactive
-	au BufEnter,WinEnter,FocusGained * setlocal cursorline   | set winhl=LineNr:active
-	au BufLeave,WinLeave,FocusLost   * setlocal nocursorline | set winhl=LineNr:inactive
+	au BufEnter,WinEnter,FocusGained * setlocal cursorline
+	au BufLeave,WinLeave,FocusLost   * setlocal nocursorline
 augroup END
+
+" matching paren highlighting
+hi MatchParenActive ctermfg=232 ctermbg=81 cterm=bold
+hi! link MatchParen MatchParenActive
+au InsertEnter * hi clear MatchParen
+au InsertLeave * hi! link MatchParen MatchParenActive
 
 " style vertical split line
 hi VertSplit    ctermfg=240  ctermbg=None cterm=None
