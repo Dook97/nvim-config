@@ -32,35 +32,30 @@ set fillchars+=eob:\ ,
 " hack to put cursor at the beggining of a tab instead of the end
 set list lcs=tab:\ \ ,
 
-" display tabs 4 characters wide
-set tabstop=4
-set shiftwidth=4
-" ...with some exceptions
-au FileType c,cpp,go,make,lex,yacc setlocal tabstop=8 shiftwidth=8
-au FileType html setlocal tabstop=2 shiftwidth=2
-
 " remove annoying LSP error/warning column
 set scl=no
 
 " syntax highlighting tweaks
 hi lightBlue ctermfg=81
 hi! Normal ctermfg=254
-hi! link @text.literal Normal
-hi! @punctuation.special ctermfg=11
 hi! Title ctermfg=Magenta
+hi! @text.emphasis cterm=italic
+hi! @text.strong cterm=bold
+hi! @punctuation.special ctermfg=11
 hi! link TSFunctionCall lightBlue
 hi! link Identifier lightBlue
-hi! link @Include lightBlue
 hi! link Special Normal
 hi! link goTSConstant Normal
 hi! link TSFuncMacro Normal
+hi! link cssBraces Normal
+hi! link CurSearch Search
+hi! link Number Normal
+hi! link @text.literal Normal
+hi! link @Include lightBlue
 hi! link @function Normal
 hi! link @variable Normal
 hi! link @method Normal
 hi! link @string.escape Normal
-hi! link cssBraces Normal
-hi! link CurSearch Search
-hi! link Number Normal
 hi! link @PreProc Keyword
 hi! link @field Normal
 hi! link @parameter Normal
@@ -75,7 +70,7 @@ hi! link @property Normal
 hi! link @keyword.operator Keyword
 hi! link @storageclass Keyword
 hi! link @text.literal lightBlue
-"
+
 " make floating windows not hideous
 hi! NormalFloat cterm=bold ctermfg=white ctermbg=235
 hi! Pmenu cterm=none ctermfg=245 ctermbg=235

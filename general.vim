@@ -30,6 +30,13 @@ set lz
 " no mouse
 set mouse=
 
+" display tabs 4 characters wide
+set tabstop=4
+set shiftwidth=4
+" ...with some exceptions
+au FileType c,cpp,go,make,lex,yacc setlocal tabstop=8 shiftwidth=8
+au FileType html setlocal tabstop=2 shiftwidth=2
+
 " hybrid numbers - relative in normal mode, absolute in insert mode
 set nu rnu
 augroup numbertoggle
