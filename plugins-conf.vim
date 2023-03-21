@@ -102,7 +102,7 @@ vim.diagnostic.config {
 
 -- rounded corners around floating windows
 -- also no underlines under LSP errors/warnings
-local handlers =  {
+local handlers = {
   -- ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {border = 'rounded'}),
   -- ["textDocument/show_line_diagnostics"] = vim.lsp.with(vim.lsp.handlers.hover, {border = 'rounded'}),
   ["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, { underline = false }),
@@ -110,8 +110,8 @@ local handlers =  {
 
 -- set LSP keymaps
 local opts = { noremap=true, silent=true }
-vim.keymap.set('n', '[e', vim.diagnostic.goto_prev, opts)
-vim.keymap.set('n', ']e', vim.diagnostic.goto_next, opts)
+  vim.keymap.set('n', '[e', vim.diagnostic.goto_prev, opts)
+  vim.keymap.set('n', ']e', vim.diagnostic.goto_next, opts)
 local on_attach = function(client, bufnr)
   vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
   vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
@@ -121,29 +121,28 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('n', '<space>A', vim.lsp.buf.code_action, bufopts)
 end
 
--- set up language server for c/cpp
-require('lspconfig')['ccls'].setup{
+local cmp = require'cmp'
+-- nvim-cmp almost supports LSP's capabilities so You should advertise it to LSP servers..
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
+
+require('lspconfig')['clangd'].setup {
   on_attach = on_attach,
   handlers=handlers,
---  init_options = {
---    cache = {
---      -- only keep cache in memory - dont write to disk
---      -- slower but doesnt generate any clutter
---      directory = "",
---    },
---  },
+  capabilities = capabilities,
 }
 
 -- set up language server for python
 require('lspconfig')['pyright'].setup{
   on_attach = on_attach,
   handlers=handlers,
+  capabilities = capabilities,
 }
 
 -- set up language server for c#
 require('lspconfig')['csharp_ls'].setup{
   on_attach = on_attach,
   handlers=handlers,
+  capabilities = capabilities,
 }
 
 -- treesitter config
@@ -206,12 +205,10 @@ require'nvim-treesitter.configs'.setup {
   },
 }
 
-local cmp = require'cmp'
-
 cmp.setup {
   sources = {
     { name = 'nvim_lsp' },
-    { name = 'buffer', keyword_length = 5 },
+    { name = 'buffer' },
     { name = 'nvim_lsp_signature_help' }
   },
   mapping = cmp.mapping.preset.insert({
@@ -229,14 +226,6 @@ cmp.setup {
           and not context.in_syntax_group("Comment")
       end
   end
-}
-
--- The nvim-cmp almost supports LSP's capabilities so You should advertise it to LSP servers..
-local capabilities = require('cmp_nvim_lsp').default_capabilities()
-
--- The following example advertise capabilities to `clangd`.
-require'lspconfig'.clangd.setup {
-  capabilities = capabilities,
 }
 
 EOF
