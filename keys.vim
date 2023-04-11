@@ -14,14 +14,11 @@ inoremap [ []<Left>
 inoremap " ""<Left>
 inoremap ` ``<Left>
 
-" don't jump to next occurence on *
-nnoremap <silent> * :let @/='\<<C-R>=expand("<cword>")<CR>\>'<CR>:set hls<CR>
-
 " Alternate way to quit
 nnoremap <leader>q :bd!<CR>
 nnoremap <leader>Q :qa!<CR>
 
-" Chop line into shorter lines
+" format
 nnoremap Q gqq
 vnoremap Q gq
 
