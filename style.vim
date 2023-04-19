@@ -10,7 +10,6 @@ hi CursorLineNr cterm=None ctermfg=Yellow
 
 " remove line highlighting on defocus
 augroup linetoggle
-	au!
 	au BufEnter,WinEnter,FocusGained * setlocal cursorline
 	au BufLeave,WinLeave,FocusLost   * setlocal nocursorline
 augroup END

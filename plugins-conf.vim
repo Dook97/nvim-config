@@ -119,6 +119,7 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
   vim.keymap.set('n', '<space>r', vim.lsp.buf.rename, bufopts)
   vim.keymap.set('n', '<space>A', vim.lsp.buf.code_action, bufopts)
+  client.server_capabilities.semanticTokensProvider = nil
 end
 
 local cmp = require'cmp'
@@ -127,21 +128,22 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 require('lspconfig')['clangd'].setup {
   on_attach = on_attach,
-  handlers=handlers,
+  handlers = handlers,
   capabilities = capabilities,
 }
 
 -- set up language server for python
 require('lspconfig')['pyright'].setup{
   on_attach = on_attach,
-  handlers=handlers,
+  handlers = handlers,
   capabilities = capabilities,
 }
 
 -- set up language server for c#
-require('lspconfig')['csharp_ls'].setup{
+require('lspconfig')['omnisharp'].setup {
+  cmd = {"dotnet", "/usr/lib/omnisharp/OmniSharp.dll"},
   on_attach = on_attach,
-  handlers=handlers,
+  handlers = handlers,
   capabilities = capabilities,
 }
 

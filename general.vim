@@ -12,7 +12,8 @@ set noshowmode
 set scrolloff=1
 
 " dont indent switch cases and private/public/protected specifiers
-set cinoptions+=:0,g0
+set cinoptions+=:0,g0,#1
+set cinkeys-=0#
 
 " Splits open at the bottom and right
 set splitbelow splitright
@@ -30,17 +31,9 @@ set lz
 " no mouse
 set mouse=
 
-" display tabs 4 characters wide
-set tabstop=4
-set shiftwidth=4
-" ...with some exceptions
-au FileType c,cpp,go,make,lex,yacc setlocal tabstop=8 shiftwidth=8
-au FileType html setlocal tabstop=2 shiftwidth=2
-
 " hybrid numbers - relative in normal mode, absolute in insert mode
 set nu rnu
 augroup numbertoggle
-	au!
 	au BufEnter,InsertLeave,WinEnter,FocusGained * if &nu && mode() != "i" | set rnu   | endif
 	au BufLeave,InsertEnter,WinLeave,FocusLost   * if &nu                  | set nornu | endif
 	au TermOpen * setlocal nonu nornu
