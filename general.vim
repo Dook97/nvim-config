@@ -1,4 +1,5 @@
 set smartindent
+au FileType python set nosmartindent " smartindent doesn't play well with python comments
 set fileencoding=utf-8
 
 " only show statusline when theres more than one window

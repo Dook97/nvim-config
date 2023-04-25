@@ -69,3 +69,7 @@ nnoremap <C-p> :bp<CR>
 
 " easier terminal mode escape
 tnoremap <C-x> <C-\><C-n>
+
+" unfuck python commenting
+au FileType python nnoremap gco o#<space>
+au FileType python nnoremap gcO O#<space>
