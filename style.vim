@@ -35,40 +35,36 @@ set list lcs=tab:\ \ ,
 set scl=no
 
 " syntax highlighting tweaks
-hi lightBlue ctermfg=81
-hi! Normal ctermfg=254
-hi! Title ctermfg=Magenta
-hi! @text.emphasis cterm=italic
-hi! @text.strong cterm=bold
-hi! @punctuation.special ctermfg=11
-hi! link TSFunctionCall lightBlue
-hi! link Identifier lightBlue
-hi! link Special Normal
-hi! link goTSConstant Normal
-hi! link TSFuncMacro Normal
-hi! link cssBraces Normal
-hi! link CurSearch Search
-hi! link Number Normal
-hi! link @text.literal Normal
-hi! link @Include lightBlue
-hi! link @function Normal
-hi! link @variable Normal
-hi! link @method Normal
-hi! link @string.escape Normal
-hi! link @PreProc Keyword
-hi! link @field Normal
-hi! link @parameter Normal
-hi! link @function.call TSFunctionCall
-hi! link @method.call TSFunctionCall
-hi! link @constructor Normal
-hi! link @function.builtin TSFunction
-hi! link @special Normal
-hi! link @constant.builtin Constant
-hi! link @operator Normal
-hi! link @property Normal
-hi! link @keyword.operator Keyword
-hi! link @storageclass Keyword
-hi! link @text.literal lightBlue
+hi lightBlue			ctermfg=81
+hi! Normal			ctermfg=254
+hi! Title			ctermfg=Magenta
+hi! @text.emphasis		cterm=italic
+hi! @text.strong		cterm=bold
+hi! @punctuation.special	ctermfg=11
+hi! link Identifier		Normal
+hi! link Special		Normal
+hi! link cssBraces		Normal
+hi! link CurSearch		Search
+hi! link Number			Normal
+hi! link Function		Normal
+hi! link Operator		Normal
+hi! link Property		Normal
+hi! link xmlTag			lightBlue
+hi! link xmlTagName		lightBlue
+hi! link Special		Normal
+hi! link @string.escape		Normal
+hi! link @PreProc		Keyword
+hi! link @parameter		Normal
+hi! link @function.call		lightBlue
+hi! link @function.builtin	@function.call
+hi! link @method.call		@function.call
+hi! link @function.macro	Normal
+hi! link @constructor		NONE
+hi! link @constant.builtin	Constant
+hi! link @keyword.operator	Keyword
+hi! link @storageclass		Keyword
+hi! link @text.literal		lightBlue
+hi! link @attribute		lightBlue
 
 " make floating windows not hideous
 hi! NormalFloat cterm=bold ctermfg=white ctermbg=235
@@ -82,3 +78,7 @@ hi! clear DiagnosticUnderlineError
 hi! clear DiagnosticUnderlineWarn
 hi! clear DiagnosticUnderlineInfo
 hi! clear DiagnosticUnderlineHint
+
+" as far as I can tell this is just annoying in LSP windows and doesn't do
+" anything useful
+hi! clear Error
