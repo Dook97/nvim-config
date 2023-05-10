@@ -13,7 +13,7 @@ set noshowmode
 set scrolloff=1
 
 " dont indent switch cases and private/public/protected specifiers
-set cinoptions+=:0,g0,#1
+set cinoptions+=:0,g0
 set cinkeys-=0#
 
 " Splits open at the bottom and right

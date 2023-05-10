@@ -81,19 +81,16 @@ let g:lightline.tabline      = { 'left' : [[ 'tabs' ]], 'right' : [[ ]] }
 let g:lightline.tabline_separator  = { 'left': '', 'right': '' }
 let g:lightline.tabline_subseparator  = { 'left': '', 'right': '' }
 
+" load commentary plugin
+lua require('Comment').setup()
+
+" change color of number row based on error detection
+hi! DiagnosticLineNrError ctermbg=red
+hi! DiagnosticLineNrWarn ctermbg=136
+sign define DiagnosticSignError text= texthl=DiagnosticSignError linehl= numhl=DiagnosticLineNrError
+sign define DiagnosticSignWarn  text= texthl=DiagnosticSignWarn  linehl= numhl=DiagnosticLineNrWarn
+
 lua << EOF
--- load commentary plugin
-require('Comment').setup()
-
--- change color of number row based on error detection
-vim.cmd [[
-  highlight! DiagnosticLineNrError ctermbg=red
-  highlight! DiagnosticLineNrWarn  ctermbg=136
-
-  sign define DiagnosticSignError text= texthl=DiagnosticSignError linehl= numhl=DiagnosticLineNrError
-  sign define DiagnosticSignWarn  text= texthl=DiagnosticSignWarn  linehl= numhl=DiagnosticLineNrWarn
-]]
-
 -- rounded border around diagnostic messages
 vim.diagnostic.config {
   -- float = { border = "rounded" },
@@ -122,9 +119,11 @@ local on_attach = function(client, bufnr)
   client.server_capabilities.semanticTokensProvider = nil
 end
 
-local cmp = require'cmp'
+local cmp = require('cmp')
 -- nvim-cmp almost supports LSP's capabilities so You should advertise it to LSP servers..
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
+-- disable LSP support for snippets
+capabilities.textDocument.completion.completionItem.snippetSupport = false
 
 require('lspconfig')['clangd'].setup {
   on_attach = on_attach,
@@ -147,10 +146,10 @@ require('lspconfig')['csharp_ls'].setup{
 }
 
 -- treesitter config
-require'nvim-treesitter.configs'.setup {
+require('nvim-treesitter.configs').setup {
   -- A list of parser names, or "all"
   ensure_installed = {
-    "c", "cpp", "go", "javascript", "json", "latex", "python",
+    "c", "cpp", "go", "javascript", "json", "latex", "python", "comment",
     "typescript", "lua", "c_sharp", "haskell", "markdown", "markdown_inline",
   },
 
@@ -208,9 +207,15 @@ require'nvim-treesitter.configs'.setup {
 
 cmp.setup {
   sources = {
-    { name = 'nvim_lsp' },
+    { name = 'nvim_lsp_signature_help' },
+    {
+        name = 'nvim_lsp',
+        entry_filter = function(entry)
+          -- disable snippets in LSP completion menu
+          return require("cmp").lsp.CompletionItemKind.Snippet ~= entry:get_kind()
+        end
+    },
     { name = 'buffer' },
-    { name = 'nvim_lsp_signature_help' }
   },
   mapping = cmp.mapping.preset.insert({
     ['<C-e>'] = cmp.mapping.abort(),
