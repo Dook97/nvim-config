@@ -72,3 +72,7 @@ tnoremap <C-x> <C-\><C-n>
 " unfuck python commenting
 au FileType python nnoremap gco o#<space>
 au FileType python nnoremap gcO O#<space>
+
+" I'm lazy :p
+au FileType cs inoremap cw<tab> Console.WriteLine()<Left>
+au Filetype cs,c,cpp inoremap for<tab> for (int i = 0; i < N; ++i)<Esc>^fi;

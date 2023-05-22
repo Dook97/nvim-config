@@ -14,6 +14,7 @@ call plug#begin('~/.config/nvim/plugged')
   Plug 'josa42/nvim-lightline-lsp'                            " add err and warning sign to lightline
   Plug 'hrsh7th/cmp-nvim-lsp'                                 " autocomplete with LSP
   Plug 'hrsh7th/cmp-buffer'                                   " autocomplete words in buffer
+  Plug 'hrsh7th/cmp-path'                                     " autocomplete paths
   Plug 'hrsh7th/nvim-cmp'                                     " autocompletion engine
   Plug 'hrsh7th/cmp-nvim-lsp-signature-help'                  " shows info about the function signature
 call plug#end()
@@ -216,6 +217,7 @@ cmp.setup {
         end
     },
     { name = 'buffer' },
+    { name = 'path' },
   },
   mapping = cmp.mapping.preset.insert({
     ['<C-e>'] = cmp.mapping.abort(),

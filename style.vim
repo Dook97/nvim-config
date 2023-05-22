@@ -65,6 +65,7 @@ hi! link @keyword.operator	Keyword
 hi! link @storageclass		Keyword
 hi! link @text.literal		lightBlue
 hi! link @attribute		lightBlue
+hi! link @type.qualifier	Keyword
 
 " make floating windows not hideous
 hi! NormalFloat cterm=bold ctermfg=white ctermbg=235
