@@ -66,6 +66,7 @@ hi! link @storageclass		Keyword
 hi! link @text.literal		lightBlue
 hi! link @attribute		lightBlue
 hi! link @type.qualifier	Keyword
+hi! link arduinoFunc		@function.call
 
 " make floating windows not hideous
 hi! NormalFloat cterm=bold ctermfg=white ctermbg=235
@@ -73,6 +74,7 @@ hi! Pmenu cterm=none ctermfg=245 ctermbg=235
 hi! PmenuSel ctermfg=cyan ctermbg=240
 hi! PmenuThumb ctermbg=245
 hi! link PmenuSbar Normal
+hi! FloatBorder ctermbg=235
 
 " remove annoying LSP underline
 hi! clear DiagnosticUnderlineError

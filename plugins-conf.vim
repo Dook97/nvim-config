@@ -15,8 +15,8 @@ call plug#begin('~/.config/nvim/plugged')
   Plug 'hrsh7th/cmp-nvim-lsp'                                 " autocomplete with LSP
   Plug 'hrsh7th/cmp-buffer'                                   " autocomplete words in buffer
   Plug 'hrsh7th/cmp-path'                                     " autocomplete paths
-  Plug 'hrsh7th/nvim-cmp'                                     " autocompletion engine
   Plug 'hrsh7th/cmp-nvim-lsp-signature-help'                  " shows info about the function signature
+  Plug 'hrsh7th/nvim-cmp'                                     " autocompletion engine
 call plug#end()
 
 " netrw settings
@@ -94,15 +94,15 @@ sign define DiagnosticSignWarn  text= texthl=DiagnosticSignWarn  linehl= numhl=D
 lua << EOF
 -- rounded border around diagnostic messages
 vim.diagnostic.config {
-  -- float = { border = "rounded" },
+  float = { border = "rounded" },
   severity_sort = true,
 }
 
 -- rounded corners around floating windows
 -- also no underlines under LSP errors/warnings
 local handlers = {
-  -- ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {border = 'rounded'}),
-  -- ["textDocument/show_line_diagnostics"] = vim.lsp.with(vim.lsp.handlers.hover, {border = 'rounded'}),
+  ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {border = 'rounded'}),
+  ["textDocument/show_line_diagnostics"] = vim.lsp.with(vim.lsp.handlers.hover, {border = 'rounded'}),
   ["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, { underline = false }),
 }
 
