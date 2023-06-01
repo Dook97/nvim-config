@@ -48,3 +48,5 @@ au BufWritePre * let currPos = getpos(".")
 au BufWritePre * %s/\s\+$//e
 au BufWritePre * %s/\n\+\%$//e
 au BufWritePre * cal cursor(currPos[1], currPos[2])
+
+au BufWritePre *.go lua vim.lsp.buf.format()

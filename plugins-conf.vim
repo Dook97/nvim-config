@@ -126,6 +126,7 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities()
 -- disable LSP support for snippets
 capabilities.textDocument.completion.completionItem.snippetSupport = false
 
+-- set up language server for C(++)
 require('lspconfig')['clangd'].setup {
   on_attach = on_attach,
   handlers = handlers,
@@ -144,6 +145,19 @@ require('lspconfig')['csharp_ls'].setup{
   on_attach = on_attach,
   handlers=handlers,
   capabilities = capabilities,
+}
+
+-- set up language server for go
+require('lspconfig')['gopls'].setup{
+  on_attach = on_attach,
+  handlers=handlers,
+  capabilities = capabilities,
+  settings = {
+    gopls = {
+      staticcheck = true,
+      linksInHover = false,
+  },
+  },
 }
 
 -- treesitter config
@@ -207,6 +221,7 @@ require('nvim-treesitter.configs').setup {
 }
 
 cmp.setup {
+  preselect = 'none',
   sources = {
     { name = 'nvim_lsp_signature_help' },
     {
@@ -223,17 +238,6 @@ cmp.setup {
     ['<C-e>'] = cmp.mapping.abort(),
     ['<CR>'] = cmp.mapping.confirm({ select = false }),
   }),
-    enabled = function()
-      -- disable completion in comments
-      local context = require 'cmp.config.context'
-      -- keep command mode completion enabled when cursor is in a comment
-      if vim.api.nvim_get_mode().mode == 'c' then
-        return true
-      else
-        return not context.in_treesitter_capture("comment")
-          and not context.in_syntax_group("Comment")
-      end
-  end
 }
 
 EOF
