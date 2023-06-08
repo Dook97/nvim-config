@@ -2,6 +2,9 @@ set smartindent
 au FileType python set nosmartindent " smartindent doesn't play well with python comments
 set fileencoding=utf-8
 
+" set window title
+set title
+
 " only show statusline when theres more than one window
 set laststatus=1
 
@@ -29,9 +32,6 @@ set smartcase
 " lazy redraw - screen will not be redrawn while executing macros etc
 set lz
 
-" no mouse
-set mouse=
-
 " hybrid numbers - relative in normal mode, absolute in insert mode
 set nu rnu
 augroup numbertoggle
@@ -49,4 +49,12 @@ au BufWritePre * %s/\s\+$//e
 au BufWritePre * %s/\n\+\%$//e
 au BufWritePre * cal cursor(currPos[1], currPos[2])
 
-au BufWritePre *.go lua vim.lsp.buf.format()
+" automatically organize imports on write and format
+augroup gostuff
+	au!
+	au BufWritePre *.go lua vim.lsp.buf.format()
+	au BufWritePre *.go lua vim.lsp.buf.code_action({ context = { only = { 'source.organizeImports' } }, apply = true })
+augroup END
+
+" disable right click popup menu
+behave xterm

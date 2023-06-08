@@ -77,9 +77,9 @@ hi LightlineLeft_active_error ctermfg=white ctermbg=red
 
 call lightline#lsp#register()
 
-let g:lightline.inactive    = { 'left':  [[ 'filename']], 'right': [[ ]] }
-let g:lightline.tabline      = { 'left' : [[ 'tabs' ]], 'right' : [[ ]] }
-let g:lightline.tabline_separator  = { 'left': '', 'right': '' }
+let g:lightline.inactive              = { 'left':  [[ 'filename']], 'right': [[ ]] }
+let g:lightline.tabline               = { 'left' : [[ 'tabs' ]], 'right' : [[ ]] }
+let g:lightline.tabline_separator     = { 'left': '', 'right': '' }
 let g:lightline.tabline_subseparator  = { 'left': '', 'right': '' }
 
 " load commentary plugin
@@ -156,7 +156,7 @@ require('lspconfig')['gopls'].setup{
     gopls = {
       staticcheck = true,
       linksInHover = false,
-  },
+    },
   },
 }
 
@@ -166,6 +166,8 @@ require('nvim-treesitter.configs').setup {
   ensure_installed = {
     "c", "cpp", "go", "javascript", "json", "latex", "python", "comment",
     "typescript", "lua", "c_sharp", "haskell", "markdown", "markdown_inline",
+    "make", "html", "gitignore", "gitcommit", "arduino", "yaml", "vim", "sql",
+    "css", "dockerfile", "bash", "rust", "query"
   },
 
   -- Install parsers synchronously (only applied to `ensure_installed`)
@@ -179,7 +181,7 @@ require('nvim-treesitter.configs').setup {
   textobjects = {
     select = {
       enable = true,
-      -- Automatically jump forward to textobj, similar to targets.vim
+      -- Automatically jump forward to textobj
       lookahead = true,
       keymaps = {
         ["af"] = "@function.outer",

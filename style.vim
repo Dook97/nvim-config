@@ -58,7 +58,7 @@ hi! link @parameter		Normal
 hi! link @function.call		lightBlue
 hi! link @function.builtin	@function.call
 hi! link @method.call		@function.call
-hi! link @function.macro	Normal
+" hi! link @function.macro	Normal
 hi! link @constructor		NONE
 hi! link @constant.builtin	Constant
 hi! link @keyword.operator	Keyword
