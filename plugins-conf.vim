@@ -143,7 +143,7 @@ require('lspconfig')['pyright'].setup{
 -- set up language server for c#
 require('lspconfig')['csharp_ls'].setup{
   on_attach = on_attach,
-  handlers=handlers,
+  handlers = handlers,
   capabilities = capabilities,
 }
 

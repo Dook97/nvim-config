@@ -5,8 +5,9 @@ set fileencoding=utf-8
 " set window title
 set title
 
-" only show statusline when theres more than one window
+" show statusline automatically when coding, else only on multiple splits
 set laststatus=1
+au LspAttach * set laststatus=2
 
 " unncessary since were using lightline plugin
 set noruler
