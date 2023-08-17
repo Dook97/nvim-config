@@ -1,3 +1,6 @@
+" custom colorscheme
+colorscheme dook97
+
 set smartindent
 au FileType python set nosmartindent " smartindent doesn't play well with python comments
 set fileencoding=utf-8
