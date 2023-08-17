@@ -1,3 +1,6 @@
+set background=dark
+hi clear
+
 " set highlight groups
 hi LineNr      ctermfg=242
 hi LineNrAbove ctermfg=242

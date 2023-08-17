@@ -108,9 +108,9 @@ local handlers = {
 
 -- set LSP keymaps
 local opts = { noremap=true, silent=true }
+local on_attach = function(client, bufnr)
   vim.keymap.set('n', '[e', vim.diagnostic.goto_prev, opts)
   vim.keymap.set('n', ']e', vim.diagnostic.goto_next, opts)
-local on_attach = function(client, bufnr)
   vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
   vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
   vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
@@ -165,9 +165,9 @@ require('nvim-treesitter.configs').setup {
   -- A list of parser names, or "all"
   ensure_installed = {
     "c", "cpp", "go", "javascript", "json", "latex", "python", "comment",
-    "typescript", "lua", "c_sharp", "haskell", "markdown", "markdown_inline",
-    "make", "html", "gitignore", "gitcommit", "arduino", "yaml", "vim", "sql",
-    "css", "dockerfile", "bash", "rust", "query"
+    "typescript", "c_sharp", "haskell", "markdown", "markdown_inline",
+    "make", "html", "gitignore", "gitcommit", "arduino", "yaml", "sql",
+    "css", "dockerfile", "bash", "rust", "query", "lua"
   },
 
   -- Install parsers synchronously (only applied to `ensure_installed`)
