@@ -70,6 +70,7 @@ hi! link @text.literal		lightBlue
 hi! link @attribute		lightBlue
 hi! link @type.qualifier	Keyword
 hi! link arduinoFunc		@function.call
+hi! link @text.danger		@text.todo
 
 " make floating windows not hideous
 hi! NormalFloat cterm=bold ctermfg=white ctermbg=235

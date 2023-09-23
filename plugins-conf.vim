@@ -3,7 +3,7 @@
 call plug#begin('~/.config/nvim/plugged')
   Plug 'tpope/vim-repeat'                                     " enables . command for some plugins
   Plug 'tpope/vim-surround'                                   " super useful to (un)surround stuff
-  Plug 'itchyny/lightline.vim'                                " statusline plugin
+  Plug 'itchyny/lightline.vim'                                " statusline
   Plug 'numToStr/Comment.nvim'                                " comment stuff
   Plug 'tpope/vim-sleuth'                                     " automatic indentation mode detection
   Plug 'ap/vim-css-color'                                     " show colors in css files
