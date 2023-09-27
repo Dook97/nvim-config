@@ -11,12 +11,6 @@ set cursorline
 hi CursorLine   cterm=None ctermbg=238
 hi CursorLineNr cterm=None ctermfg=Yellow
 
-" remove line highlighting on defocus
-augroup linetoggle
-	au BufEnter,WinEnter,FocusGained * setlocal cursorline
-	au BufLeave,WinLeave,FocusLost   * setlocal nocursorline
-augroup END
-
 " matching paren highlighting
 hi MatchParenActive ctermfg=232 ctermbg=81 cterm=bold
 hi! link MatchParen MatchParenActive
@@ -27,15 +21,6 @@ au InsertLeave * hi! link MatchParen MatchParenActive
 hi VertSplit    ctermfg=240  ctermbg=None cterm=None
 hi StatusLine   ctermfg=None ctermbg=None cterm=None
 hi StatusLineNC ctermfg=None ctermbg=None cterm=None
-
-" hide end-of-buffer tildes
-set fillchars+=eob:\ ,
-
-" hack to put cursor at the beggining of a tab instead of the end
-set list lcs=tab:\ \ ,
-
-" remove annoying LSP error/warning column
-set scl=no
 
 " syntax highlighting tweaks
 hi lightBlue			ctermfg=81

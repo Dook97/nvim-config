@@ -6,7 +6,6 @@ call plug#begin('~/.config/nvim/plugged')
   Plug 'itchyny/lightline.vim'                                " statusline
   Plug 'numToStr/Comment.nvim'                                " comment stuff
   Plug 'tpope/vim-sleuth'                                     " automatic indentation mode detection
-  Plug 'ap/vim-css-color'                                     " show colors in css files
   Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'} " a lot of functionality with ASTs
   Plug 'nvim-treesitter/nvim-treesitter-textobjects'          " define bindings for actions with AST text objects
   Plug 'neovim/nvim-lspconfig'                                " preconfigure lsp servers

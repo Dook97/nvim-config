@@ -12,7 +12,7 @@ set title
 set laststatus=1
 au LspAttach * set laststatus=2
 
-" unncessary since were using lightline plugin
+" unncessary since we're using lightline plugin
 set noruler
 set noshowmode
 
@@ -43,6 +43,21 @@ augroup numbertoggle
 	au BufLeave,InsertEnter,WinLeave,FocusLost   * if &nu                  | set nornu | endif
 	au TermOpen * setlocal nonu nornu
 augroup END
+
+" remove line highlighting on defocus
+augroup linetoggle
+	au BufEnter,WinEnter,FocusGained * setlocal cursorline
+	au BufLeave,WinLeave,FocusLost   * setlocal nocursorline
+augroup END
+
+" hide end-of-buffer tildes
+set fillchars+=eob:\ ,
+
+" hack to put cursor at the beggining of a tab instead of the end
+set list lcs=tab:\ \ ,
+
+" remove annoying LSP error/warning column
+set scl=no
 
 " Save file as sudo on files that require root permission
 cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
