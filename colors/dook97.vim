@@ -56,6 +56,8 @@ hi! link @attribute		lightBlue
 hi! link @type.qualifier	Keyword
 hi! link arduinoFunc		@function.call
 hi! link @text.danger		@text.todo
+hi! link yaccAction		@function.call
+hi! link yaccVar		Keyword
 
 " make floating windows not hideous
 hi! NormalFloat cterm=bold ctermfg=white ctermbg=235

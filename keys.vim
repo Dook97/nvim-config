@@ -25,6 +25,8 @@ vnoremap Q gq
 " Better tabbing
 vnoremap < <gv
 vnoremap > >gv
+nnoremap > >>
+nnoremap < <<
 
 " Easy scrolling
 noremap <C-x> <C-e>
@@ -37,8 +39,6 @@ nnoremap <C-h> <C-w>h
 nnoremap <C-l> <C-w>l
 
 " resize window
-nnoremap = <C-w>+
-nnoremap - <C-w>-
 nnoremap \ <C-w><
 nnoremap ' <C-w>>
 
@@ -47,10 +47,6 @@ nnoremap <C-s> <C-x>
 
 " vertical split shortcut
 nnoremap <C-w>v :vsplit<CR>
-
-" easy tabs
-nnoremap <leader>a gt
-nnoremap <leader>t :tabe<CR>
 
 " copy to system clipboard
 noremap Y "+y

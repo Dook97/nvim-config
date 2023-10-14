@@ -21,6 +21,7 @@ call plug#end()
 " netrw settings
 let g:netrw_liststyle = 3
 let g:netrw_banner = 0
+au FileType netrw setlocal bufhidden=delete " delete unused netrw buffers
 
 " lightline
 function! GetPluginName()

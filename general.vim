@@ -1,6 +1,7 @@
 " custom colorscheme
 colorscheme dook97
 
+set filetype
 set smartindent
 au FileType python set nosmartindent " smartindent doesn't play well with python comments
 set fileencoding=utf-8
@@ -13,8 +14,7 @@ set laststatus=1
 au LspAttach * set laststatus=2
 
 " unncessary since we're using lightline plugin
-set noruler
-set noshowmode
+set noruler noshowmode
 
 " reserved number of lines from top and bottom of viewport
 set scrolloff=1
@@ -30,8 +30,7 @@ set splitbelow splitright
 set undofile
 
 " search is case insensitive unless upper case character is in the query
-set ignorecase
-set smartcase
+set ignorecase smartcase
 
 " lazy redraw - screen will not be redrawn while executing macros etc
 set lz
