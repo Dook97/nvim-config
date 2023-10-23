@@ -25,8 +25,6 @@ vnoremap Q gq
 " Better tabbing
 vnoremap < <gv
 vnoremap > >gv
-nnoremap > >>
-nnoremap < <<
 
 " Easy scrolling
 noremap <C-x> <C-e>
