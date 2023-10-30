@@ -14,9 +14,15 @@ inoremap [ []<Left>
 inoremap " ""<Left>
 inoremap ` ``<Left>
 
-" Alternate way to quit
+" kill buffer
 nnoremap <leader>q :bd!<CR>
+" kill all buffers
 nnoremap <leader>Q :qa!<CR>
+" close a split (doesn't close the underlying buffer)
+nnoremap <leader>c :close<CR>
+
+" quickly switch/delete/... buffers
+noremap <c-b> :buffers<CR>:b
 
 " format
 nnoremap Q gqq
@@ -26,32 +32,12 @@ vnoremap Q gq
 vnoremap < <gv
 vnoremap > >gv
 
-" Easy scrolling
-noremap <C-x> <C-e>
-noremap <C-z> <C-y>
-
-" easy moving between windows
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-h> <C-w>h
-nnoremap <C-l> <C-w>l
-
-" resize window
-nnoremap \ <C-w><
-nnoremap ' <C-w>>
-
-" counterpart to <C-a> - substracts one from number
-nnoremap <C-s> <C-x>
-
 " vertical split shortcut
 nnoremap <C-w>v :vsplit<CR>
 
 " copy to system clipboard
 noremap Y "+y
 nnoremap YY "+yy
-
-" no-highlight shortcut
-nnoremap <leader>h :noh<CR>
 
 " netrw (file explorer)
 nnoremap <leader>n :Explore<CR>

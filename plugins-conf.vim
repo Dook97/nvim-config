@@ -16,7 +16,15 @@ call plug#begin('~/.config/nvim/plugged')
   Plug 'hrsh7th/cmp-path'                                     " autocomplete paths
   Plug 'hrsh7th/cmp-nvim-lsp-signature-help'                  " shows info about the function signature
   Plug 'hrsh7th/nvim-cmp'                                     " autocompletion engine
+  Plug 'psliwka/vim-smoothie'                                 " smooth scrolling
 call plug#end()
+
+let g:smoothie_no_default_mappings = 1
+
+nnoremap <unique> <C-d> <cmd>call smoothie#do("\<C-D>") <CR>
+vnoremap <unique> <C-d> <cmd>call smoothie#do("\<C-D>") <CR>
+nnoremap <unique> <C-u> <cmd>call smoothie#do("\<C-u>") <CR>
+vnoremap <unique> <C-u> <cmd>call smoothie#do("\<C-u>") <CR>
 
 " netrw settings
 let g:netrw_liststyle = 3
