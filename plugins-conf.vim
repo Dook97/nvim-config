@@ -83,12 +83,12 @@ let g:lightline#lsp#indicator_errors = 'E '
 
 hi LightlineLeft_active_error ctermfg=white ctermbg=red
 
-call lightline#lsp#register()
-
 let g:lightline.inactive              = { 'left':  [[ 'filename']], 'right': [[ ]] }
 let g:lightline.tabline               = { 'left' : [[ 'tabs' ]], 'right' : [[ ]] }
 let g:lightline.tabline_separator     = { 'left': '', 'right': '' }
 let g:lightline.tabline_subseparator  = { 'left': '', 'right': '' }
+
+call lightline#lsp#register()
 
 " load commentary plugin
 lua require('Comment').setup()
@@ -100,6 +100,17 @@ sign define DiagnosticSignError text= texthl=DiagnosticSignError linehl= numhl=D
 sign define DiagnosticSignWarn  text= texthl=DiagnosticSignWarn  linehl= numhl=DiagnosticLineNrWarn
 
 lua << EOF
+
+-- a workaround for a neovim bug; see:
+-- https://github.com/itchyny/lightline.vim/pull/659#issuecomment-1704032081
+local util = require "vim.lsp.util"
+local orig = util.make_floating_popup_options
+util.make_floating_popup_options = function(width, height, opts)
+  local orig_opts = orig(width, height, opts)
+  orig_opts.noautocmd = true
+  return orig_opts
+end
+
 -- rounded border around diagnostic messages
 vim.diagnostic.config {
   float = { border = "rounded" },
