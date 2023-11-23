@@ -1,6 +1,14 @@
-" you need to have the Plug plugin manager installed
-" use :PlugInstall to download these
-call plug#begin('~/.config/nvim/plugged')
+" download vim-plug if we don't have it already
+if ! filereadable(system('echo -n "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/autoload/plug.vim"'))
+	echo "Downloading junegunn/vim-plug to manage plugins..."
+	silent !mkdir -p ${XDG_CONFIG_HOME:-$HOME/.config}/nvim/autoload/
+	silent !curl "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
+              \ > ${XDG_CONFIG_HOME:-$HOME/.config}/nvim/autoload/plug.vim
+	autocmd VimEnter * PlugInstall
+endif
+
+" use :PlugInstall to download & update these
+call plug#begin(system('echo -n "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/plugged"'))
   Plug 'tpope/vim-repeat'                                     " enables . command for some plugins
   Plug 'tpope/vim-surround'                                   " super useful to (un)surround stuff
   Plug 'itchyny/lightline.vim'                                " statusline
@@ -63,7 +71,7 @@ function! LightlineReadonly()
 endfunction
 
 let g:lightline = {
-  \ 'colorscheme' : 'powerline_transparent',
+  \ 'colorscheme' : 'powerlineish',
   \ 'component_function': {
     \ 'mode': 'LightlineMode',
     \ 'readonly': 'LightlineReadonly',
