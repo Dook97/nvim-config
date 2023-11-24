@@ -1,35 +1,40 @@
 set background=dark
 hi clear
 
-" set highlight groups
-hi LineNr      ctermfg=242
-hi LineNrAbove ctermfg=242
-hi LineNrBelow ctermfg=242
-
 " highlight current line
 set cursorline
-hi CursorLine   cterm=None ctermbg=238
-hi CursorLineNr cterm=None ctermfg=Yellow
+hi! LineNr       cterm=none ctermfg=242 gui=none guifg=#6c6c6c
+hi! CursorLine   cterm=None ctermbg=238 gui=none guibg=#444444
+hi! CursorLineNr cterm=none ctermfg=11  gui=none guifg=#fffe00
 
 " matching paren highlighting
-hi MatchParenActive ctermfg=232 ctermbg=81 cterm=bold
+hi! MatchParenActive cterm=bold ctermbg=81 ctermfg=232 gui=bold guibg=#5fd7ff guifg=#08080a
 hi! link MatchParen MatchParenActive
 au InsertEnter * hi clear MatchParen
 au InsertLeave * hi! link MatchParen MatchParenActive
 
 " style vertical split line
-hi VertSplit    ctermfg=240  ctermbg=None cterm=None
-hi StatusLine   ctermfg=None ctermbg=None cterm=None
-hi StatusLineNC ctermfg=None ctermbg=None cterm=None
+hi! VertSplit cterm=None ctermfg=240 ctermbg=None gui=None guifg=#585858
+hi! clear StatusLine
+hi! clear StatusLineNC
+" hack - if StatusLine == StatusLineNC vim fills empty space with carets
+" we don't want that so we change one of them slightly
+hi StatusLine gui=italic
 
-" syntax highlighting tweaks
-hi lightBlue			ctermfg=81
-hi! Normal			ctermfg=254
-hi! Title			ctermfg=Magenta
-hi! @text.emphasis		cterm=italic
-hi! @text.strong		cterm=bold
+hi lightBlue			cterm=none ctermfg=81 gui=none guifg=#59d0fd
+hi! Normal			cterm=none ctermfg=254 gui=none guifg=#e5e5e5
+hi! Keyword			cterm=none ctermfg=11 gui=none guifg=#fffe00
+hi! Type			cterm=none ctermfg=121 gui=none guifg=#87ffaf
+hi! Comment			cterm=none ctermfg=14 gui=none guifg=#00ffff
+hi! Constant			cterm=none ctermfg=13 gui=none guifg=#ff00ff
+hi! Title			cterm=none ctermfg=13 gui=none guifg=#ff00ff
+hi! @text.emphasis		cterm=italic gui=italic
+hi! @text.strong		cterm=bold gui=bold
 hi! @punctuation.special	ctermfg=11
+hi! link Statement		Keyword
+hi! link Include		lightBlue
 hi! link Identifier		Normal
+hi! link Repeat			Keyword
 hi! link Special		Normal
 hi! link cssBraces		Normal
 hi! link CurSearch		Search
@@ -46,7 +51,7 @@ hi! link @parameter		Normal
 hi! link @function.call		lightBlue
 hi! link @function.builtin	@function.call
 hi! link @method.call		@function.call
-" hi! link @function.macro	Normal
+hi! link @conditional		Keyword
 hi! link @constructor		NONE
 hi! link @constant.builtin	Constant
 hi! link @keyword.operator	Keyword
@@ -60,12 +65,12 @@ hi! link yaccAction		@function.call
 hi! link yaccVar		Keyword
 
 " make floating windows not hideous
-hi! NormalFloat cterm=bold ctermfg=white ctermbg=235
-hi! Pmenu cterm=none ctermfg=245 ctermbg=235
-hi! PmenuSel ctermfg=cyan ctermbg=240
-hi! PmenuThumb ctermbg=245
+hi! NormalFloat cterm=bold ctermfg=white ctermbg=235 gui=bold guifg=white guibg=#262626
+hi! Pmenu cterm=none ctermfg=245 ctermbg=235 gui=none guibg=#262626 guifg=#738589
+hi! PmenuSel ctermfg=cyan ctermbg=240 guifg=cyan guibg=#738589
+hi! PmenuThumb ctermbg=245 guibg=#738589
 hi! link PmenuSbar Normal
-hi! FloatBorder ctermbg=235
+hi! FloatBorder ctermbg=235 guibg=#262626
 
 " remove annoying LSP underline
 hi! clear DiagnosticUnderlineError
