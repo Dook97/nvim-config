@@ -7,6 +7,15 @@ if ! filereadable(system('echo -n "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/autolo
 	autocmd VimEnter * PlugInstall
 endif
 
+" download custom lighline theme if we don't have it already
+if ! filereadable(system('echo -n "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/plugged/lightline.vim/autoload/lightline/colorscheme/dook.vim"'))
+	echo "Downloading custom lighline theme..."
+	silent !mkdir -p
+              \ ${XDG_CONFIG_HOME:-$HOME/.config}/nvim/plugged/lightline.vim/autoload/lightline/colorscheme
+	silent !curl "https://raw.githubusercontent.com/Dook97/nvim-config/main/lightline_colors.vim" --hsts ""
+              \ > ${XDG_CONFIG_HOME:-$HOME/.config}/nvim/plugged/lightline.vim/autoload/lightline/colorscheme/dook.vim
+endif
+
 " use :PlugInstall to download & update these
 call plug#begin(system('echo -n "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/plugged"'))
   Plug 'tpope/vim-repeat'                                     " enables . command for some plugins
@@ -71,7 +80,7 @@ function! LightlineReadonly()
 endfunction
 
 let g:lightline = {
-  \ 'colorscheme' : 'powerlineish',
+  \ 'colorscheme' : 'dook',
   \ 'component_function': {
     \ 'mode': 'LightlineMode',
     \ 'readonly': 'LightlineReadonly',
