@@ -63,6 +63,8 @@ hi! link arduinoFunc		@function.call
 hi! link @text.danger		@text.todo
 hi! link yaccAction		@function.call
 hi! link yaccVar		Keyword
+hi! link cmakeCommand		@function.call
+hi! link cmakeKWproject		Keyword
 
 " make floating windows not hideous
 hi! NormalFloat cterm=bold ctermfg=white ctermbg=235 gui=bold guifg=white guibg=#262626
