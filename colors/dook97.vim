@@ -31,6 +31,7 @@ hi! Title			cterm=none ctermfg=13 gui=none guifg=#ff00ff
 hi! @text.emphasis		cterm=italic gui=italic
 hi! @text.strong		cterm=bold gui=bold
 hi! @punctuation.special	ctermfg=11
+hi! Folded			ctermfg=14 ctermbg=236
 hi! link Statement		Keyword
 hi! link Include		lightBlue
 hi! link Identifier		Normal
