@@ -76,3 +76,11 @@ augroup END
 
 " disable right click popup menu
 behave xterm
+
+" automatically fold debug lines in C(++)
+function! CFold()
+	set foldmarker=#ifdef,#endif
+	set foldmethod=marker
+	norm g/#ifdef DEBUG/foldclose
+endfun
+au FileType c,cpp call CFold()
