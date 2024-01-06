@@ -58,9 +58,6 @@ set list lcs=tab:\ \ ,
 " remove annoying LSP error/warning column
 set scl=no
 
-" Save file as sudo on files that require root permission
-cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
-
 " Automatically deletes all trailing whitespace and newlines at end of file on save
 au BufWritePre * let currPos = getpos(".")
 au BufWritePre * %s/\s\+$//e
@@ -76,11 +73,3 @@ augroup END
 
 " disable right click popup menu
 behave xterm
-
-" automatically fold debug lines in C(++)
-function! CFold()
-	set foldmarker=#ifdef,#endif
-	set foldmethod=marker
-	norm g/#ifdef DEBUG/foldclose
-endfun
-au FileType c,cpp call CFold()

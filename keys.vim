@@ -49,3 +49,11 @@ nnoremap <C-p> :bp<CR>
 " unfuck python commenting
 au FileType python nnoremap gco o#<space>
 au FileType python nnoremap gcO O#<space>
+
+" use extended regex for searching by default
+nnoremap / /\v
+vnoremap / /\v
+cnoremap s/ s/\v
+
+" Save file as sudo on files that require root permission
+cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
