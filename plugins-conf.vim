@@ -32,6 +32,7 @@ call plug#begin(system('echo -n "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/plugged"
   Plug 'hrsh7th/cmp-nvim-lsp-signature-help'                  " shows info about the function signature
   Plug 'hrsh7th/nvim-cmp'                                     " autocompletion engine
   Plug 'psliwka/vim-smoothie'                                 " smooth scrolling
+  Plug 'norcalli/nvim-colorizer.lua'                          " css colors preview
 call plug#end()
 
 let g:smoothie_no_default_mappings = 1
@@ -96,7 +97,7 @@ let g:lightline.active = {
 let g:lightline#lsp#indicator_warnings = 'W '
 let g:lightline#lsp#indicator_errors = 'E '
 
-hi LightlineLeft_active_error ctermfg=white ctermbg=red
+hi LightlineLeft_active_error ctermfg=white ctermbg=red guifg=white guibg=red
 
 let g:lightline.inactive              = { 'left':  [[ 'filename']], 'right': [[ ]] }
 let g:lightline.tabline               = { 'left' : [[ 'tabs' ]], 'right' : [[ ]] }
@@ -109,10 +110,10 @@ call lightline#lsp#register()
 lua require('Comment').setup()
 
 " change color of number row based on error detection
-hi! DiagnosticLineNrError ctermbg=red
-hi! DiagnosticLineNrWarn ctermbg=136
-sign define DiagnosticSignError text= texthl=DiagnosticSignError linehl= numhl=DiagnosticLineNrError
-sign define DiagnosticSignWarn  text= texthl=DiagnosticSignWarn  linehl= numhl=DiagnosticLineNrWarn
+hi! DiagnosticLineNrError ctermbg=red guibg=red
+hi! DiagnosticLineNrWarn ctermbg=136 guibg=#af8700
+sign define DiagnosticSignError numhl=DiagnosticLineNrError
+sign define DiagnosticSignWarn  numhl=DiagnosticLineNrWarn
 
 lua << EOF
 
@@ -274,6 +275,44 @@ cmp.setup {
     ['<C-e>'] = cmp.mapping.abort(),
     ['<CR>'] = cmp.mapping.confirm({ select = false }),
   }),
+}
+
+-- Attaches to every FileType mode
+require 'colorizer'.setup()
+
+-- Attach to certain Filetypes, add special configuration for `html`
+-- Use `background` for everything else.
+require 'colorizer'.setup {
+  'css';
+  'javascript';
+  html = {
+    mode = 'foreground';
+  }
+}
+
+-- Use the `default_options` as the second parameter, which uses
+-- `foreground` for every mode. This is the inverse of the previous
+-- setup configuration.
+require 'colorizer'.setup({
+  'css';
+  'javascript';
+  html = { mode = 'background' };
+}, { mode = 'foreground' })
+
+-- Use the `default_options` as the second parameter, which uses
+-- `foreground` for every mode. This is the inverse of the previous
+-- setup configuration.
+require 'colorizer'.setup {
+  '*'; -- Highlight all files, but customize some others.
+  css = { rgb_fn = true; }; -- Enable parsing rgb(...) functions in css.
+  html = { names = false; } -- Disable parsing "names" like Blue or Gray
+}
+
+-- Exclude some filetypes from highlighting by using `!`
+require 'colorizer'.setup {
+  '*'; -- Highlight all files, but customize some others.
+  '!vim'; -- Exclude vim from highlighting.
+  -- Exclusion Only makes sense if '*' is specified!
 }
 
 EOF

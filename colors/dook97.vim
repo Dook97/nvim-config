@@ -1,6 +1,8 @@
 set background=dark
 hi clear
 
+set termguicolors
+
 " highlight current line
 set cursorline
 hi! LineNr       cterm=none ctermfg=242 gui=none guifg=#6c6c6c
@@ -32,6 +34,7 @@ hi! @text.emphasis		cterm=italic gui=italic
 hi! @text.strong		cterm=bold gui=bold
 hi! @punctuation.special	ctermfg=11
 hi! Folded			ctermfg=14 ctermbg=236
+hi! Todo			ctermfg=0 ctermbg=11 guibg=#ffff00 guifg=black
 hi! link Statement		Keyword
 hi! link Include		lightBlue
 hi! link Identifier		Normal
@@ -41,6 +44,7 @@ hi! link cssBraces		Normal
 hi! link CurSearch		Search
 hi! link Number			Normal
 hi! link Function		Normal
+hi! link Macro			lightBlue
 hi! link Operator		Normal
 hi! link Property		Normal
 hi! link xmlTag			lightBlue
@@ -48,6 +52,7 @@ hi! link xmlTagName		lightBlue
 hi! link Special		Normal
 hi! link @string.escape		Normal
 hi! link @PreProc		Keyword
+hi! link @Define		@PreProc
 hi! link @parameter		Normal
 hi! link @function.call		lightBlue
 hi! link @function.builtin	@function.call
