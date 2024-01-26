@@ -35,14 +35,16 @@ hi! @text.strong		cterm=bold gui=bold
 hi! @punctuation.special	ctermfg=11
 hi! Folded			ctermfg=14 ctermbg=236
 hi! Todo			ctermfg=0 ctermbg=11 guibg=#ffff00 guifg=black
+
 hi! link Statement		Keyword
-hi! link Include		lightBlue
+hi! link Include		Keyword
 hi! link Identifier		Normal
 hi! link Repeat			Keyword
 hi! link Special		Normal
 hi! link cssBraces		Normal
 hi! link CurSearch		Search
 hi! link Number			Normal
+hi! link Character		Normal
 hi! link Function		Normal
 hi! link Macro			lightBlue
 hi! link Operator		Normal
@@ -50,7 +52,9 @@ hi! link Property		Normal
 hi! link xmlTag			lightBlue
 hi! link xmlTagName		lightBlue
 hi! link Special		Normal
-hi! link @string.escape		Normal
+hi! link @boolean		Normal
+hi! link @string		Normal
+hi! link @string.escape		Constant
 hi! link @PreProc		Keyword
 hi! link @Define		@PreProc
 hi! link @parameter		Normal
@@ -71,6 +75,7 @@ hi! link yaccAction		@function.call
 hi! link yaccVar		Keyword
 hi! link cmakeCommand		@function.call
 hi! link cmakeKWproject		Keyword
+hi! link manReference		lightBlue
 
 " make floating windows not hideous
 hi! NormalFloat cterm=bold ctermfg=white ctermbg=235 gui=bold guifg=white guibg=#262626
