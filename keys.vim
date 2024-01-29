@@ -53,7 +53,15 @@ au FileType python nnoremap gcO O#<space>
 " use extended regex for searching by default
 nnoremap / /\v
 vnoremap / /\v
-cnoremap s/ s/\v
+nnoremap <leader>/ /
+vnoremap <leader>/ /
+nnoremap :s :s/\v
+nnoremap <leader>:s :s/
+nnoremap :g :g/\v
+nnoremap <leader>:g :g/
+
+" paste over a selection without changing contents of the unnamed register
+vnoremap <leader>p "_dP
 
 " Save file as sudo on files that require root permission
 cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
