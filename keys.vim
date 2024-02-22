@@ -51,14 +51,9 @@ au FileType python nnoremap gco o#<space>
 au FileType python nnoremap gcO O#<space>
 
 " use extended regex for searching by default
-nnoremap / /\v
-vnoremap / /\v
-nnoremap <leader>/ /
-vnoremap <leader>/ /
-nnoremap :s :s/\v
-nnoremap <leader>:s :s/
-nnoremap :g :g/\v
-nnoremap <leader>:g :g/
+nnoremap <leader>/ /\v
+vnoremap <leader>/ /\v
+nnoremap <leader>s :s/\v
 
 " paste over a selection without changing contents of the unnamed register
 vnoremap <leader>p "_dP

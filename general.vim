@@ -35,6 +35,9 @@ set ignorecase smartcase
 " lazy redraw - screen will not be redrawn while executing macros etc
 set lz
 
+" time to wait for a mapped sequence to complete
+set timeoutlen=300
+
 " hybrid numbers - relative in normal mode, absolute in insert mode
 set nu rnu
 augroup numbertoggle

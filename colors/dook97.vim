@@ -76,6 +76,7 @@ hi! link yaccVar		Keyword
 hi! link cmakeCommand		@function.call
 hi! link cmakeKWproject		Keyword
 hi! link manReference		lightBlue
+hi! link @function.method.call	@function.call
 
 " make floating windows not hideous
 hi! NormalFloat cterm=bold ctermfg=white ctermbg=235 gui=bold guifg=white guibg=#262626
