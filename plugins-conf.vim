@@ -49,8 +49,7 @@ au FileType netrw setlocal bufhidden=delete " delete unused netrw buffers
 
 " lightline
 function! GetPluginName()
-  return &filetype ==# 'nerdtree' ? 'NERD'
-  \ : &filetype ==# 'vim-plug' ? 'PLUG'
+  return &filetype ==# 'vim-plug' ? 'PLUG'
   \ : ''
 endfunction
 
@@ -75,7 +74,7 @@ function! LightlineFilename()
 endfunction
 
 function! LightlineReadonly()
-  return &readonly && &filetype !=# 'nerdtree' ? 'RO' : ''
+  return &readonly && &filetype !=# 'netrw' ? 'RO' : ''
 endfunction
 
 let g:lightline = {

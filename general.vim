@@ -36,7 +36,7 @@ set ignorecase smartcase
 set lz
 
 " time to wait for a mapped sequence to complete
-set timeoutlen=300
+set timeoutlen=500
 
 " hybrid numbers - relative in normal mode, absolute in insert mode
 set nu rnu
