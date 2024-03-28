@@ -61,3 +61,11 @@ vnoremap <leader>p "_dP
 
 " Save file as sudo on files that require root permission
 cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
+
+" easily generate sha256 hashes of random stuff
+function! Hash()
+	let @h = system("dd if=/dev/random bs=512 count=1 2>/dev/null | sha256sum | cut -d' ' -f1")
+	let @h = substitute(strtrans(@h), '\^@', '', 'g')
+	norm "hp
+endfunction
+nnoremap <leader>h :call Hash()<CR>
