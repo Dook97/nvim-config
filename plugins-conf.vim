@@ -16,23 +16,24 @@ endif
 
 " use :PlugInstall to download & update these
 call plug#begin(system('echo -n "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/plugged"'))
-  Plug 'tpope/vim-repeat'                                     " enables . command for some plugins
-  Plug 'tpope/vim-surround'                                   " super useful to (un)surround stuff
-  Plug 'itchyny/lightline.vim'                                " statusline
-  Plug 'numToStr/Comment.nvim'                                " comment stuff
-  Plug 'tpope/vim-sleuth'                                     " automatic indentation mode detection
-  Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'} " a lot of functionality with ASTs
-  Plug 'nvim-treesitter/nvim-treesitter-textobjects'          " define bindings for actions with AST text objects
-  Plug 'neovim/nvim-lspconfig'                                " preconfigure lsp servers
-  Plug 'nvim-treesitter/playground'                           " allows displaying treesitter capture groups
-  Plug 'josa42/nvim-lightline-lsp'                            " add err and warning sign to lightline
-  Plug 'hrsh7th/cmp-nvim-lsp'                                 " autocomplete with LSP
-  Plug 'hrsh7th/cmp-buffer'                                   " autocomplete words in buffer
-  Plug 'hrsh7th/cmp-path'                                     " autocomplete paths
-  Plug 'hrsh7th/cmp-nvim-lsp-signature-help'                  " shows info about the function signature
-  Plug 'hrsh7th/nvim-cmp'                                     " autocompletion engine
-  Plug 'psliwka/vim-smoothie'                                 " smooth scrolling
-  Plug 'norcalli/nvim-colorizer.lua'                          " css colors preview
+Plug 'tpope/vim-repeat'                                     " enables . command for some plugins
+Plug 'tpope/vim-surround'                                   " super useful to (un)surround stuff
+Plug 'itchyny/lightline.vim'                                " statusline
+Plug 'numToStr/Comment.nvim'                                " comment stuff
+Plug 'tpope/vim-sleuth'                                     " automatic indentation mode detection
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'} " a lot of functionality with ASTs
+Plug 'nvim-treesitter/nvim-treesitter-textobjects'          " define bindings for actions with AST text objects
+Plug 'neovim/nvim-lspconfig'                                " preconfigure lsp servers
+Plug 'nvim-treesitter/playground'                           " allows displaying treesitter capture groups
+Plug 'josa42/nvim-lightline-lsp'                            " add err and warning sign to lightline
+Plug 'hrsh7th/cmp-nvim-lsp'                                 " autocomplete with LSP
+Plug 'hrsh7th/cmp-buffer'                                   " autocomplete words in buffer
+Plug 'hrsh7th/cmp-path'                                     " autocomplete paths
+Plug 'hrsh7th/cmp-nvim-lsp-signature-help'                  " shows info about the function signature
+Plug 'hrsh7th/nvim-cmp'                                     " autocompletion engine
+Plug 'psliwka/vim-smoothie'                                 " smooth scrolling
+Plug 'norcalli/nvim-colorizer.lua'                          " css colors preview
+Plug 'mg979/vim-visual-multi'                               " multiple cursors
 call plug#end()
 
 let g:smoothie_no_default_mappings = 1

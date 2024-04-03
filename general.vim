@@ -76,3 +76,5 @@ augroup END
 
 " disable right click popup menu
 behave xterm
+
+au VimResized * execute "norm! \<c-w>="
