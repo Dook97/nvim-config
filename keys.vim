@@ -79,25 +79,3 @@ vnoremap / /\v
 
 " repeat last macro unless in a special buffer
 nnoremap <expr> <CR> empty(&buftype) ? '@@' : '<CR>'
-
-" visual mode move lines with J & K
-function! s:Move(address, at_limit)
-  if !a:at_limit
-    execute "'<,'>move " . a:address
-    call feedkeys('gv=', 'n')
-  endif
-  call feedkeys('gv', 'n')
-endfunction
-
-function! Move_up() abort range
-  let l:at_top=a:firstline == 1
-  call s:Move("'<-2", l:at_top)
-endfunction
-
-function! Move_down() abort range
-  let l:at_bottom=a:lastline == line('$')
-  call s:Move("'>+1", l:at_bottom)
-endfunction
-
-xnoremap <silent> K :call Move_up()<CR>
-xnoremap <silent> J :call Move_down()<CR>
