@@ -146,6 +146,8 @@ local opts = { noremap=true, silent=true }
 local on_attach = function(client, bufnr)
   vim.keymap.set('n', '[e', vim.diagnostic.goto_prev, opts)
   vim.keymap.set('n', ']e', vim.diagnostic.goto_next, opts)
+  vim.keymap.set('n', '<space>e', '<cmd>lua vim.diagnostic.setloclist({severity="error"})<CR>', bufopts)
+  vim.keymap.set('n', '<space>E', vim.diagnostic.setloclist, bufopts)
   vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
   vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
   vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)

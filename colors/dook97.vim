@@ -33,7 +33,7 @@ hi! Title			cterm=none ctermfg=13 gui=none guifg=#ff00ff
 hi! @text.emphasis		cterm=italic gui=italic
 hi! @text.strong		cterm=bold gui=bold
 hi! @punctuation.special	ctermfg=11
-hi! Folded			ctermfg=14 ctermbg=236
+hi! Folded			ctermfg=14 ctermbg=236 guibg=#383838 guifg=#59d0fd
 hi! Todo			ctermfg=0 ctermbg=11 guibg=#ffff00 guifg=black
 
 hi! link Statement		Keyword
@@ -77,6 +77,7 @@ hi! link cmakeCommand		@function.call
 hi! link cmakeKWproject		Keyword
 hi! link manReference		lightBlue
 hi! link @function.method.call	@function.call
+hi! link qfLineNr		Normal
 
 " make floating windows not hideous
 hi! NormalFloat cterm=bold ctermfg=white ctermbg=235 gui=bold guifg=white guibg=#262626
@@ -94,4 +95,4 @@ hi! clear DiagnosticUnderlineHint
 
 " as far as I can tell this is just annoying in LSP windows and doesn't do
 " anything useful
-hi! clear Error
+hi! Error ctermfg=9 ctermbg=none guifg=Red guibg=none
