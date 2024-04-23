@@ -33,7 +33,6 @@ Plug 'hrsh7th/cmp-nvim-lsp-signature-help'                  " shows info about t
 Plug 'hrsh7th/nvim-cmp'                                     " autocompletion engine
 Plug 'psliwka/vim-smoothie'                                 " smooth scrolling
 Plug 'norcalli/nvim-colorizer.lua'                          " css colors preview
-Plug 'mg979/vim-visual-multi'                               " multiple cursors
 call plug#end()
 
 let g:smoothie_no_default_mappings = 1

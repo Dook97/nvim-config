@@ -78,6 +78,8 @@ hi! link cmakeKWproject		Keyword
 hi! link manReference		lightBlue
 hi! link @function.method.call	@function.call
 hi! link qfLineNr		Normal
+hi! link @comment.todo		Search
+hi! link @comment.error		Search
 
 " make floating windows not hideous
 hi! NormalFloat cterm=bold ctermfg=white ctermbg=235 gui=bold guifg=white guibg=#262626
