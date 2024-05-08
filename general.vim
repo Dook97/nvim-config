@@ -1,5 +1,5 @@
 " custom colorscheme
-colorscheme dook97
+colorscheme tsoding
 
 filetype plugin on
 set smartindent
@@ -19,9 +19,28 @@ set noruler noshowmode
 " reserved number of lines from top and bottom of viewport
 set scrolloff=1
 
-" dont indent switch cases and private/public/protected specifiers
-set cinoptions+=:0,g0
+" indentation settings
+set cinoptions+=:0,g0,N-s
 set cinkeys-=0#
+
+" Don't indent template
+function! CppNoTemplateIndent()
+    let l:cline_num = line('.')
+    let l:pline_num = prevnonblank(l:cline_num - 1)
+    let l:pline = getline(l:pline_num)
+    while l:pline =~# '\(^\s*{\s*\|^\s*//\|^\s*/\*\|\*/\s*$\)'
+        let l:pline_num = prevnonblank(l:pline_num - 1)
+        let l:pline = getline(l:pline_num)
+    endwhile
+    let l:retv = cindent('.')
+    let l:pindent = indent(l:pline_num)
+    if l:pline =~# '^\s*template'
+        let l:retv = l:pindent
+    endif
+    return l:retv
+endfunction
+
+autocmd BufEnter *.{cpp,hpp} setlocal indentexpr=CppNoTemplateIndent()
 
 " Splits open at the bottom and right
 set splitbelow splitright
