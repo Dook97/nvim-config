@@ -16,27 +16,32 @@ au InsertEnter * hi clear MatchParen
 au InsertLeave * hi! link MatchParen MatchParenActive
 
 " style vertical split line
-hi! VertSplit gui=None guifg=#585858
+hi! WinSeparator gui=None guifg=#585858
 hi! clear StatusLine
 hi! clear StatusLineNC
 " hack - if StatusLine == StatusLineNC vim fills empty space with carets
 " we don't want that so we change one of them slightly
 hi StatusLine gui=italic
 
-hi! Normal			 gui=none guifg=#d5d5d5
-hi! Keyword			 gui=none guifg=#f0f000
-hi! Type			 gui=none guifg=#919191
-hi! Comment			 gui=none guifg=#ff9e00
-hi! Title			 gui=none guifg=#ff00ff
-hi! @text.emphasis		 gui=italic
-hi! @text.strong		 gui=bold
-hi! Folded			 guibg=#383838 guifg=#59d0fd
-hi! Todo			 guibg=#ffff00 guifg=black
-hi! String			 guibg=none guifg=#5fbb25
+hi! Normal			gui=none guifg=#d5d5d5 guibg=none
+hi! Keyword			gui=none guifg=#d0d000
+hi! Type			gui=none guifg=#919191
+hi! Comment			gui=none guifg=#8781d8
+hi! Title			gui=none guifg=#ff00ff
+hi! @text.emphasis		gui=italic
+hi! @text.strong		gui=bold
+hi! Folded			guibg=#383838 guifg=#59d0fd
+hi! Todo			guibg=#ffff00 guifg=black
+hi! String			guibg=none guifg=#5fbb25
+hi! @comment.note		guifg=magenta
+hi! Search			guibg=Yellow guifg=black
 
 hi! clear PreProc
 hi! clear Define
 
+au FileType vim hi! clear Type
+
+hi lightBlue			cterm=none ctermfg=81 gui=none guifg=#59d0fd
 hi! link Constant		Normal
 hi! link Statement		Keyword
 hi! link Include		Keyword
@@ -63,7 +68,6 @@ hi! link @conditional		Keyword
 hi! link @constructor		NONE
 hi! link @constant		Normal
 hi! link @constant.builtin	Constant
-hi! link @keyword.operator	Keyword
 hi! link @storageclass		Keyword
 hi! link @text.literal		lightBlue
 hi! link @attribute		lightBlue
@@ -96,4 +100,4 @@ hi! clear DiagnosticUnderlineHint
 
 " as far as I can tell this is just annoying in LSP windows and doesn't do
 " anything useful
-hi! Error guifg=Red guibg=none
+hi! clear Error

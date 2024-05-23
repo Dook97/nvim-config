@@ -1,5 +1,5 @@
 " custom colorscheme
-colorscheme tsoding
+colorscheme dook2
 
 filetype plugin on
 set smartindent
@@ -94,6 +94,6 @@ augroup gostuff
 augroup END
 
 " disable right click popup menu
-behave xterm
+set mousemodel=extend
 
 au VimResized * execute "norm! \<c-w>="
