@@ -19,6 +19,9 @@ set noruler noshowmode
 " reserved number of lines from top and bottom of viewport
 set scrolloff=1
 
+" don't wrap long lines
+set nowrap
+
 " indentation settings
 set cinoptions+=:0,g0,N-s
 set cinkeys-=0#
@@ -97,3 +100,6 @@ augroup END
 set mousemodel=extend
 
 au VimResized * execute "norm! \<c-w>="
+
+" .h files are C not C++
+let g:c_syntax_for_h = 1

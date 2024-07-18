@@ -26,7 +26,6 @@ hi StatusLine gui=italic
 hi! Normal			gui=none guifg=#d5d5d5 guibg=none
 hi! Keyword			gui=none guifg=#d0d000
 hi! Type			gui=none guifg=#919191
-hi! Comment			gui=none guifg=#8781d8
 hi! Title			gui=none guifg=#ff00ff
 hi! @text.emphasis		gui=italic
 hi! @text.strong		gui=bold
@@ -35,6 +34,8 @@ hi! Todo			guibg=#ffff00 guifg=black
 hi! String			guibg=none guifg=#5fbb25
 hi! @comment.note		guifg=magenta
 hi! Search			guibg=Yellow guifg=black
+hi! TreesitterContext		guibg=#265601
+hi! manSubHeading		guifg=Magenta
 
 hi! clear PreProc
 hi! clear Define
@@ -42,6 +43,7 @@ hi! clear Define
 au FileType vim hi! clear Type
 
 hi lightBlue			cterm=none ctermfg=81 gui=none guifg=#59d0fd
+hi! link Comment		lightBlue
 hi! link Constant		Normal
 hi! link Statement		Keyword
 hi! link Include		Keyword
@@ -72,6 +74,7 @@ hi! link @storageclass		Keyword
 hi! link @text.literal		lightBlue
 hi! link @attribute		lightBlue
 hi! link @type.qualifier	Keyword
+hi! link @type.builtin		@type
 hi! link arduinoFunc		@function.call
 hi! link @text.danger		@text.todo
 hi! link yaccAction		@function.call
@@ -79,6 +82,7 @@ hi! link yaccVar		Keyword
 hi! link cmakeCommand		@function.call
 hi! link cmakeKWproject		Keyword
 hi! link manReference		lightBlue
+hi! link manOptionDesc		lightBlue
 hi! link @function.method.call	@function.call
 hi! link qfLineNr		Normal
 hi! link @comment.todo		Search

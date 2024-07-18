@@ -29,7 +29,6 @@ Plug 'josa42/nvim-lightline-lsp'                            " add err and warnin
 Plug 'hrsh7th/cmp-nvim-lsp'                                 " autocomplete with LSP
 Plug 'hrsh7th/cmp-buffer'                                   " autocomplete words in buffer
 Plug 'hrsh7th/cmp-path'                                     " autocomplete paths
-Plug 'hrsh7th/cmp-nvim-lsp-signature-help'                  " shows info about the function signature
 Plug 'hrsh7th/nvim-cmp'                                     " autocompletion engine
 Plug 'psliwka/vim-smoothie'                                 " smooth scrolling
 Plug 'norcalli/nvim-colorizer.lua'                          " css colors preview
@@ -139,6 +138,8 @@ local handlers = {
   ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {border = 'rounded'}),
   ["textDocument/show_line_diagnostics"] = vim.lsp.with(vim.lsp.handlers.hover, {border = 'rounded'}),
   ["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, { underline = false }),
+  ['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'rounded' }),
+  ['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'rounded' }),
 }
 
 -- set LSP keymaps
@@ -152,8 +153,17 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
   vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
   vim.keymap.set('n', '<space>k', vim.lsp.buf.hover, bufopts)
+  vim.keymap.set({'n', 'i'}, '<C-k>', vim.lsp.buf.signature_help, opts)
   vim.keymap.set('n', '<space>r', vim.lsp.buf.rename, bufopts)
-  vim.keymap.set('n', '<space>A', vim.lsp.buf.code_action, bufopts)
+  vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+  vim.keymap.set({'n', 'v'}, '<space>a', vim.lsp.buf.code_action, bufopts)
+  vim.keymap.set({ 'i', 's' }, '<Tab>', function()
+    if vim.snippet.active({ direction = 1 }) then
+      return '<cmd>lua vim.snippet.jump(1)<cr>'
+    else
+      return '<Tab>'
+    end
+  end, { expr = true })
   client.server_capabilities.semanticTokensProvider = nil
 end
 
@@ -161,7 +171,7 @@ local cmp = require('cmp')
 -- nvim-cmp almost supports LSP's capabilities so You should advertise it to LSP servers..
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 -- disable LSP support for snippets
-capabilities.textDocument.completion.completionItem.snippetSupport = false
+-- capabilities.textDocument.completion.completionItem.snippetSupport = false
 
 -- set up language server for C(++)
 require('lspconfig')['clangd'].setup {
@@ -265,10 +275,10 @@ cmp.setup {
     { name = 'nvim_lsp_signature_help' },
     {
         name = 'nvim_lsp',
-        entry_filter = function(entry)
-          -- disable snippets in LSP completion menu
-          return require("cmp").lsp.CompletionItemKind.Snippet ~= entry:get_kind()
-        end
+        -- entry_filter = function(entry)
+        --   -- disable snippets in LSP completion menu
+        --   return require("cmp").lsp.CompletionItemKind.Snippet ~= entry:get_kind()
+        -- end
     },
     { name = 'buffer' },
     { name = 'path' },
@@ -287,21 +297,6 @@ require 'colorizer'.setup {
   html = {
     mode = 'foreground';
   }
-}
-
-require'treesitter-context'.setup{
-  enable = true, -- Enable this plugin (Can be enabled/disabled later via commands)
-  max_lines = 1, -- How many lines the window should span. Values <= 0 mean no limit.
-  min_window_height = 0, -- Minimum editor window height to enable context. Values <= 0 mean no limit.
-  line_numbers = true,
-  multiline_threshold = 20, -- Maximum number of lines to show for a single context
-  trim_scope = 'inner', -- Which context lines to discard if `max_lines` is exceeded. Choices: 'inner', 'outer'
-  mode = 'cursor',  -- Line used to calculate context. Choices: 'cursor', 'topline'
-  -- Separator between context and content. Should be a single character string, like '-'.
-  -- When separator is set, the context will only show up when there are at least 2 lines above cursorline.
-  separator = nil,
-  zindex = 20, -- The Z-index of the context window
-  on_attach = nil, -- (fun(buf: integer): boolean) return false to disable attaching
 }
 
 EOF
