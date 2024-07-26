@@ -19,13 +19,13 @@ call plug#begin(system('echo -n "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/plugged"
 Plug 'tpope/vim-repeat'                                     " enables . command for some plugins
 Plug 'tpope/vim-surround'                                   " super useful to (un)surround stuff
 Plug 'itchyny/lightline.vim'                                " statusline
+Plug 'josa42/nvim-lightline-lsp'                            " add err and warning sign to lightline
 Plug 'numToStr/Comment.nvim'                                " comment stuff
 Plug 'tpope/vim-sleuth'                                     " automatic indentation mode detection
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'} " a lot of functionality with ASTs
 Plug 'nvim-treesitter/nvim-treesitter-textobjects'          " define bindings for actions with AST text objects
 Plug 'neovim/nvim-lspconfig'                                " preconfigure lsp servers
 Plug 'nvim-treesitter/playground'                           " allows displaying treesitter capture groups
-Plug 'josa42/nvim-lightline-lsp'                            " add err and warning sign to lightline
 Plug 'hrsh7th/cmp-nvim-lsp'                                 " autocomplete with LSP
 Plug 'hrsh7th/cmp-buffer'                                   " autocomplete words in buffer
 Plug 'hrsh7th/cmp-path'                                     " autocomplete paths
@@ -33,7 +33,13 @@ Plug 'hrsh7th/nvim-cmp'                                     " autocompletion eng
 Plug 'psliwka/vim-smoothie'                                 " smooth scrolling
 Plug 'norcalli/nvim-colorizer.lua'                          " css colors preview
 Plug 'nvim-treesitter/nvim-treesitter-context'              " show current function name when scrolling
+Plug 'nvim-lua/plenary.nvim'                                " Telescope prerequisite
+Plug 'nvim-telescope/telescope.nvim', {'tag': '0.1.8'}      " conveniently search buffers, files & whatever else
 call plug#end()
+
+" Find files using Telescope command-line sugar.
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>fb <cmd>Telescope buffers<cr>
 
 let g:smoothie_no_default_mappings = 1
 
@@ -145,14 +151,10 @@ local handlers = {
 -- set LSP keymaps
 local opts = { noremap=true, silent=true }
 local on_attach = function(client, bufnr)
-  vim.keymap.set('n', '[e', vim.diagnostic.goto_prev, opts)
-  vim.keymap.set('n', ']e', vim.diagnostic.goto_next, opts)
   vim.keymap.set('n', '<space>e', '<cmd>lua vim.diagnostic.setloclist({severity="error"})<CR>', bufopts)
   vim.keymap.set('n', '<space>E', vim.diagnostic.setloclist, bufopts)
   vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
   vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
-  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
-  vim.keymap.set('n', '<space>k', vim.lsp.buf.hover, bufopts)
   vim.keymap.set({'n', 'i'}, '<C-k>', vim.lsp.buf.signature_help, opts)
   vim.keymap.set('n', '<space>r', vim.lsp.buf.rename, bufopts)
   vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
@@ -182,6 +184,21 @@ require('lspconfig')['clangd'].setup {
 
 -- set up language server for python
 require('lspconfig')['pyright'].setup{
+  settings = {
+    pyright = {
+      disableOrganizeImports = true,
+    },
+    python = {
+      analysis = {
+        ignore = { '*' }
+      }
+    }
+  },
+  on_attach = on_attach,
+  handlers = handlers,
+  capabilities = capabilities,
+}
+require('lspconfig')['ruff'].setup{
   on_attach = on_attach,
   handlers = handlers,
   capabilities = capabilities,
