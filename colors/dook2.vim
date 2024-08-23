@@ -36,6 +36,8 @@ hi! @comment.note		guifg=magenta
 hi! Search			guibg=Yellow guifg=black
 hi! TreesitterContext		guibg=#265601
 hi! manSubHeading		guifg=Magenta
+hi! Added			guifg=#19d50c
+hi! Removed			guifg=Red
 
 hi! clear PreProc
 hi! clear Define

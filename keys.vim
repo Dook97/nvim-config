@@ -76,6 +76,3 @@ nnoremap <leader>h :call Hash()<CR>
 
 nnoremap / /\v
 vnoremap / /\v
-
-" repeat last macro unless in a special buffer
-nnoremap <expr> <CR> empty(&buftype) ? '@@' : '<CR>'
