@@ -224,6 +224,12 @@ require('lspconfig')['gopls'].setup{
   },
 }
 
+require('lspconfig')['rust_analyzer'].setup{
+  on_attach = on_attach,
+  handlers=handlers,
+  capabilities = capabilities,
+}
+
 -- treesitter config
 require('nvim-treesitter.configs').setup {
   -- A list of parser names, or "all"

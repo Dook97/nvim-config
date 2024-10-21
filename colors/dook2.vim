@@ -89,6 +89,7 @@ hi! link @function.method.call	@function.call
 hi! link qfLineNr		Normal
 hi! link @comment.todo		Search
 hi! link @comment.error		Search
+hi! link @markup.list		lightBlue
 
 " make floating windows not hideous
 hi! NormalFloat	    gui=bold guifg=white guibg=#262626
