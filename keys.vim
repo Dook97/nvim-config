@@ -74,5 +74,9 @@ function! Hash()
 endfunction
 nnoremap <leader>h :call Hash()<CR>
 
+" tabular plugin shortcut
+nnoremap <c-t> :Tab /
+vnoremap <c-t> :Tab /
+
 nnoremap / /\v
 vnoremap / /\v

@@ -35,6 +35,7 @@ Plug 'norcalli/nvim-colorizer.lua'                          " css colors preview
 Plug 'nvim-treesitter/nvim-treesitter-context'              " show current function name when scrolling
 Plug 'nvim-lua/plenary.nvim'                                " Telescope prerequisite
 Plug 'nvim-telescope/telescope.nvim', {'tag': '0.1.8'}      " conveniently search buffers, files & whatever else
+Plug 'shirosaki/tabular', { 'branch': 'fix_leading_spaces'} " multiline alignment plugin
 call plug#end()
 
 " Find files using Telescope command-line sugar.
