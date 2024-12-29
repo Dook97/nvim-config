@@ -38,6 +38,10 @@ Plug 'nvim-telescope/telescope.nvim', {'tag': '0.1.8'}      " conveniently searc
 Plug 'shirosaki/tabular', { 'branch': 'fix_leading_spaces'} " multiline alignment plugin
 call plug#end()
 
+" hide context lines when in cmdline/search so that we have a clear view of
+" what we're doing
+au CmdlineEnter,CmdlineLeave * :TSContextToggle
+
 " Find files using Telescope command-line sugar.
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
