@@ -3,6 +3,13 @@ hi clear
 
 set termguicolors
 
+" Hide stupid lsp highlights
+lua <<EOF
+for _, group in ipairs(vim.fn.getcompletion("@lsp", "highlight")) do
+  vim.api.nvim_set_hl(0, group, {})
+end
+EOF
+
 " highlight current line
 set cursorline
 hi! LineNr       gui=none guifg=#6c6c6c
@@ -19,11 +26,8 @@ au InsertLeave * hi! link MatchParen MatchParenActive
 hi! WinSeparator gui=None guifg=#585858
 hi! clear StatusLine
 hi! clear StatusLineNC
-" hack - if StatusLine == StatusLineNC vim fills empty space with carets
-" we don't want that so we change one of them slightly
-hi StatusLine gui=italic
 
-hi! Normal			gui=none guifg=#d5d5d5 guibg=none
+hi! Normal			cterm=none ctermfg=254 ctermbg=none gui=none guifg=#d5d5d5 guibg=none
 hi! Keyword			gui=none guifg=#d0d000
 hi! Type			gui=none guifg=#919191
 hi! Title			gui=none guifg=#ff00ff
@@ -94,17 +98,18 @@ hi! link @markup.list		lightBlue
 " make floating windows not hideous
 hi! NormalFloat	    gui=bold guifg=white guibg=#262626
 hi! Pmenu	    gui=none guibg=#262626 guifg=#738589
-hi! PmenuSel	    guifg=cyan guibg=#738589
+hi! PmenuSel	    guifg=black guibg=cyan gui=bold
 hi! PmenuThumb	    guibg=#738589
 hi! FloatBorder	    guibg=#262626
 hi! link PmenuSbar  Normal
 
-" remove annoying LSP underline
-hi! clear DiagnosticUnderlineError
-hi! clear DiagnosticUnderlineWarn
-hi! clear DiagnosticUnderlineInfo
-hi! clear DiagnosticUnderlineHint
-
 " as far as I can tell this is just annoying in LSP windows and doesn't do
 " anything useful
 hi! clear Error
+
+" change color of number row based on error detection
+lua vim.api.nvim_set_hl(0, "DiagnosticUnnecessary", {})
+hi! DiagnosticUnderlineError cterm=none gui=none
+hi! DiagnosticUnderlineWarn cterm=none gui=none
+hi! DiagnosticLineNrError ctermbg=red guibg=red ctermfg=white guifg=white
+hi! DiagnosticLineNrWarn ctermbg=136 guibg=#af8700 ctermfg=white guifg=white

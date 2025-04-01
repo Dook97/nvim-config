@@ -16,42 +16,23 @@ endif
 
 " use :PlugInstall to download & update these
 call plug#begin(system('echo -n "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/plugged"'))
-Plug 'tpope/vim-repeat'                                     " enables . command for some plugins
-Plug 'tpope/vim-surround'                                   " super useful to (un)surround stuff
-Plug 'itchyny/lightline.vim'                                " statusline
-Plug 'josa42/nvim-lightline-lsp'                            " add err and warning sign to lightline
-Plug 'numToStr/Comment.nvim'                                " comment stuff
-Plug 'tpope/vim-sleuth'                                     " automatic indentation mode detection
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'} " a lot of functionality with ASTs
-Plug 'nvim-treesitter/nvim-treesitter-textobjects'          " define bindings for actions with AST text objects
-Plug 'neovim/nvim-lspconfig'                                " preconfigure lsp servers
-Plug 'nvim-treesitter/playground'                           " allows displaying treesitter capture groups
-Plug 'hrsh7th/cmp-nvim-lsp'                                 " autocomplete with LSP
-Plug 'hrsh7th/cmp-buffer'                                   " autocomplete words in buffer
-Plug 'hrsh7th/cmp-path'                                     " autocomplete paths
-Plug 'hrsh7th/nvim-cmp'                                     " autocompletion engine
-Plug 'psliwka/vim-smoothie'                                 " smooth scrolling
-Plug 'norcalli/nvim-colorizer.lua'                          " css colors preview
-Plug 'nvim-treesitter/nvim-treesitter-context'              " show current function name when scrolling
-Plug 'nvim-lua/plenary.nvim'                                " Telescope prerequisite
-Plug 'nvim-telescope/telescope.nvim', {'tag': '0.1.8'}      " conveniently search buffers, files & whatever else
-Plug 'shirosaki/tabular', { 'branch': 'fix_leading_spaces'} " multiline alignment plugin
+Plug 'tpope/vim-repeat'                                      " enables . command for some plugins
+Plug 'tpope/vim-surround'                                    " super useful to (un)surround stuff
+Plug 'itchyny/lightline.vim'                                 " statusline
+Plug 'josa42/nvim-lightline-lsp'                             " add err and warning sign to lightline
+Plug 'tpope/vim-sleuth'                                      " automatic indentation mode detection
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " a lot of functionality with ASTs
+Plug 'nvim-treesitter/nvim-treesitter-textobjects'           " define bindings for actions with AST text objects
+Plug 'psliwka/vim-smoothie'                                  " smooth scrolling
+Plug 'norcalli/nvim-colorizer.lua'                           " css colors preview
+Plug 'nvim-treesitter/nvim-treesitter-context'               " show current function name when scrolling
+Plug 'nvim-lua/plenary.nvim'                                 " Telescope prerequisite
+Plug 'nvim-telescope/telescope.nvim', {'branch': '0.1.x'}    " conveniently search buffers, files & whatever else
+Plug 'shirosaki/tabular', { 'branch': 'fix_leading_spaces' } " multiline alignment plugin
+Plug 'andis-sprinkis/lf-vim'                                 " lfrc syntax highlighting
 call plug#end()
 
-" hide context lines when in cmdline/search so that we have a clear view of
-" what we're doing
-au CmdlineEnter,CmdlineLeave * :TSContextToggle
-
-" Find files using Telescope command-line sugar.
-nnoremap <leader>ff <cmd>Telescope find_files<cr>
-nnoremap <leader>fb <cmd>Telescope buffers<cr>
-
 let g:smoothie_no_default_mappings = 1
-
-nnoremap <unique> <C-d> <cmd>call smoothie#do("\<C-D>") <CR>
-vnoremap <unique> <C-d> <cmd>call smoothie#do("\<C-D>") <CR>
-nnoremap <unique> <C-u> <cmd>call smoothie#do("\<C-u>") <CR>
-vnoremap <unique> <C-u> <cmd>call smoothie#do("\<C-u>") <CR>
 
 " netrw settings
 let g:netrw_liststyle = 3
@@ -116,124 +97,7 @@ let g:lightline.tabline_subseparator  = { 'left': '', 'right': '' }
 
 call lightline#lsp#register()
 
-" load commentary plugin
-lua require('Comment').setup()
-
-" change color of number row based on error detection
-hi! DiagnosticLineNrError ctermbg=red guibg=red
-hi! DiagnosticLineNrWarn ctermbg=136 guibg=#af8700
-sign define DiagnosticSignError numhl=DiagnosticLineNrError
-sign define DiagnosticSignWarn  numhl=DiagnosticLineNrWarn
-
 lua << EOF
-
--- a workaround for a neovim bug; see:
--- https://github.com/itchyny/lightline.vim/pull/659#issuecomment-1704032081
-local util = require "vim.lsp.util"
-local orig = util.make_floating_popup_options
-util.make_floating_popup_options = function(width, height, opts)
-  local orig_opts = orig(width, height, opts)
-  orig_opts.noautocmd = true
-  return orig_opts
-end
-
--- rounded border around diagnostic messages
-vim.diagnostic.config {
-  float = { border = "rounded" },
-  severity_sort = true,
-}
-
--- rounded corners around floating windows
--- also no underlines under LSP errors/warnings
-local handlers = {
-  ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {border = 'rounded'}),
-  ["textDocument/show_line_diagnostics"] = vim.lsp.with(vim.lsp.handlers.hover, {border = 'rounded'}),
-  ["textDocument/publishDiagnostics"] = vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, { underline = false }),
-  ['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'rounded' }),
-  ['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'rounded' }),
-}
-
--- set LSP keymaps
-local opts = { noremap=true, silent=true }
-local on_attach = function(client, bufnr)
-  vim.keymap.set('n', '<space>e', '<cmd>lua vim.diagnostic.setloclist({severity="error"})<CR>', bufopts)
-  vim.keymap.set('n', '<space>E', vim.diagnostic.setloclist, bufopts)
-  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
-  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
-  vim.keymap.set({'n', 'i'}, '<C-k>', vim.lsp.buf.signature_help, opts)
-  vim.keymap.set('n', '<space>r', vim.lsp.buf.rename, bufopts)
-  vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
-  vim.keymap.set({'n', 'v'}, '<space>a', vim.lsp.buf.code_action, bufopts)
-  vim.keymap.set({ 'i', 's' }, '<Tab>', function()
-    if vim.snippet.active({ direction = 1 }) then
-      return '<cmd>lua vim.snippet.jump(1)<cr>'
-    else
-      return '<Tab>'
-    end
-  end, { expr = true })
-  client.server_capabilities.semanticTokensProvider = nil
-end
-
-local cmp = require('cmp')
--- nvim-cmp almost supports LSP's capabilities so You should advertise it to LSP servers..
-local capabilities = require('cmp_nvim_lsp').default_capabilities()
--- disable LSP support for snippets
--- capabilities.textDocument.completion.completionItem.snippetSupport = false
-
--- set up language server for C(++)
-require('lspconfig')['clangd'].setup {
-  on_attach = on_attach,
-  handlers = handlers,
-  capabilities = capabilities,
-}
-
--- set up language server for python
-require('lspconfig')['pyright'].setup{
-  settings = {
-    pyright = {
-      disableOrganizeImports = true,
-    },
-    python = {
-      analysis = {
-        ignore = { '*' }
-      }
-    }
-  },
-  on_attach = on_attach,
-  handlers = handlers,
-  capabilities = capabilities,
-}
-require('lspconfig')['ruff'].setup{
-  on_attach = on_attach,
-  handlers = handlers,
-  capabilities = capabilities,
-}
-
--- set up language server for c#
-require('lspconfig')['csharp_ls'].setup{
-  on_attach = on_attach,
-  handlers = handlers,
-  capabilities = capabilities,
-}
-
--- set up language server for go
-require('lspconfig')['gopls'].setup{
-  on_attach = on_attach,
-  handlers=handlers,
-  capabilities = capabilities,
-  settings = {
-    gopls = {
-      staticcheck = true,
-      linksInHover = false,
-    },
-  },
-}
-
-require('lspconfig')['rust_analyzer'].setup{
-  on_attach = on_attach,
-  handlers=handlers,
-  capabilities = capabilities,
-}
 
 -- treesitter config
 require('nvim-treesitter.configs').setup {
@@ -297,34 +161,52 @@ require('nvim-treesitter.configs').setup {
   },
 }
 
-cmp.setup {
-  preselect = 'none',
-  sources = {
-    { name = 'nvim_lsp_signature_help' },
-    {
-        name = 'nvim_lsp',
-        -- entry_filter = function(entry)
-        --   -- disable snippets in LSP completion menu
-        --   return require("cmp").lsp.CompletionItemKind.Snippet ~= entry:get_kind()
-        -- end
-    },
-    { name = 'buffer' },
-    { name = 'path' },
-  },
-  mapping = cmp.mapping.preset.insert({
-    ['<C-e>'] = cmp.mapping.abort(),
-    ['<CR>'] = cmp.mapping.confirm({ select = false }),
-  }),
-}
-
 -- Attach to certain Filetypes, add special configuration for `html`
 -- Use `background` for everything else.
-require 'colorizer'.setup {
+require('colorizer').setup {
   'css';
   'javascript';
   html = {
     mode = 'foreground';
   }
 }
+
+-- show lsp diagnostic text
+vim.diagnostic.config({
+  virtual_text = true,
+  signs = {
+      text = {
+          [vim.diagnostic.severity.ERROR] = '',
+          [vim.diagnostic.severity.WARN] = '',
+      },
+      numhl = {
+          [vim.diagnostic.severity.ERROR] = 'DiagnosticLineNrError',
+          [vim.diagnostic.severity.WARN] = 'DiagnosticLineNrWarn',
+      },
+  },
+})
+
+vim.api.nvim_create_autocmd('LspAttach', {
+  callback = function(ev)
+    local client = vim.lsp.get_client_by_id(ev.data.client_id)
+    if client:supports_method('textDocument/completion') then
+      vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
+    end
+
+    vim.keymap.set('n', '<space>e', '<cmd>lua vim.diagnostic.setloclist({severity="error"})<CR>', { buffer = ev.buf })
+    vim.keymap.set('n', '<space>E', vim.diagnostic.setloclist, { buffer = ev.buf })
+    vim.keymap.set('n', 'grd', vim.lsp.buf.definition, { buffer = ev.buf })
+    vim.keymap.set('n', 'grD', vim.lsp.buf.declaration, { buffer = ev.buf })
+  end,
+})
+
+vim.lsp.config('*', {
+  root_markers = { '.git' },
+})
+
+vim.lsp.enable({'clangd'})
+vim.lsp.enable({'gopls'})
+vim.lsp.enable({'pyright'})
+vim.lsp.enable({'ruff'})
 
 EOF

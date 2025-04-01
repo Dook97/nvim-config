@@ -66,17 +66,23 @@ vnoremap <leader>p "_dP
 " Save file as sudo on files that require root permission
 cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
 
-" easily generate sha256 hashes of random stuff
-function! Hash()
-	let @h = system("dd if=/dev/random bs=512 count=1 2>/dev/null | sha256sum | cut -d' ' -f1")
-	let @h = substitute(strtrans(@h), '\^@', '', 'g')
-	norm "hp
-endfunction
-nnoremap <leader>h :call Hash()<CR>
-
 " tabular plugin shortcut
 nnoremap <c-t> :Tab /
 vnoremap <c-t> :Tab /
 
+" extended regex in searches
 nnoremap / /\v
 vnoremap / /\v
+
+" Find files using Telescope command-line sugar.
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>fb <cmd>Telescope buffers<cr>
+nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+
+" smmoth scrolling binds
+nnoremap <C-d> <cmd>call smoothie#do("\<C-D>")<CR>
+vnoremap <C-d> <cmd>call smoothie#do("\<C-D>")<CR>
+nnoremap <C-u> <cmd>call smoothie#do("\<C-u>")<CR>
+vnoremap <C-u> <cmd>call smoothie#do("\<C-u>")<CR>
+
+au LspAttach * inoremap <c-n> <c-x><c-o>

@@ -5,9 +5,9 @@ set termguicolors
 
 " highlight current line
 set cursorline
-hi! LineNr       cterm=none ctermfg=242 gui=none guifg=#6c6c6c
-hi! CursorLine   cterm=None ctermbg=238 gui=none guibg=#444444
-hi! CursorLineNr cterm=none ctermfg=11  gui=none guifg=#fffe00
+hi! LineNr       cterm=NONE ctermfg=242 gui=NONE guifg=#6c6c6c
+hi! CursorLine   cterm=NONE ctermbg=238 gui=NONE guibg=#444444
+hi! CursorLineNr cterm=NONE ctermfg=11  gui=NONE guifg=#fffe00
 
 " matching paren highlighting
 hi! MatchParenActive cterm=bold ctermbg=81 ctermfg=232 gui=bold guibg=#5fd7ff guifg=#08080a
@@ -16,20 +16,17 @@ au InsertEnter * hi clear MatchParen
 au InsertLeave * hi! link MatchParen MatchParenActive
 
 " style vertical split line
-hi! VertSplit cterm=None ctermfg=240 ctermbg=None gui=None guifg=#585858
+hi! VertSplit cterm=NONE ctermfg=240 ctermbg=NONE gui=NONE guifg=#585858
 hi! clear StatusLine
 hi! clear StatusLineNC
-" hack - if StatusLine == StatusLineNC vim fills empty space with carets
-" we don't want that so we change one of them slightly
-hi StatusLine gui=italic
 
-hi lightBlue			cterm=none ctermfg=81 gui=none guifg=#59d0fd
-hi! Normal			cterm=none ctermfg=254 gui=none guifg=#e5e5e5
-hi! Keyword			cterm=none ctermfg=11 gui=none guifg=#fffe00
-hi! Type			cterm=none ctermfg=121 gui=none guifg=#87ffaf
-hi! Comment			cterm=none ctermfg=14 gui=none guifg=#00ffff
-hi! Constant			cterm=none ctermfg=13 gui=none guifg=#ff00ff
-hi! Title			cterm=none ctermfg=13 gui=none guifg=#ff00ff
+hi lightBlue			cterm=NONE ctermfg=81 gui=NONE guifg=#59d0fd
+hi! Normal			cterm=NONE ctermfg=254 ctermbg=NONE gui=NONE guifg=#e5e5e5 guibg=NONE
+hi! Keyword			cterm=NONE ctermfg=11 gui=NONE guifg=#fffe00
+hi! Type			cterm=NONE ctermfg=121 gui=NONE guifg=#87ffaf
+hi! Comment			cterm=NONE ctermfg=14 gui=NONE guifg=#00ffff
+hi! Constant			cterm=NONE ctermfg=13 gui=NONE guifg=#ff00ff
+hi! Title			cterm=NONE ctermfg=13 gui=NONE guifg=#ff00ff
 hi! @text.emphasis		cterm=italic gui=italic
 hi! @text.strong		cterm=bold gui=bold
 hi! @punctuation.special	ctermfg=11
@@ -83,7 +80,7 @@ hi! link @comment.error		Search
 
 " make floating windows not hideous
 hi! NormalFloat cterm=bold ctermfg=white ctermbg=235 gui=bold guifg=white guibg=#262626
-hi! Pmenu cterm=none ctermfg=245 ctermbg=235 gui=none guibg=#262626 guifg=#738589
+hi! Pmenu cterm=NONE ctermfg=245 ctermbg=235 gui=NONE guibg=#262626 guifg=#738589
 hi! PmenuSel ctermfg=cyan ctermbg=240 guifg=cyan guibg=#738589
 hi! PmenuThumb ctermbg=245 guibg=#738589
 hi! link PmenuSbar Normal
@@ -97,4 +94,4 @@ hi! clear DiagnosticUnderlineHint
 
 " as far as I can tell this is just annoying in LSP windows and doesn't do
 " anything useful
-hi! Error ctermfg=9 ctermbg=none guifg=Red guibg=none
+hi! Error ctermfg=9 ctermbg=NONE guifg=Red guibg=NONE

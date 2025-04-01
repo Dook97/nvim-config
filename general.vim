@@ -42,8 +42,7 @@ function! CppNoTemplateIndent()
     endif
     return l:retv
 endfunction
-
-autocmd BufEnter *.{cpp,hpp} setlocal indentexpr=CppNoTemplateIndent()
+au BufEnter *.{cpp,hpp} setlocal indentexpr=CppNoTemplateIndent()
 
 " Splits open at the bottom and right
 set splitbelow splitright
@@ -103,3 +102,19 @@ au VimResized * execute "norm! \<c-w>="
 
 " .h files are C not C++
 let g:c_syntax_for_h = 1
+
+set winborder=rounded
+
+" hide context lines when in cmdline/search so that we have a clear view of
+" what we're doing
+au CmdlineEnter,CmdlineLeave * :TSContextToggle
+
+function! Lspreload_fun()
+	lua vim.lsp.stop_client(vim.lsp.get_clients({bufnr = vim.api.nvim_get_current_buf()}))
+	sleep 100m
+	edit
+endfunction
+command! LspReload call Lspreload_fun()
+
+set completeopt=fuzzy,menuone,noselect,popup,preview
+set pumheight=7
