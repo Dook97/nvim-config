@@ -171,9 +171,10 @@ require('colorizer').setup {
   }
 }
 
--- show lsp diagnostic text
 vim.diagnostic.config({
+  -- show lsp diagnostic text
   virtual_text = true,
+  -- diagnostic messages are highlighted via line numbers instead of signcolumn
   signs = {
       text = {
           [vim.diagnostic.severity.ERROR] = '',
@@ -186,6 +187,7 @@ vim.diagnostic.config({
   },
 })
 
+-- enable nvim built-in lsp autocompletion and make it always display suggestions
 vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(ev)
     local client = assert(vim.lsp.get_client_by_id(ev.data.client_id))
@@ -196,13 +198,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
       end
     })
     vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
-
-    vim.keymap.set('n', '<space>e', '<cmd>lua vim.diagnostic.setloclist({severity="error"})<CR>', { buffer = ev.buf })
-    vim.keymap.set('n', '<space>E', vim.diagnostic.setloclist, { buffer = ev.buf })
-    vim.keymap.set('n', 'grd', vim.lsp.buf.definition, { buffer = ev.buf })
-    vim.keymap.set('n', 'grD', vim.lsp.buf.declaration, { buffer = ev.buf })
-    vim.keymap.set('i', '<c-n>', '<c-x><c-o>', { buffer = ev.buf })
-  end,
+  end
 })
 
 vim.lsp.config('*', {

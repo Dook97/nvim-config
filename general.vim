@@ -98,17 +98,20 @@ augroup END
 " disable right click popup menu
 set mousemodel=extend
 
+" automatically normalize window sizes when neovim gets resized
 au VimResized * execute "norm! \<c-w>="
 
 " .h files are C not C++
 let g:c_syntax_for_h = 1
 
+" floating window border style
 set winborder=rounded
 
 " hide context lines when in cmdline/search so that we have a clear view of
 " what we're doing
 au CmdlineEnter,CmdlineLeave * :TSContextToggle
 
+" hacky function to restart lspserver
 function! Lspreload_fun()
 	lua vim.lsp.stop_client(vim.lsp.get_clients({bufnr = vim.api.nvim_get_current_buf()}))
 	sleep 100m
@@ -116,5 +119,24 @@ function! Lspreload_fun()
 endfunction
 command! LspReload call Lspreload_fun()
 
+" insert mode completion options
 set completeopt=fuzzy,menuone,noselect,popup,preview
 set pumheight=7
+
+" <c-x><c-f> complete menu stays open as long as you accept tokens
+" no need to reopen it for every directory when completing longer paths
+lua <<EOF
+local function simulate_keypress(key)
+  local termcodes = vim.api.nvim_replace_termcodes(key, true, false, true)
+  vim.api.nvim_feedkeys(termcodes, 'm', false)
+end
+
+vim.api.nvim_create_autocmd('CompleteDone', {
+  callback = function()
+    if vim.v.event.complete_type == "files" and vim.v.event.reason == "accept" then
+        simulate_keypress('<c-x>')
+        simulate_keypress('<c-f>')
+    end
+  end
+})
+EOF
