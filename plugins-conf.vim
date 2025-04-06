@@ -188,15 +188,20 @@ vim.diagnostic.config({
 
 vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(ev)
-    local client = vim.lsp.get_client_by_id(ev.data.client_id)
-    if client:supports_method('textDocument/completion') then
-      vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
-    end
+    local client = assert(vim.lsp.get_client_by_id(ev.data.client_id))
+    vim.api.nvim_create_autocmd({ 'TextChangedI' }, {
+      buffer = ev.buf,
+      callback = function()
+        vim.lsp.completion.get()
+      end
+    })
+    vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
 
     vim.keymap.set('n', '<space>e', '<cmd>lua vim.diagnostic.setloclist({severity="error"})<CR>', { buffer = ev.buf })
     vim.keymap.set('n', '<space>E', vim.diagnostic.setloclist, { buffer = ev.buf })
     vim.keymap.set('n', 'grd', vim.lsp.buf.definition, { buffer = ev.buf })
     vim.keymap.set('n', 'grD', vim.lsp.buf.declaration, { buffer = ev.buf })
+    vim.keymap.set('i', '<c-n>', '<c-x><c-o>', { buffer = ev.buf })
   end,
 })
 

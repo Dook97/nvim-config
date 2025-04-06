@@ -85,4 +85,20 @@ vnoremap <C-d> <cmd>call smoothie#do("\<C-D>")<CR>
 nnoremap <C-u> <cmd>call smoothie#do("\<C-u>")<CR>
 vnoremap <C-u> <cmd>call smoothie#do("\<C-u>")<CR>
 
-au LspAttach * inoremap <c-n> <c-x><c-o>
+" <c-x><c-f> complete menu stays open as long as you accept tokens
+" no need to reopen it for every directory when completing longer paths
+lua <<EOF
+local function simulate_keypress(key)
+  local termcodes = vim.api.nvim_replace_termcodes(key, true, false, true)
+  vim.api.nvim_feedkeys(termcodes, 'm', false)
+end
+
+vim.api.nvim_create_autocmd('CompleteDone', {
+  callback = function()
+    if vim.v.event.complete_type == "files" and vim.v.event.reason == "accept" then
+        simulate_keypress('<c-x>')
+        simulate_keypress('<c-f>')
+    end
+  end
+})
+EOF
