@@ -97,3 +97,11 @@ vim.api.nvim_create_autocmd('LspAttach', {
   end
 })
 EOF
+
+" no comment on new line
+autocmd BufEnter * setlocal formatoptions-=cro
+
+" comment below/above/at the end of current line
+nnoremap gco o<esc>"=&commentstring<cr>p0$hC
+nnoremap gcO O<esc>"=&commentstring<cr>p0$hC
+nnoremap gcA A<space><esc>"=&commentstring<cr>p$hC
