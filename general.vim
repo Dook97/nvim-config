@@ -133,10 +133,33 @@ end
 
 vim.api.nvim_create_autocmd('CompleteDone', {
   callback = function()
-    if vim.v.event.complete_type == "files" and vim.v.event.reason == "accept" then
+    local e = vim.v.event
+    if e.complete_type == "files" and e.reason == "accept" then
         simulate_keypress('<c-x>')
         simulate_keypress('<c-f>')
     end
   end
 })
 EOF
+
+" fix vimscript commentstring - no idea why it's misconfigured by default
+au FileType vim setlocal commentstring=\"\ %s
+
+" fallback commentstring
+au BufEnter * if empty(&commentstring) | setlocal commentstring=\#\ %s
+
+" no comment on new line
+au VimEnter * set formatoptions-=cro
+
+" automatically update hugo content dates
+function! HugoTimeUpdate()
+    let currPos = getpos(".")
+    if search('^draft = true$')
+	/\v^date \= '\zs([^']*)\ze'$/s//\=substitute(system('date -I'), '\n', '', 'g')/
+    endif
+    if search('^lastmod = ')
+	/\v^lastmod \= '\zs([^']*)\ze'$/s//\=substitute(system('date -I'), '\n', '', 'g')/
+    endif
+    cal cursor(currPos[1], currPos[2])
+endfunction
+au BufWritePre content/*.md call HugoTimeUpdate()

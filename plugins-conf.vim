@@ -29,7 +29,6 @@ Plug 'nvim-treesitter/nvim-treesitter-context'               " show current func
 Plug 'nvim-lua/plenary.nvim'                                 " Telescope prerequisite
 Plug 'nvim-telescope/telescope.nvim', {'branch': '0.1.x'}    " conveniently search buffers, files & whatever else
 Plug 'shirosaki/tabular', { 'branch': 'fix_leading_spaces' } " multiline alignment plugin
-Plug 'andis-sprinkis/lf-vim'                                 " lfrc syntax highlighting
 call plug#end()
 
 let g:smoothie_no_default_mappings = 1
@@ -187,16 +186,10 @@ vim.diagnostic.config({
   },
 })
 
--- enable nvim built-in lsp autocompletion and make it always display suggestions
+-- enable nvim built-in lsp autocompletion
 vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(ev)
     local client = assert(vim.lsp.get_client_by_id(ev.data.client_id))
-    vim.api.nvim_create_autocmd({ 'TextChangedI' }, {
-      buffer = ev.buf,
-      callback = function()
-        vim.lsp.completion.get()
-      end
-    })
     vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
   end
 })

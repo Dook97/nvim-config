@@ -52,14 +52,6 @@ nnoremap YY "+yy
 " netrw (file explorer)
 nnoremap <leader>n :Explore<CR>
 
-" switch to next buffer
-nnoremap <C-n> :bn<CR>
-nnoremap <C-p> :bp<CR>
-
-" unfuck python commenting
-au FileType python nnoremap gco o#<space>
-au FileType python nnoremap gcO O#<space>
-
 " paste over a selection without changing contents of the unnamed register
 vnoremap <leader>p "_dP
 
@@ -97,9 +89,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
   end
 })
 EOF
-
-" no comment on new line
-autocmd BufEnter * setlocal formatoptions-=cro
 
 " comment below/above/at the end of current line
 nnoremap gco o<esc>"=&commentstring<cr>p0$hC
