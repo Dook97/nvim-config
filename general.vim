@@ -151,8 +151,8 @@ au BufEnter * if empty(&commentstring) | setlocal commentstring=\#\ %s
 " no comment on new line
 au VimEnter * set formatoptions-=cro
 
-" automatically update hugo content dates
-function! HugoTimeUpdate()
+" update hugo content dates
+function! HugoTimeUpdate_f()
     let currPos = getpos(".")
     if search('^draft = true$')
 	/\v^date \= '\zs([^']*)\ze'$/s//\=substitute(system('date -I'), '\n', '', 'g')/
@@ -162,4 +162,6 @@ function! HugoTimeUpdate()
     endif
     cal cursor(currPos[1], currPos[2])
 endfunction
-au BufWritePre content/*.md call HugoTimeUpdate()
+command! HugoTimeUpdate call HugoTimeUpdate_f()
+
+au FileType markdown setlocal tw=80

@@ -91,6 +91,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
 EOF
 
 " comment below/above/at the end of current line
-nnoremap gco o<esc>"=&commentstring<cr>p0$hC
-nnoremap gcO O<esc>"=&commentstring<cr>p0$hC
-nnoremap gcA A<space><esc>"=&commentstring<cr>p$hC
+nnoremap gco o<esc>"=&commentstring<cr>p0$F%c2l
+nnoremap gcO O<esc>"=&commentstring<cr>p0$F%c2l
+nnoremap gcA A<space><esc>"=&commentstring<cr>p$F%c2l
