@@ -3,7 +3,6 @@ colorscheme dook2
 
 filetype plugin on
 set smartindent
-au FileType python set nosmartindent " smartindent doesn't play well with python comments
 set fileencoding=utf-8
 
 " set window title
@@ -79,9 +78,6 @@ set fillchars+=eob:\ ,
 " hack to put cursor at the beggining of a tab instead of the end
 set list lcs=tab:\ \ ,
 
-" remove annoying LSP error/warning column
-set scl=no
-
 " Automatically deletes all trailing whitespace and newlines at end of file on save
 au BufWritePre * let currPos = getpos(".")
 au BufWritePre * %s/\s\+$//e
@@ -142,9 +138,6 @@ vim.api.nvim_create_autocmd('CompleteDone', {
 })
 EOF
 
-" fix vimscript commentstring - no idea why it's misconfigured by default
-au FileType vim setlocal commentstring=\"\ %s
-
 " fallback commentstring
 au BufEnter * if empty(&commentstring) | setlocal commentstring=\#\ %s
 
@@ -163,5 +156,3 @@ function! HugoTimeUpdate_f()
     cal cursor(currPos[1], currPos[2])
 endfunction
 command! HugoTimeUpdate call HugoTimeUpdate_f()
-
-au FileType markdown setlocal tw=80

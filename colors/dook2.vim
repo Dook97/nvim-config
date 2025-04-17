@@ -42,6 +42,7 @@ hi! TreesitterContext		guibg=#265601
 hi! manSubHeading		guifg=Magenta
 hi! Added			guifg=#19d50c
 hi! Removed			guifg=Red
+hi! SpellBad			guibg=#800000
 
 hi! clear PreProc
 hi! clear Define

@@ -29,7 +29,6 @@ Plug 'nvim-treesitter/nvim-treesitter-context'               " show current func
 Plug 'nvim-lua/plenary.nvim'                                 " Telescope prerequisite
 Plug 'nvim-telescope/telescope.nvim', {'branch': '0.1.x'}    " conveniently search buffers, files & whatever else
 Plug 'shirosaki/tabular', { 'branch': 'fix_leading_spaces' } " multiline alignment plugin
-Plug 'aidanalr/daily-bible.nvim'
 call plug#end()
 
 let g:smoothie_no_default_mappings = 1
@@ -98,8 +97,6 @@ let g:lightline.tabline_subseparator  = { 'left': '', 'right': '' }
 call lightline#lsp#register()
 
 lua << EOF
-
-require('dailybible').setup({ mode = 'random' })
 
 -- treesitter config
 require('nvim-treesitter.configs').setup {
