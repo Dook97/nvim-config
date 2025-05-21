@@ -175,31 +175,11 @@ vim.diagnostic.config({
   virtual_text = true,
   -- diagnostic messages are highlighted via line numbers instead of signcolumn
   signs = {
-      text = {
-          [vim.diagnostic.severity.ERROR] = '',
-          [vim.diagnostic.severity.WARN] = '',
-      },
-      numhl = {
-          [vim.diagnostic.severity.ERROR] = 'DiagnosticLineNrError',
-          [vim.diagnostic.severity.WARN] = 'DiagnosticLineNrWarn',
-      },
+    numhl = {
+      [vim.diagnostic.severity.ERROR] = 'DiagnosticLineNrError',
+      [vim.diagnostic.severity.WARN] = 'DiagnosticLineNrWarn',
+    },
   },
-})
-
--- enable nvim built-in lsp autocompletion
-vim.api.nvim_create_autocmd('LspAttach', {
-  callback = function(ev)
-    ---[[Code required to activate autocompletion and trigger it on each keypress
-    local client = assert(vim.lsp.get_client_by_id(ev.data.client_id))
-    client.server_capabilities.completionProvider.triggerCharacters = vim.split("qwertyuiopasdfghjklzxcvbnm. ", "")
-    vim.api.nvim_create_autocmd({ 'TextChangedI' }, {
-      buffer = ev.buf,
-      callback = function()
-        vim.lsp.completion.get()
-      end
-    })
-    vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
-  end,
 })
 
 vim.lsp.config('*', {

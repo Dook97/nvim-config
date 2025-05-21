@@ -156,3 +156,8 @@ function! HugoTimeUpdate_f()
     cal cursor(currPos[1], currPos[2])
 endfunction
 command! HugoTimeUpdate call HugoTimeUpdate_f()
+
+" avoid artifacts after shell job suspension
+autocmd FocusGained,VimResume * checktime | redraw!
+
+set signcolumn=no

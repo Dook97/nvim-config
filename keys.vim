@@ -85,12 +85,14 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', '<space>E', vim.diagnostic.setloclist, { buffer = ev.buf })
     vim.keymap.set('n', 'grd', vim.lsp.buf.definition, { buffer = ev.buf })
     vim.keymap.set('n', 'grD', vim.lsp.buf.declaration, { buffer = ev.buf })
-    vim.keymap.set('i', '<c-n>', '<c-x><c-o>', { buffer = ev.buf })
   end
 })
 EOF
 
 " comment below/above/at the end of current line
-nnoremap gco o<esc>"=&commentstring<cr>p0$F%c2l
-nnoremap gcO O<esc>"=&commentstring<cr>p0$F%c2l
+nnoremap gco o<c-r>=&commentstring<cr><esc>$F%c2l
+nnoremap gcO O<c-r>=&commentstring<cr><esc>$F%c2l
 nnoremap gcA A<space><esc>"=&commentstring<cr>p$F%c2l
+
+" keep cursor in place when joining lines
+nnoremap J mzJ`z:delmarks z<CR>
