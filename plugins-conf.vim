@@ -29,6 +29,7 @@ Plug 'nvim-treesitter/nvim-treesitter-context'               " show current func
 Plug 'nvim-lua/plenary.nvim'                                 " Telescope prerequisite
 Plug 'nvim-telescope/telescope.nvim', {'branch': '0.1.x'}    " conveniently search buffers, files & whatever else
 Plug 'shirosaki/tabular', { 'branch': 'fix_leading_spaces' } " multiline alignment plugin
+Plug 'vim-scripts/AutoComplPop'                              " automatically suggest completions while typing
 call plug#end()
 
 let g:smoothie_no_default_mappings = 1
