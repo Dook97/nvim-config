@@ -141,9 +141,6 @@ EOF
 " fallback commentstring
 au BufEnter * if empty(&commentstring) | setlocal commentstring=\#\ %s
 
-" it doesnt work when I put it in ftplugin/vim.vim 4 some reason
-au FileType vim setlocal commentstring=\"\ %s
-
 " no comment on new line
 au VimEnter * set formatoptions-=cro
 

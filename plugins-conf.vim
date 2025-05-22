@@ -61,7 +61,7 @@ endfunction
 function! LightlineFilename()
   return GetPluginName() !=# '' ? GetPluginName()
   \ : expand('%') ==# '' ? '[NO NAME]'
-  \ : (winwidth(0) > 60 ? expand('%:p:~')
+  \ : (winwidth(0) > 60 ? fnamemodify(expand('%'), ':~:.')
   \ : expand('%:t')) . (&modified ? ' +' : '')
 endfunction
 
