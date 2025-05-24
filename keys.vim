@@ -18,15 +18,31 @@ inoremap [ []<Left>
 inoremap " ""<Left>
 inoremap ` ``<Left>
 
-" kill buffer
-function! Qkey_func()
+function! SmartQuit()
+	" 1. If there's only one listed buffer and one window, quit Neovim
 	if len(getbufinfo({'buflisted':1})) == 1
 		quit!
-	else
-		bdelete!
+		return
 	endif
+
+	" 2. If current buffer is shown in more than one window, close just the window
+	let buf = bufnr('%')
+	let win_count = 0
+	for w in range(1, winnr('$'))
+		if winbufnr(w) == buf
+			let win_count += 1
+		endif
+	endfor
+	if win_count > 1
+		close!
+		return
+	endif
+
+	" 3. Otherwise, wipe the buffer and close the window
+	bdelete!
 endfunction
-nnoremap <leader>q :call Qkey_func()<CR>
+nnoremap <leader>q :call SmartQuit()<CR>
+
 
 " kill all buffers
 nnoremap <leader>Q :qa!<CR>
@@ -96,3 +112,10 @@ nnoremap gcA A<space><esc>"=&commentstring<cr>p$F%c2l
 
 " keep cursor in place when joining lines
 nnoremap J mzJ`z:delmarks z<CR>
+
+" open lsp token definiton in vertical split
+nnoremap <c-w>[ :vsplit<cr>:lua vim.lsp.buf.definition()<cr>
+
+" autocompletion accept/reject
+inoremap <c-j> <c-y>
+inoremap <c-l> <c-e>

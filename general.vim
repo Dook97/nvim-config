@@ -25,24 +25,6 @@ set nowrap
 set cinoptions+=:0,g0,N-s
 set cinkeys-=0#
 
-" Don't indent template
-function! CppNoTemplateIndent()
-    let l:cline_num = line('.')
-    let l:pline_num = prevnonblank(l:cline_num - 1)
-    let l:pline = getline(l:pline_num)
-    while l:pline =~# '\(^\s*{\s*\|^\s*//\|^\s*/\*\|\*/\s*$\)'
-        let l:pline_num = prevnonblank(l:pline_num - 1)
-        let l:pline = getline(l:pline_num)
-    endwhile
-    let l:retv = cindent('.')
-    let l:pindent = indent(l:pline_num)
-    if l:pline =~# '^\s*template'
-        let l:retv = l:pindent
-    endif
-    return l:retv
-endfunction
-au BufEnter *.{cpp,hpp} setlocal indentexpr=CppNoTemplateIndent()
-
 " Splits open at the bottom and right
 set splitbelow splitright
 
@@ -84,21 +66,11 @@ au BufWritePre * %s/\s\+$//e
 au BufWritePre * %s/\n\+\%$//e
 au BufWritePre * cal cursor(currPos[1], currPos[2])
 
-" automatically organize imports on write and format
-augroup gostuff
-	au!
-	au BufWritePre *.go lua vim.lsp.buf.format()
-	au BufWritePre *.go lua vim.lsp.buf.code_action({ context = { only = { 'source.organizeImports' } }, apply = true })
-augroup END
-
 " disable right click popup menu
 set mousemodel=extend
 
 " automatically normalize window sizes when neovim gets resized
 au VimResized * execute "norm! \<c-w>="
-
-" .h files are C not C++
-let g:c_syntax_for_h = 1
 
 " floating window border style
 set winborder=rounded
@@ -122,7 +94,7 @@ set pumheight=7
 " <c-x><c-f> complete menu stays open as long as you accept tokens
 " no need to reopen it for every directory when completing longer paths
 au CompleteDone * if v:event.complete_type ==# "files" && v:event.reason ==# "accept"
-    \ | call feedkeys("\<c-x>\<c-f>")
+    \ | call feedkeys("\<c-x>\<c-f>", "n")
 
 " fallback commentstring
 au BufEnter * if empty(&commentstring) | setlocal commentstring=\#\ %s
@@ -143,7 +115,8 @@ function! HugoTimeUpdate_f()
 endfunction
 command! HugoTimeUpdate call HugoTimeUpdate_f()
 
-" avoid artifacts after shell job suspension
-autocmd FocusGained,VimResume * checktime | redraw!
-
 set signcolumn=no
+
+set iskeyword+=-
+
+set sessionoptions-=blank
