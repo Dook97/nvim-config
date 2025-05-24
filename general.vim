@@ -121,22 +121,8 @@ set pumheight=7
 
 " <c-x><c-f> complete menu stays open as long as you accept tokens
 " no need to reopen it for every directory when completing longer paths
-lua <<EOF
-local function simulate_keypress(key)
-  local termcodes = vim.api.nvim_replace_termcodes(key, true, false, true)
-  vim.api.nvim_feedkeys(termcodes, 'm', false)
-end
-
-vim.api.nvim_create_autocmd('CompleteDone', {
-  callback = function()
-    local e = vim.v.event
-    if e.complete_type == "files" and e.reason == "accept" then
-        simulate_keypress('<c-x>')
-        simulate_keypress('<c-f>')
-    end
-  end
-})
-EOF
+au CompleteDone * if v:event.complete_type ==# "files" && v:event.reason ==# "accept"
+    \ | call feedkeys("\<c-x>\<c-f>")
 
 " fallback commentstring
 au BufEnter * if empty(&commentstring) | setlocal commentstring=\#\ %s

@@ -1,1 +1,1 @@
-setlocal iskeyword=@-@,:,a-z,A-Z,48-57,_,.,-
+setlocal iskeyword=a-z,A-Z,48-57,_,-

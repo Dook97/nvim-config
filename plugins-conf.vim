@@ -101,22 +101,17 @@ lua << EOF
 
 -- treesitter config
 require('nvim-treesitter.configs').setup {
-  -- A list of parser names, or "all"
   ensure_installed = {
     "c", "cpp", "go", "javascript", "json", "latex", "python", "comment",
     "typescript", "c_sharp", "haskell", "markdown", "markdown_inline",
     "make", "html", "gitignore", "gitcommit", "arduino", "yaml", "sql",
     "css", "dockerfile", "bash", "rust", "query", "lua"
   },
-
-  -- Install parsers synchronously (only applied to `ensure_installed`)
   sync_install = false,
-
   highlight = {
     enable = true,
     additional_vim_regex_highlighting = false,
   },
-
   textobjects = {
     select = {
       enable = true,
@@ -135,7 +130,6 @@ require('nvim-treesitter.configs').setup {
         ["aC"] = "@comment.outer",
       },
     },
-
     move = {
       enable = true,
       set_jumps = true, -- whether to set jumps in the jumplist
@@ -172,7 +166,6 @@ require('colorizer').setup {
 }
 
 vim.diagnostic.config({
-  -- show lsp diagnostic text
   virtual_text = true,
   -- diagnostic messages are highlighted via line numbers instead of signcolumn
   signs = {
