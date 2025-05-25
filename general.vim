@@ -61,10 +61,12 @@ set fillchars+=eob:\ ,
 set list lcs=tab:\ \ ,
 
 " Automatically deletes all trailing whitespace and newlines at end of file on save
-au BufWritePre * let currPos = getpos(".")
-au BufWritePre * %s/\s\+$//e
-au BufWritePre * %s/\n\+\%$//e
-au BufWritePre * cal cursor(currPos[1], currPos[2])
+function! Trim_whitespace()
+	let currPos = getpos(".")
+	%s/\v(\s+$|\n+%$)//e
+	call cursor(currPos[1], currPos[2])
+endfunction
+au BufWritePre * call Trim_whitespace()
 
 " disable right click popup menu
 set mousemodel=extend
@@ -94,7 +96,7 @@ set pumheight=7
 " <c-x><c-f> complete menu stays open as long as you accept tokens
 " no need to reopen it for every directory when completing longer paths
 au CompleteDone * if v:event.complete_type ==# "files" && v:event.reason ==# "accept"
-    \ | call feedkeys("\<c-x>\<c-f>", "n")
+	\ | call feedkeys("\<c-x>\<c-f>", "n")
 
 " fallback commentstring
 au BufEnter * if empty(&commentstring) | setlocal commentstring=\#\ %s
@@ -104,19 +106,25 @@ au VimEnter * set formatoptions-=cro
 
 " update hugo content dates
 function! HugoTimeUpdate_f()
-    let currPos = getpos(".")
-    if search('^draft = true$')
-	/\v^date \= '\zs([^']*)\ze'$/s//\=substitute(system('date -I'), '\n', '', 'g')/
-    endif
-    if search('^lastmod = ')
-	/\v^lastmod \= '\zs([^']*)\ze'$/s//\=substitute(system('date -I'), '\n', '', 'g')/
-    endif
-    cal cursor(currPos[1], currPos[2])
+	let currPos = getpos(".")
+	if search('^draft = true$')
+		/\v^date \= '\zs([^']*)\ze'$/s//\=substitute(system('date -I'), '\n', '', 'g')/
+	endif
+	if search('^lastmod = ')
+		/\v^lastmod \= '\zs([^']*)\ze'$/s//\=substitute(system('date -I'), '\n', '', 'g')/
+	endif
+	call cursor(currPos[1], currPos[2])
 endfunction
 command! HugoTimeUpdate call HugoTimeUpdate_f()
 
+" disable dumb bloat
 set signcolumn=no
 
-set iskeyword+=-
-
+" don's save empty windows on :mksession
 set sessionoptions-=blank
+
+" see ftplugin/TelescopePrompt.vim for why this is necessary
+au BufLeave * if &ft ==# 'TelescopePrompt' | call acp#enable()
+" lightline gets broken after telescope selection, so redraw
+au BufLeave * if &ft ==# 'TelescopePrompt' |
+	\ lua vim.schedule(function() vim.cmd('call lightline#update()') end)

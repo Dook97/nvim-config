@@ -26,7 +26,7 @@ Plug 'nvim-treesitter/nvim-treesitter-textobjects'           " define bindings f
 Plug 'psliwka/vim-smoothie'                                  " smooth scrolling
 Plug 'norcalli/nvim-colorizer.lua'                           " css colors preview
 Plug 'nvim-treesitter/nvim-treesitter-context'               " show current function name when scrolling
-Plug 'nvim-lua/plenary.nvim'                                 " Telescope prerequisite
+Plug 'nvim-lua/plenary.nvim'                                 " Telescope prerequisite; manually apply this https://github.com/nvim-lua/plenary.nvim/pull/649/commits/7750bc895a1f06aa7a940f5aea43671a74143be0
 Plug 'nvim-telescope/telescope.nvim', {'branch': '0.1.x'}    " conveniently search buffers, files & whatever else
 Plug 'shirosaki/tabular', { 'branch': 'fix_leading_spaces' } " multiline alignment plugin
 Plug 'vim-scripts/AutoComplPop'                              " automatically suggest completions while typing
@@ -102,7 +102,7 @@ lua << EOF
 -- treesitter config
 require('nvim-treesitter.configs').setup {
   ensure_installed = {
-    "c", "cpp", "go", "javascript", "json", "latex", "python", "comment",
+    "c", "cpp", "go", "javascript", "json", "python", "comment",
     "typescript", "c_sharp", "haskell", "markdown", "markdown_inline",
     "make", "html", "gitignore", "gitcommit", "arduino", "yaml", "sql",
     "css", "dockerfile", "bash", "rust", "query", "lua"
