@@ -79,15 +79,7 @@ set winborder=rounded
 
 " hide context lines when in cmdline/search so that we have a clear view of
 " what we're doing
-au CmdlineEnter,CmdlineLeave * :TSContextToggle
-
-" hacky function to restart lspserver
-function! Lspreload_fun()
-	lua vim.lsp.stop_client(vim.lsp.get_clients({bufnr = vim.api.nvim_get_current_buf()}))
-	sleep 100m
-	edit
-endfunction
-command! LspReload call Lspreload_fun()
+au CmdlineEnter,CmdlineLeave * :TSContext toggle
 
 " insert mode completion options
 set completeopt=fuzzy,menuone,noselect,popup,preview
@@ -120,7 +112,7 @@ command! HugoTimeUpdate call HugoTimeUpdate_f()
 " disable dumb bloat
 set signcolumn=no
 
-" don's save empty windows on :mksession
+" don't save empty windows on :mksession
 set sessionoptions-=blank
 
 " see ftplugin/TelescopePrompt.vim for why this is necessary
@@ -128,3 +120,6 @@ au BufLeave * if &ft ==# 'TelescopePrompt' | call acp#enable()
 " lightline gets broken after telescope selection, so redraw
 au BufLeave * if &ft ==# 'TelescopePrompt' |
 	\ lua vim.schedule(function() vim.cmd('call lightline#update()') end)
+
+" briefly highlight yanked region
+au TextYankPost * lua vim.highlight.on_yank()

@@ -23,9 +23,9 @@ Plug 'josa42/nvim-lightline-lsp'                             " add err and warni
 Plug 'tpope/vim-sleuth'                                      " automatic indentation mode detection
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " a lot of functionality with ASTs
 Plug 'nvim-treesitter/nvim-treesitter-textobjects'           " define bindings for actions with AST text objects
+Plug 'nvim-treesitter/nvim-treesitter-context'               " show current function name when scrolling
 Plug 'psliwka/vim-smoothie'                                  " smooth scrolling
 Plug 'norcalli/nvim-colorizer.lua'                           " css colors preview
-Plug 'nvim-treesitter/nvim-treesitter-context'               " show current function name when scrolling
 Plug 'nvim-lua/plenary.nvim'                                 " Telescope prerequisite; manually apply this https://github.com/nvim-lua/plenary.nvim/pull/649/commits/7750bc895a1f06aa7a940f5aea43671a74143be0
 Plug 'nvim-telescope/telescope.nvim', {'branch': '0.1.x'}    " conveniently search buffers, files & whatever else
 Plug 'shirosaki/tabular', { 'branch': 'fix_leading_spaces' } " multiline alignment plugin
@@ -184,5 +184,7 @@ vim.lsp.enable({'clangd'})
 vim.lsp.enable({'gopls'})
 vim.lsp.enable({'pyright'})
 vim.lsp.enable({'ruff'})
+
+require('treesitter-context').setup({enable=true})
 
 EOF

@@ -117,6 +117,34 @@ nnoremap grD <cmd>lua vim.lsp.buf.declaration()<cr>
 nnoremap grr <cmd>lua require('telescope.builtin').lsp_references({show_line=false})<cr>
 nnoremap gre <cmd>lua require('telescope.builtin').diagnostics({bufnr=0})<cr>
 nnoremap <c-w>[ :vsplit<cr>:lua vim.lsp.buf.definition()<cr>
+lua <<EOF
+vim.api.nvim_create_user_command('LspStop', function() vim.lsp.stop_client(vim.lsp.get_clients()) end, {})
+vim.api.nvim_create_user_command(
+  "LspRestart",
+  function(kwargs)
+    local name = kwargs.fargs[1]
+    for _, client in ipairs(vim.lsp.get_clients({ name = name })) do
+      local bufs = vim.lsp.get_buffers_by_client_id(client.id)
+      client:stop()
+      vim.wait(30000, function()
+        return vim.lsp.get_client_by_id(client.id) == nil
+      end)
+      local client_id = vim.lsp.start(client.config, { attach = false })
+      if client_id then
+        for _, buf in ipairs(bufs) do
+          vim.lsp.buf_attach_client(buf, client_id)
+        end
+      end
+    end
+  end,
+  {
+    nargs = "?",
+    complete = function()
+      return vim.tbl_map(function(c) return c.name end, vim.lsp.get_clients())
+    end
+  }
+)
+EOF
 
 " comment below/above/at the end of current line
 nnoremap gco o<c-r>=&commentstring<cr><esc>$F%c2l
