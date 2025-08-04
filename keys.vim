@@ -147,9 +147,9 @@ vim.api.nvim_create_user_command(
 EOF
 
 " comment below/above/at the end of current line
-nnoremap gco o<c-r>=&commentstring<cr><esc>$F%c2l
-nnoremap gcO O<c-r>=&commentstring<cr><esc>$F%c2l
-nnoremap gcA A<space><esc>"=&commentstring<cr>p$F%c2l
+nnoremap gco o<c-r>=&commentstring<cr><esc>$F%"_c2l
+nnoremap gcO O<c-r>=&commentstring<cr><esc>$F%"_c2l
+nnoremap gcA A<space><c-r>=&commentstring<cr><esc>$F%"_c2l
 
 " keep cursor in place when joining lines
 nnoremap J mzJ`z:delmarks z<CR>
@@ -160,3 +160,16 @@ inoremap <c-l> <c-e>
 
 nnoremap <Space> <Nop>
 vnoremap <Space> <Nop>
+
+" update hugo content dates
+function! HugoTimeUpdate_f()
+	let currPos = getpos(".")
+	if search('^draft = true$')
+		/\v^date \= '\zs([^']*)\ze'$/s//\=substitute(system('date -I'), '\n', '', 'g')/
+	endif
+	if search('^lastmod = ')
+		/\v^lastmod \= '\zs([^']*)\ze'$/s//\=substitute(system('date -I'), '\n', '', 'g')/
+	endif
+	call cursor(currPos[1], currPos[2])
+endfunction
+command! HugoTimeUpdate call HugoTimeUpdate_f()

@@ -1,6 +1,3 @@
-" custom colorscheme
-colorscheme dook2
-
 filetype plugin on
 set smartindent
 set fileencoding=utf-8
@@ -42,17 +39,13 @@ set timeoutlen=750
 
 " hybrid numbers - relative in normal mode, absolute in insert mode
 set nu rnu
-augroup numbertoggle
-	au BufEnter,InsertLeave,WinEnter,FocusGained * if &nu && mode() != "i" | set rnu   | endif
-	au BufLeave,InsertEnter,WinLeave,FocusLost   * if &nu                  | set nornu | endif
-	au TermOpen * setlocal nonu nornu
-augroup END
+au BufEnter,InsertLeave,WinEnter,FocusGained * if &nu && mode() != "i" | set rnu   | endif
+au BufLeave,InsertEnter,WinLeave,FocusLost   * if &nu                  | set nornu | endif
+au TermOpen * setlocal nonu nornu
 
 " remove line highlighting on defocus
-augroup linetoggle
-	au BufEnter,WinEnter,FocusGained * setlocal cursorline
-	au BufLeave,WinLeave,FocusLost   * setlocal nocursorline
-augroup END
+au BufEnter,WinEnter,FocusGained * setlocal cursorline
+au BufLeave,WinLeave,FocusLost   * setlocal nocursorline
 
 " hide end-of-buffer tildes
 set fillchars+=eob:\ ,
@@ -96,30 +89,37 @@ au BufEnter * if empty(&commentstring) | setlocal commentstring=\#\ %s
 " no comment on new line
 au VimEnter * set formatoptions-=cro
 
-" update hugo content dates
-function! HugoTimeUpdate_f()
-	let currPos = getpos(".")
-	if search('^draft = true$')
-		/\v^date \= '\zs([^']*)\ze'$/s//\=substitute(system('date -I'), '\n', '', 'g')/
-	endif
-	if search('^lastmod = ')
-		/\v^lastmod \= '\zs([^']*)\ze'$/s//\=substitute(system('date -I'), '\n', '', 'g')/
-	endif
-	call cursor(currPos[1], currPos[2])
-endfunction
-command! HugoTimeUpdate call HugoTimeUpdate_f()
-
 " disable dumb bloat
 set signcolumn=no
 
 " don't save empty windows on :mksession
 set sessionoptions-=blank
 
-" see ftplugin/TelescopePrompt.vim for why this is necessary
-au BufLeave * if &ft ==# 'TelescopePrompt' | call acp#enable()
 " lightline gets broken after telescope selection, so redraw
 au BufLeave * if &ft ==# 'TelescopePrompt' |
 	\ lua vim.schedule(function() vim.cmd('call lightline#update()') end)
 
 " briefly highlight yanked region
 au TextYankPost * lua vim.highlight.on_yank()
+
+" autocompletion
+set ac
+set complete=o,.,w,b,u
+lua <<EOF
+vim.api.nvim_create_autocmd("LspAttach", {
+  callback = function(ev)
+    vim.lsp.completion.enable(true, ev.data.client_id, ev.buf, {
+      convert = function(item)
+        local abbr = item.label
+        abbr = #abbr > 40 and abbr:sub(1, 39) .. "…" or abbr
+        local menu = item.detail or ""
+        menu = #menu > 40 and menu:sub(1, 39) .. "…" or menu
+        return { abbr = abbr, menu = menu }
+      end,
+    })
+  end,
+})
+EOF
+
+" see ftplugin/TelescopePrompt.vim for why this is necessary
+au BufLeave * if &ft ==# 'TelescopePrompt' | setlocal ac

@@ -116,3 +116,6 @@ hi! DiagnosticLineNrError ctermbg=red guibg=red ctermfg=white guifg=white
 hi! DiagnosticLineNrWarn ctermbg=136 guibg=#af8700 ctermfg=white guifg=white
 
 hi! DiagnosticError guifg=red
+
+hi! LightlineLeft_active_error guifg=white guibg=red
+hi! LightlineLeft_active_warning guifg=#222222 guibg=#cbac00
