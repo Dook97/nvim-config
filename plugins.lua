@@ -10,6 +10,7 @@ vim.pack.add({
   'psliwka/vim-smoothie',                                       -- smooth scrolling
   'norcalli/nvim-colorizer.lua',                                -- css colors preview
   'nvim-lua/plenary.nvim',                                      -- telescope prerequisite
+  'stevearc/conform.nvim',                                      -- ebin meta formatter thingy
   { src = 'nvim-telescope/telescope.nvim', version = '0.1.x' }, -- conveniently search buffers, files & whatever else
   { src = 'shirosaki/tabular', version = 'fix_leading_spaces' } -- multiline alignment
 })
@@ -114,10 +115,33 @@ vim.lsp.config('*', {
   root_markers = { '.git' },
 })
 
--- enable all configured servers
+-- enable all configured LSP servers
 local servers = vim.fn.systemlist([[ ls ${XDG_CONFIG_HOME}/nvim/lsp/ | sed -E 's/(.*)\\.lua$/\\1/' ]])
 for _, line in ipairs(servers) do
   vim.lsp.enable({line:match("(.+)%.lua$")})
 end
 
 require('treesitter-context').setup({enable=true})
+
+require("conform").setup({
+	formatters_by_ft = {
+		sh   = { "shfmt", "shellcheck" },
+		zsh  = { "shfmt", "shellcheck" },
+		bash = { "shfmt", "shellcheck" },
+		go   = { "gofmt" },
+		cs   = { "clang-format" },
+		js   = { "clang-format" },
+		java = { "clang-format" },
+		json = { "jq" },
+		lua  = { "stylua" },
+	},
+})
+
+-- use conform as gq for filetypes that have a formatter set
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = vim.tbl_keys(require("conform").formatters_by_ft),
+  group = vim.api.nvim_create_augroup('conform_formatexpr', { clear = true }),
+  callback = function()
+    vim.opt_local.formatexpr = 'v:lua.require("conform").formatexpr()'
+  end,
+})
