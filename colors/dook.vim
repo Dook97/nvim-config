@@ -95,6 +95,7 @@ hi! link qfLineNr		Normal
 hi! link @comment.todo		Search
 hi! link @comment.error		Search
 hi! link @markup.list		lightBlue
+hi! link @variable.parameter.bash NONE
 
 " make floating windows not hideous
 hi! NormalFloat	    gui=bold guifg=white guibg=#262626

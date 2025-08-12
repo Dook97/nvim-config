@@ -1,22 +1,21 @@
 vim.pack.add({
-	"tpope/vim-repeat",                                            -- enables . command for some plugins
-	"tpope/vim-surround",                                          -- super useful to (un)surround stuff
-	"itchyny/lightline.vim",                                       -- statusline
-	"josa42/nvim-lightline-lsp",                                   -- add err and warning sign to lightline
-	"tpope/vim-sleuth",                                            -- automatic indentation mode detection
-	"nvim-treesitter/nvim-treesitter",                             -- a lot of functionality with ASTs
-	"nvim-treesitter/nvim-treesitter-textobjects",                 -- define bindings for actions with AST text objects
-	"nvim-treesitter/nvim-treesitter-context",                     -- show current function name when scrolling
-	"psliwka/vim-smoothie",                                        -- smooth scrolling
-	"norcalli/nvim-colorizer.lua",                                 -- css colors preview
-	"nvim-lua/plenary.nvim",                                       -- telescope prerequisite
-	"stevearc/conform.nvim",                                       -- ebin meta formatter thingy
-	{ src = "nvim-telescope/telescope.nvim", version = "0.1.x" },  -- conveniently search buffers, files & whatever else
-	{ src = "shirosaki/tabular", version = "fix_leading_spaces" }, -- multiline alignment
+	"github.com/kylechui/nvim-surround",                                      -- (un)surround stuff
+	"github.com/itchyny/lightline.vim",                                       -- statusline
+	"github.com/josa42/nvim-lightline-lsp",                                   -- add err and warning sign to lightline
+	"github.com/tpope/vim-sleuth",                                            -- automatic indentation mode detection
+	"github.com/nvim-treesitter/nvim-treesitter",                             -- a lot of functionality with ASTs
+	"github.com/nvim-treesitter/nvim-treesitter-textobjects",                 -- define bindings for actions with AST text objects
+	"github.com/nvim-treesitter/nvim-treesitter-context",                     -- show current function name when scrolling
+	"github.com/psliwka/vim-smoothie",                                        -- smooth scrolling
+	"github.com/norcalli/nvim-colorizer.lua",                                 -- css colors preview
+	"github.com/nvim-lua/plenary.nvim",                                       -- telescope prerequisite
+	"github.com/stevearc/conform.nvim",                                       -- ebin meta formatter thingy
+	{ src = "github.com/nvim-telescope/telescope.nvim", version = "0.1.x" },  -- conveniently search buffers, files & whatever else
+	{ src = "github.com/shirosaki/tabular", version = "fix_leading_spaces" }, -- multiline alignment
 })
 
 -- lightline
-local theme = os.getenv("XDG_DATA_HOME")
+local theme = (os.getenv("XDG_DATA_HOME") or "~/.local/share")
 	.. "/nvim/site/pack/core/opt/lightline.vim/autoload/lightline/colorscheme/dook.vim"
 if vim.fn.filereadable(theme) == 0 then
 	print("Downloading custom lightline theme...")
@@ -28,10 +27,60 @@ if vim.fn.filereadable(theme) == 0 then
 		"https://raw.githubusercontent.com/Dook97/nvim-config/main/lightline_colors.vim",
 	})
 end
-vim.cmd("source ${XDG_CONFIG_HOME}/nvim/lightline_conf.vim")
 
-vim.g.smoothie_no_default_mappings = 1
+-- has to be defined in vimscript, idk why
+vim.cmd([[
+function! LightlineFileinfo()
+	return winwidth(0) < 80 ? '' : &fileformat . ' | ' . &fileencoding . ' | ' .  &filetype
+endfunction
 
+function! LightlineMode()
+	return winwidth(0) < 50 ? '' : lightline#mode()
+endfunction
+
+function! LightlineLineinfo()
+	return winwidth(0) < 50 ? '' : printf('%3s:%-2s', line('.'), col('.'))
+endfunction
+
+function! LightlineFilename()
+	return expand('%') ==# '' ? '[NO NAME]'
+	\ : (winwidth(0) > 60 ? fnamemodify(expand('%'), ':~:.')
+	\ : expand('%:t')) . (&modified ? ' +' : '')
+endfunction
+
+function! LightlineReadonly()
+	return &readonly && &filetype !=# 'netrw' ? 'RO' : ''
+endfunction
+]])
+
+vim.g["lightline#lsp#indicator_warnings"] = "W "
+vim.g["lightline#lsp#indicator_errors"] = "E "
+vim.g.lightline = {
+	colorscheme = "dook",
+	component_function = {
+		mode = "LightlineMode",
+		readonly = "LightlineReadonly",
+		fileinfo = "LightlineFileinfo",
+		filename = "LightlineFilename",
+		lineinfo = "LightlineLineinfo",
+	},
+	active = {
+		left = { { "mode", "paste" }, { "readonly", "filename", "lsp_errors", "lsp_warnings" } },
+		right = { { "lineinfo" }, { "fileinfo" } },
+	},
+	inactive = {
+		left = { { "filename" } },
+		right = { {} },
+	},
+	tabline = { left = { { "tabs" } },
+		right = { {} },
+	},
+	tabline_separator    = { left = "", right = "", },
+	tabline_subseparator = { left = "", right = "", },
+}
+vim.cmd("call lightline#lsp#register()")
+
+-- netrw settings
 vim.g.netrw_liststyle = 3
 vim.g.netrw_banner = 0
 
@@ -51,7 +100,6 @@ require("nvim-treesitter.configs").setup({
 	textobjects = {
 		select = {
 			enable = true,
-			-- Automatically jump forward to textobj
 			lookahead = true,
 			keymaps = {
 				["af"] = "@function.outer",
@@ -68,7 +116,7 @@ require("nvim-treesitter.configs").setup({
 		},
 		move = {
 			enable = true,
-			set_jumps = true, -- whether to set jumps in the jumplist
+			set_jumps = true, -- jumplist
 			goto_next_start = {
 				["]f"] = "@function.outer",
 				["]c"] = "@class.outer",
@@ -91,8 +139,7 @@ require("nvim-treesitter.configs").setup({
 	},
 })
 
--- Attach to certain Filetypes, add special configuration for `html`
--- Use `background` for everything else.
+-- hex/html colors highlighting
 vim.o.termguicolors = true
 require("colorizer").setup({
 	"css",
@@ -102,6 +149,7 @@ require("colorizer").setup({
 	},
 })
 
+-- lsp diagnostic text
 vim.diagnostic.config({
 	virtual_text = true,
 	-- diagnostic messages are highlighted via line numbers instead of signcolumn
@@ -113,10 +161,10 @@ vim.diagnostic.config({
 	},
 })
 
+-- lsp conf
 vim.lsp.config("*", {
 	root_markers = { ".git" },
 })
-
 -- enable all configured LSP servers
 local servers = vim.fn.systemlist([[ ls ${XDG_CONFIG_HOME}/nvim/lsp/ | sed -E 's/(.*)\\.lua$/\\1/' ]])
 for _, line in ipairs(servers) do
@@ -124,6 +172,7 @@ for _, line in ipairs(servers) do
 end
 
 require("treesitter-context").setup({ enable = true })
+require("nvim-surround").setup()
 
 require("conform").setup({
 	formatters_by_ft = {
