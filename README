@@ -1,0 +1,6 @@
+My neovim configuration.
+
+I like to keep it somewhat lightweight. I try not to use too
+many plugins and stick to the defaults where reasonably possible.
+
+I'm currently running on the v0.12dev release.

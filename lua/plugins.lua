@@ -1,17 +1,19 @@
+vim.g.smoothie_remapped_commands = { "<C-D>", "<C-U>" }
+
 vim.pack.add({
-	"github.com/kylechui/nvim-surround",                                      -- (un)surround stuff
-	"github.com/itchyny/lightline.vim",                                       -- statusline
-	"github.com/josa42/nvim-lightline-lsp",                                   -- add err and warning sign to lightline
-	"github.com/tpope/vim-sleuth",                                            -- automatic indentation mode detection
-	"github.com/nvim-treesitter/nvim-treesitter",                             -- a lot of functionality with ASTs
-	"github.com/nvim-treesitter/nvim-treesitter-textobjects",                 -- define bindings for actions with AST text objects
-	"github.com/nvim-treesitter/nvim-treesitter-context",                     -- show current function name when scrolling
-	"github.com/psliwka/vim-smoothie",                                        -- smooth scrolling
-	"github.com/norcalli/nvim-colorizer.lua",                                 -- css colors preview
-	"github.com/nvim-lua/plenary.nvim",                                       -- telescope prerequisite
-	"github.com/stevearc/conform.nvim",                                       -- ebin meta formatter thingy
-	{ src = "github.com/nvim-telescope/telescope.nvim", version = "0.1.x" },  -- conveniently search buffers, files & whatever else
-	{ src = "github.com/shirosaki/tabular", version = "fix_leading_spaces" }, -- multiline alignment
+	"https://github.com/kylechui/nvim-surround",                                      -- (un)surround stuff
+	"https://github.com/itchyny/lightline.vim",                                       -- statusline
+	"https://github.com/josa42/nvim-lightline-lsp",                                   -- add err and warning sign to lightline
+	"https://github.com/tpope/vim-sleuth",                                            -- automatic indentation mode detection
+	"https://github.com/nvim-treesitter/nvim-treesitter",                             -- a lot of functionality with ASTs
+	"https://github.com/nvim-treesitter/nvim-treesitter-textobjects",                 -- define bindings for actions with AST text objects
+	"https://github.com/nvim-treesitter/nvim-treesitter-context",                     -- show current function name when scrolling
+	"https://github.com/psliwka/vim-smoothie",                                        -- smooth scrolling
+	"https://github.com/norcalli/nvim-colorizer.lua",                                 -- css colors preview
+	"https://github.com/nvim-lua/plenary.nvim",                                       -- telescope prerequisite
+	"https://github.com/stevearc/conform.nvim",                                       -- ebin meta formatter thingy
+	{ src = "https://github.com/nvim-telescope/telescope.nvim", version = "0.1.x" },  -- conveniently search buffers, files & whatever else
+	{ src = "https://github.com/shirosaki/tabular", version = "fix_leading_spaces" }, -- multiline alignment
 })
 
 -- lightline

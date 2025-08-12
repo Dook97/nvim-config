@@ -79,12 +79,10 @@ vmap("<leader>p", '"_dP')
 cmap("w!!", "execute 'silent! write !sudo tee % >/dev/null' <bar> edit!")
 
 -- tabular plugin shortcut
-nmap("<c-t>", ":Tab /")
-vmap("<c-t>", ":Tab /")
+map({ "n", "v" }, "<c-t>", ":Tab /")
 
 -- extended regex in searches
-nmap("/", "/\\v")
-vmap("/", "/\\v")
+map({ "n", "v" }, "/", "/\\v")
 
 -- Telescope
 local tscope = require("telescope.builtin")
@@ -105,12 +103,12 @@ nmap("<leader>ff", function()
 	end
 end)
 
--- LSP bindings
+-- LSP
 nmap("grd", vim.lsp.buf.definition)
 nmap("grD", vim.lsp.buf.declaration)
 nmap("grr", function() tscope.lsp_references({ show_line = false }) end)
 nmap("gre", function() tscope.diagnostics({ bufnr = 0 }) end)
-nmap("<c-w>[", "<cmd>vsplit<cr><cmd>lua vim.lsp.buf.definition()<cr>")
+nmap("<c-w>[", "<cmd>vsplit<cr><cmd>lua vim.lsp.buf.definition()<cr>") -- counterpart to <c-w>]
 ucmd("LspStop", function() vim.lsp.stop_client(vim.lsp.get_clients()) end, {})
 ucmd("LspRestart", function(kwargs)
 	local name = kwargs.fargs[1]
@@ -133,48 +131,51 @@ end, {
 })
 
 -- stolen from neovim runtime
-local function cur_commentstr()
-	local ref_position = vim.api.nvim_win_get_cursor(0)
-	local buf_cs = vim.bo.commentstring
-	local ts_parser = vim.treesitter.get_parser(0, "", { error = false })
-	if not ts_parser then
-		return buf_cs
-	end
-	local row, col = ref_position[1] - 1, ref_position[2]
-	local ref_range = { row, col, row, col + 1 }
-	local caps = vim.treesitter.get_captures_at_pos(0, row, col)
-	for i = #caps, 1, -1 do
-		local id, metadata = caps[i].id, caps[i].metadata
-		local md_cms = metadata["bo.commentstring"] or metadata[id] and metadata[id]["bo.commentstring"]
-		if md_cms then
-			return md_cms
+local function comment(move)
+	local lhs, rhs = (function()
+		local ref_position = vim.api.nvim_win_get_cursor(0)
+		local buf_cs = vim.bo.commentstring
+		local ts_parser = vim.treesitter.get_parser(0, "", { error = false })
+		if not ts_parser then
+			return buf_cs
 		end
-	end
-	local ts_cs, res_level = nil, 0
-	local function traverse(lang_tree, level)
-		if not lang_tree:contains(ref_range) then
-			return
-		end
-		local lang = lang_tree:lang()
-		local filetypes = vim.treesitter.language.get_filetypes(lang)
-		for _, ft in ipairs(filetypes) do
-			local cur_cs = vim.filetype.get_option(ft, "commentstring")
-			if cur_cs ~= "" and level > res_level then
-				ts_cs = cur_cs
+		local row, col = ref_position[1] - 1, ref_position[2]
+		local ref_range = { row, col, row, col + 1 }
+		local caps = vim.treesitter.get_captures_at_pos(0, row, col)
+		for i = #caps, 1, -1 do
+			local id, metadata = caps[i].id, caps[i].metadata
+			local md_cms = metadata["bo.commentstring"] or metadata[id] and metadata[id]["bo.commentstring"]
+			if md_cms then
+				return md_cms
 			end
 		end
-		for _, child_lang_tree in pairs(lang_tree:children()) do
-			traverse(child_lang_tree, level + 1)
+		local ts_cs, res_level = nil, 0
+		local function traverse(lang_tree, level)
+			if not lang_tree:contains(ref_range) then
+				return
+			end
+			local lang = lang_tree:lang()
+			local filetypes = vim.treesitter.language.get_filetypes(lang)
+			for _, ft in ipairs(filetypes) do
+				local cur_cs = vim.filetype.get_option(ft, "commentstring")
+				if cur_cs ~= "" and level > res_level then
+					ts_cs = cur_cs
+				end
+			end
+			for _, child_lang_tree in pairs(lang_tree:children()) do
+				traverse(child_lang_tree, level + 1)
+			end
 		end
-	end
-	traverse(ts_parser, 1)
-	return ts_cs or buf_cs
+		traverse(ts_parser, 1)
+		return ts_cs or buf_cs
+	end)():match("^(.-)%%s(.*)$")
+	local shiftstr = string.rep(vim.keycode("<Left>"), #rhs)
+	vim.fn.feedkeys(move .. lhs .. rhs .. shiftstr)
 end
 -- comment below/above/at the end of current line
-local esccode = vim.keycode("<esc>")
-nmap("gco", function() vim.fn.feedkeys("o"  .. cur_commentstr() .. esccode .. '$F%"_c2l') end)
-nmap("gcO", function() vim.fn.feedkeys("O"  .. cur_commentstr() .. esccode .. '$F%"_c2l') end)
-nmap("gcA", function() vim.fn.feedkeys("A " .. cur_commentstr() .. esccode .. '$F%"_c2l') end)
+nmap("gco", function() comment("o") end)
+nmap("gcO", function() comment("O") end)
+nmap("gcA", function() comment("A ") end)
 
 -- keep cursor in place when joining lines
 nmap("J", "mzJ`z:delmarks z<cr>")
@@ -183,7 +184,7 @@ nmap("J", "mzJ`z:delmarks z<cr>")
 imap("<c-j>", "<c-y>")
 imap("<c-k>", "<c-e>")
 
-vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>")
+map({ "n", "v" }, "<Space>", "<Nop>")
 
 -- update hugo content dates
 vim.cmd([[

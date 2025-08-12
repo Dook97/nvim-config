@@ -121,8 +121,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
 })
 EOF
 
-" see ftplugin/TelescopePrompt.vim for why this is necessary
-au BufLeave * if &ft ==# 'TelescopePrompt' | setlocal ac
-
 " .h files are C not C++
 let g:c_syntax_for_h = 1
+
+" avoid having to press enter on snippet completion
+set shortmess^=c
