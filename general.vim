@@ -75,19 +75,18 @@ set winborder=rounded
 au CmdlineEnter,CmdlineLeave * :TSContext toggle
 
 " insert mode completion options
+set autocomplete
+set complete=o,.,w,b,u
 set completeopt=fuzzy,menuone,noselect,popup,preview
-set pumheight=7
+set pumheight=7 pummaxwidth=80
+set shortmess^=c " avoid having to press enter on snippet completion
 
 " <c-x><c-f> complete menu stays open as long as you accept tokens
-" no need to reopen it for every directory when completing longer paths
 au CompleteDone * if v:event.complete_type ==# "files" && v:event.reason ==# "accept"
 	\ | call feedkeys("\<c-x>\<c-f>", "n")
 
 " fallback commentstring
 au BufEnter * if empty(&commentstring) | setlocal commentstring=\#\ %s
-
-" no comment on new line
-au VimEnter * set formatoptions-=cro
 
 " disable dumb bloat
 set signcolumn=no
@@ -95,34 +94,8 @@ set signcolumn=no
 " don't save empty windows on :mksession
 set sessionoptions-=blank
 
-" lightline gets broken after telescope selection, so redraw
-au BufLeave * if &ft ==# 'TelescopePrompt' |
-	\ lua vim.schedule(function() vim.cmd('call lightline#update()') end)
-
 " briefly highlight yanked region
 au TextYankPost * lua vim.highlight.on_yank()
 
-" autocompletion
-set ac
-set complete=o,.,w,b,u
-lua <<EOF
-vim.api.nvim_create_autocmd("LspAttach", {
-  callback = function(ev)
-    vim.lsp.completion.enable(true, ev.data.client_id, ev.buf, {
-      convert = function(item)
-        local abbr = item.label
-        abbr = #abbr > 40 and abbr:sub(1, 39) .. "…" or abbr
-        local menu = item.detail or ""
-        menu = #menu > 40 and menu:sub(1, 39) .. "…" or menu
-        return { abbr = abbr, menu = menu }
-      end,
-    })
-  end,
-})
-EOF
-
 " .h files are C not C++
 let g:c_syntax_for_h = 1
-
-" avoid having to press enter on snippet completion
-set shortmess^=c

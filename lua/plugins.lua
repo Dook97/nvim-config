@@ -12,6 +12,7 @@ vim.pack.add({
 	"https://github.com/norcalli/nvim-colorizer.lua",                                 -- css colors preview
 	"https://github.com/nvim-lua/plenary.nvim",                                       -- telescope prerequisite
 	"https://github.com/stevearc/conform.nvim",                                       -- ebin meta formatter thingy
+	"https://github.com/windwp/nvim-ts-autotag",                                      -- html/css auto tag closing
 	{ src = "https://github.com/nvim-telescope/telescope.nvim", version = "0.1.x" },  -- conveniently search buffers, files & whatever else
 	{ src = "https://github.com/shirosaki/tabular", version = "fix_leading_spaces" }, -- multiline alignment
 })
@@ -67,20 +68,18 @@ vim.g.lightline = {
 		lineinfo = "LightlineLineinfo",
 	},
 	active = {
-		left = { { "mode", "paste" }, { "readonly", "filename", "lsp_errors", "lsp_warnings" } },
-		right = { { "lineinfo" }, { "fileinfo" } },
+		left = {{ "mode", "paste" }, { "readonly", "filename", "lsp_errors", "lsp_warnings" }},
+		right = {{ "lineinfo" }, { "fileinfo" }},
 	},
 	inactive = {
-		left = { { "filename" } },
-		right = { {} },
+		left = {{ "filename" }},
+		right = {{}},
 	},
-	tabline = { left = { { "tabs" } },
-		right = { {} },
-	},
-	tabline_separator    = { left = "", right = "", },
-	tabline_subseparator = { left = "", right = "", },
+	tabline = { left = {{ "tabs" }}, right = {{}} },
+	tabline_separator = { left = "", right = "" },
+	tabline_subseparator = { left = "", right = "" },
 }
-vim.cmd("call lightline#lsp#register()")
+vim.fn["lightline#lsp#register"]()
 
 -- netrw settings
 vim.g.netrw_liststyle = 3
@@ -151,6 +150,8 @@ require("colorizer").setup({
 	},
 })
 
+require('nvim-ts-autotag').setup()
+
 -- lsp diagnostic text
 vim.diagnostic.config({
 	virtual_text = true,
@@ -167,11 +168,18 @@ vim.diagnostic.config({
 vim.lsp.config("*", {
 	root_markers = { ".git" },
 })
+
 -- enable all configured LSP servers
 local servers = vim.fn.systemlist([[ ls ${XDG_CONFIG_HOME}/nvim/lsp/ | sed -E 's/(.*)\\.lua$/\\1/' ]])
 for _, line in ipairs(servers) do
 	vim.lsp.enable({ line:match("(.+)%.lua$") })
 end
+
+vim.api.nvim_create_autocmd("LspAttach", {
+	callback = function(ev)
+		vim.lsp.completion.enable(true, ev.data.client_id, ev.buf)
+	end,
+})
 
 require("treesitter-context").setup({ enable = true })
 require("nvim-surround").setup()

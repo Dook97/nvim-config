@@ -27,12 +27,10 @@ imap('"', '""<Left>')
 imap("`", "``<Left>")
 
 nmap("<leader>q", function()
-	-- 1. if there's only a single window in a single tab, quit
 	if vim.fn.winnr("$") == 1 and vim.fn.tabpagenr("$") == 1 then
 		vim.cmd("qa!")
 		return
 	end
-	-- 2. If current buffer is shown in more than one window, close just the window
 	local win_count = 0
 	local current_buf = vim.api.nvim_get_current_buf()
 	for _, win in ipairs(vim.api.nvim_list_wins()) do
@@ -44,7 +42,6 @@ nmap("<leader>q", function()
 		vim.cmd("close!")
 		return
 	end
-	-- 3. Otherwise, delete the buffer and close the window
 	vim.cmd("bdelete!")
 end)
 
