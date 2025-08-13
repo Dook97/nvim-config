@@ -67,18 +67,16 @@ vim.g.lightline = {
 		lineinfo = "LightlineLineinfo",
 	},
 	active = {
-		left = { { "mode", "paste" }, { "readonly", "filename", "lsp_errors", "lsp_warnings" } },
-		right = { { "lineinfo" }, { "fileinfo" } },
+		left = {{ "mode", "paste" }, { "readonly", "filename", "lsp_errors", "lsp_warnings" }},
+		right = {{ "lineinfo" }, { "fileinfo" }},
 	},
 	inactive = {
-		left = { { "filename" } },
-		right = { {} },
+		left = {{ "filename" }},
+		right = {{}},
 	},
-	tabline = { left = { { "tabs" } },
-		right = { {} },
-	},
-	tabline_separator    = { left = "", right = "", },
-	tabline_subseparator = { left = "", right = "", },
+	tabline = { left = {{ "tabs" }}, right = {{}} },
+	tabline_separator = { left = "", right = "" },
+	tabline_subseparator = { left = "", right = "" },
 }
 vim.cmd("call lightline#lsp#register()")
 
@@ -167,11 +165,18 @@ vim.diagnostic.config({
 vim.lsp.config("*", {
 	root_markers = { ".git" },
 })
+
 -- enable all configured LSP servers
 local servers = vim.fn.systemlist([[ ls ${XDG_CONFIG_HOME}/nvim/lsp/ | sed -E 's/(.*)\\.lua$/\\1/' ]])
 for _, line in ipairs(servers) do
 	vim.lsp.enable({ line:match("(.+)%.lua$") })
 end
+
+vim.api.nvim_create_autocmd("LspAttach", {
+	callback = function(ev)
+		vim.lsp.completion.enable(true, ev.data.client_id, ev.buf)
+	end,
+})
 
 require("treesitter-context").setup({ enable = true })
 require("nvim-surround").setup()
