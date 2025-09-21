@@ -177,9 +177,8 @@ nmap("gcA", function() comment("A ") end)
 -- keep cursor in place when joining lines
 nmap("J", "mzJ`z:delmarks z<cr>")
 
--- autocompletion accept/reject
+-- autocompletion accept
 imap("<c-j>", "<c-y>")
-imap("<c-k>", "<c-e>")
 
 map({ "n", "v" }, "<Space>", "<Nop>")
 
