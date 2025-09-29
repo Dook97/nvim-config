@@ -1,4 +1,5 @@
-local o    = vim.opt
+local o    = vim.o
+local opt  = vim.opt
 local g    = vim.g
 local l    = vim.opt_local
 local au   = vim.api.nvim_create_autocmd
@@ -27,9 +28,8 @@ vim.pack.add({
 	"https://github.com/nvim-treesitter/nvim-treesitter-context",                     -- show current function name when scrolling
 	"https://github.com/psliwka/vim-smoothie",                                        -- smooth scrolling
 	"https://github.com/norcalli/nvim-colorizer.lua",                                 -- css colors preview
-	"https://github.com/nvim-lua/plenary.nvim",                                       -- telescope prerequisite
 	"https://github.com/stevearc/conform.nvim",                                       -- ebin meta formatter thingy
-	"https://github.com/windwp/nvim-ts-autotag",                                      -- html/css auto tag closing
+	"https://github.com/nvim-lua/plenary.nvim",                                       -- telescope prerequisite
 	{ src = "https://github.com/nvim-telescope/telescope.nvim", version = "0.1.x" },  -- conveniently search buffers, files & whatever else
 	{ src = "https://github.com/shirosaki/tabular", version = "fix_leading_spaces" }, -- multiline alignment
 })
@@ -167,8 +167,6 @@ require("colorizer").setup({
 	},
 })
 
-require("nvim-ts-autotag").setup()
-
 -- lsp diagnostic text
 vim.diagnostic.config({
 	virtual_text = true,
@@ -219,7 +217,7 @@ au("FileType", {
 	pattern = vim.tbl_keys(require("conform").formatters_by_ft),
 	group = vim.api.nvim_create_augroup("conform_formatexpr", { clear = true }),
 	callback = function()
-		vim.opt_local.formatexpr = 'v:lua.require("conform").formatexpr()'
+		l.formatexpr = 'v:lua.require("conform").formatexpr()'
 	end,
 })
 
@@ -227,10 +225,10 @@ au("FileType", {
 
 g.mapleader = " "
 
--- Alternate way to save
+-- alternate way to save
 nmap("<leader>w", ":up<cr>")
 
--- Make some backward-jumping operators inclusive
+-- make some backward-jumping operators inclusive
 omap("F", "vF")
 omap("T", "vT")
 omap("b", "vb")
@@ -238,7 +236,7 @@ omap("B", "vB")
 omap("^", "v^")
 omap("0", "v0")
 
--- Parens auto-close
+-- parens auto-close
 imap("(", "()<Left>")
 imap("{", "{}<Left>")
 imap("[", "[]<Left>")
@@ -275,7 +273,7 @@ nmap("<c-b>", "<cmd>buffers<cr>:b")
 nmap("Q", "gqq")
 vmap("Q", "gq")
 
--- Better tabbing
+-- better tabbing
 vmap("<", "<gv")
 vmap(">", ">gv")
 
@@ -292,25 +290,18 @@ nmap("<leader>n", ":Explore<cr>")
 -- paste over a selection without changing contents of the unnamed register
 vmap("<leader>p", '"_dP')
 
--- Save file as sudo on files that require root permission
+-- save file as sudo on files that require root permission
 cmap("w!!", "execute 'silent! write !sudo tee % >/dev/null' <bar> edit!")
 
 -- tabular plugin shortcut
 map({ "n", "v" }, "<c-t>", ":Tab /")
 
 -- extended regex in searches
-map({ "n", "v" }, "/", "/\\v")
+map({ "n", "v", "o" }, "/", "/\\v")
+map({ "n", "v", "o" }, "/", "/\\v")
 
--- Telescope
+-- telescope
 local tscope = require("telescope.builtin")
-nmap("<leader>Ff", "<cmd>Telescope find_files<cr>")
-nmap("<leader>fb", "<cmd>Telescope buffers<cr>")
-nmap("<leader>fg", "<cmd>Telescope live_grep<cr>")
-nmap("<leader>gs", "<cmd>Telescope git_status<cr>")
-nmap("<leader>gb", "<cmd>Telescope git_branches<cr>")
-nmap("<leader>gc", "<cmd>Telescope git_commits<cr>")
-nmap("<leader>man", function() tscope.man_pages({ sections = { "ALL" } }) end)
-nmap("<leader>help", tscope.help_tags)
 nmap("<leader>ff", function()
 	local is_git_repo = vim.fn.system("git rev-parse --is-inside-work-tree 2>/dev/null") == "true\n"
 	if is_git_repo then
@@ -319,6 +310,11 @@ nmap("<leader>ff", function()
 		tscope.find_files()
 	end
 end)
+nmap("<leader>Ff", "<cmd>Telescope find_files<cr>")
+nmap("<leader>fb", "<cmd>Telescope buffers<cr>")
+nmap("<leader>fg", "<cmd>Telescope live_grep<cr>")
+nmap("<leader>man", function() tscope.man_pages({ sections = { "ALL" } }) end)
+nmap("<leader>help", tscope.help_tags)
 
 -- LSP
 nmap("grd", vim.lsp.buf.definition)
@@ -387,7 +383,7 @@ local function comment(move)
 		return ts_cs or buf_cs
 	end)():match("^(.-)%%s(.*)$")
 	local shiftstr = string.rep(vim.keycode("<Left>"), #rhs)
-	vim.fn.feedkeys(move .. lhs .. rhs .. shiftstr)
+	vim.fn.feedkeys(move .. lhs .. rhs .. shiftstr, "n")
 end
 -- comment below/above/at the end of current line
 nmap("gco", function() comment("o") end)
@@ -400,6 +396,7 @@ nmap("J", "mzJ`z:delmarks z<cr>")
 -- autocompletion accept
 imap("<c-j>", "<c-y>")
 
+-- remove annoying, unnecessary default behaviour
 map({ "n", "v" }, "<Space>", "<Nop>")
 
 -- update hugo content dates
@@ -422,26 +419,29 @@ command! HugoTimeUpdate call HugoTimeUpdate_f()
 vim.cmd("filetype plugin on")
 
 o.smartindent = true
-o.fileencoding = "utf-8"
 
 -- set window title
 o.title = true
 
--- show statusline automatically when coding, else only on multiple splits
+-- when to show status line
 o.laststatus = 1
 au("LspAttach", { command = "set laststatus=2" })
-
--- unncessary since we're using lightline plugin
-o.ruler = false
-o.showmode = false
+au({ "WinEnter", "WinClosed", "OptionSet" }, {
+	pattern = { "*", "laststatus" },
+	callback = function()
+		local val = o.laststatus < 2 and vim.fn.winnr("$") < 2
+		o.showmode = val
+		o.ruler = val
+	end,
+})
 
 -- reserved number of lines from top and bottom of viewport
-o.scrolloff = 1
+o.scrolloff = 5
 
 -- don't wrap long lines
 o.wrap = false
 
--- Splits open at the bottom and right
+-- splits open at the bottom and right
 o.splitbelow = true
 o.splitright = true
 
@@ -474,16 +474,16 @@ o.complete = "o,.,w,b,u"
 o.completeopt = "fuzzy,menuone,noselect,popup"
 o.pumheight = 7
 o.pummaxwidth = 80
-o.shortmess:prepend("c") -- avoid having to press enter on snippet completion
+opt.shortmess:prepend("c") -- avoid having to press enter on snippet completion
 
 -- indentation settings
-o.cinoptions:append({ ":0", "g0", "N-s" })
-o.cinkeys:remove("0#")
+opt.cinoptions:append({ ":0", "g0", "N-s" })
+opt.cinkeys:remove("0#")
 
 -- hide end-of-buffer tildes
-o.fillchars:append({ eob = " " })
+opt.fillchars:append({ eob = " " })
 
--- Automatically deletes all trailing whitespace and newlines at end of file on save
+-- automatically deletes all trailing whitespace and newlines at end of file on save
 au("BufWritePre", {
 	callback = function()
 		local curpos = vim.fn.getpos(".")
@@ -504,7 +504,7 @@ au("VimResized", { command = "wincmd =" })
 au({ "CmdlineEnter", "CmdlineLeave" }, { command = "TSContext toggle" })
 
 -- don't save empty windows on :mksession
-o.sessionoptions:remove("blank")
+opt.sessionoptions:remove("blank")
 
 -- briefly highlight yanked region
 au("TextYankPost", { callback = function() vim.highlight.on_yank() end, })
