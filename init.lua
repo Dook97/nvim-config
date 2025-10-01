@@ -20,6 +20,7 @@ g.smoothie_remapped_commands = { "<C-D>", "<C-U>" }
 
 vim.pack.add({
 	"https://github.com/nvim-lualine/lualine.nvim",                                   -- statusline
+	"https://github.com/nvim-mini/mini.pairs",                                        -- autopair parens, quotes, ...
 	"https://github.com/kylechui/nvim-surround",                                      -- (un)surround stuff
 	"https://github.com/tpope/vim-sleuth",                                            -- automatic indentation mode detection
 	"https://github.com/nvim-treesitter/nvim-treesitter",                             -- a lot of functionality with ASTs
@@ -76,8 +77,6 @@ require("nvim-treesitter.configs").setup({
 				["ic"] = "@class.inner",
 				["aP"] = "@parameter.outer",
 				["iP"] = "@parameter.inner",
-				["ib"] = "@block.inner",
-				["ab"] = "@block.outer",
 				["iC"] = "@comment.inner",
 				["aC"] = "@comment.outer",
 			},
@@ -145,9 +144,6 @@ au("LspAttach", {
 	end,
 })
 
-require("treesitter-context").setup({ enable = true })
-require("nvim-surround").setup()
-
 require("conform").setup({
 	formatters_by_ft = {
 		sh   = { "shfmt", "shellcheck" },
@@ -171,6 +167,11 @@ au("FileType", {
 	end,
 })
 
+-- boilerplate
+require("mini.pairs").setup()
+require("treesitter-context").setup({ enable = true })
+require("nvim-surround").setup()
+
 -- ___ KEYBINDS _______________________________________________
 
 g.mapleader = " "
@@ -185,13 +186,6 @@ omap("b", "vb")
 omap("B", "vB")
 omap("^", "v^")
 omap("0", "v0")
-
--- parens auto-close
-imap("(", "()<Left>")
-imap("{", "{}<Left>")
-imap("[", "[]<Left>")
-imap('"', '""<Left>')
-imap("`", "``<Left>")
 
 -- smart quit
 nmap("<leader>q", function()
