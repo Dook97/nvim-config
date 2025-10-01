@@ -19,9 +19,8 @@ vim.cmd.colorscheme("dook")
 g.smoothie_remapped_commands = { "<C-D>", "<C-U>" }
 
 vim.pack.add({
+	"https://github.com/nvim-lualine/lualine.nvim",                                   -- statusline
 	"https://github.com/kylechui/nvim-surround",                                      -- (un)surround stuff
-	"https://github.com/itchyny/lightline.vim",                                       -- statusline
-	"https://github.com/josa42/nvim-lightline-lsp",                                   -- add err and warning sign to lightline
 	"https://github.com/tpope/vim-sleuth",                                            -- automatic indentation mode detection
 	"https://github.com/nvim-treesitter/nvim-treesitter",                             -- a lot of functionality with ASTs
 	"https://github.com/nvim-treesitter/nvim-treesitter-textobjects",                 -- define bindings for actions with AST text objects
@@ -34,87 +33,20 @@ vim.pack.add({
 	{ src = "https://github.com/shirosaki/tabular", version = "fix_leading_spaces" }, -- multiline alignment
 })
 
--- has to be defined in vimscript, idk why
-vim.cmd([[
-function! LightlineFileinfo()
-	return winwidth(0) < 80 ? '' : &fileformat . ' | ' . &fileencoding . ' | ' .  &filetype
-endfunction
-
-function! LightlineMode()
-	return winwidth(0) < 50 ? '' : lightline#mode()
-endfunction
-
-function! LightlineLineinfo()
-	return winwidth(0) < 50 ? '' : printf('%3s:%-2s', line('.'), col('.'))
-endfunction
-
-function! LightlineFilename()
-	return expand('%') ==# '' ? '[NO NAME]'
-	\ : (winwidth(0) > 60 ? fnamemodify(expand('%'), ':~:.')
-	\ : expand('%:t')) . (&modified ? ' +' : '')
-endfunction
-
-function! LightlineReadonly()
-	return &readonly && &filetype !=# 'netrw' ? 'RO' : ''
-endfunction
-
-" custom style
-let s:p = {'normal': {}, 'inactive': {}, 'insert': {}, 'replace': {}, 'visual': {}, 'tabline': {}}
-
-let s:p.normal.left = [ ['darkestgreen', 'brightgreen', 'bold'], ['white', 'green'] ]
-let s:p.normal.middle = [ [ 'mediumgreen', 'darkestgreen' ] ]
-let s:p.normal.right = [ ['brightgreen', 'green', 'bold' ], ['brightgreen', 'darkestgreen'] ]
-let s:p.normal.error = [ [ 'gray9', 'brightestred' ] ]
-let s:p.normal.warning = [ [ 'gray1', 'yellow' ] ]
-
-let s:p.insert.left = [ ['darkestcyan', 'white', 'bold'], ['white', 'darkblue'] ]
-let s:p.insert.middle = [ [ 'mediumcyan', 'darkestblue' ] ]
-let s:p.insert.right = [ [ 'mediumcyan', 'darkblue' ], [ 'mediumcyan', 'darkestblue' ] ]
-
-let s:p.visual.left = [ ['darkred', 'brightorange', 'bold'], ['white', 'gray4'] ]
-let s:p.visual.middle = [ [ 'gray7', 'gray2' ] ]
-let s:p.visual.right = [ ['gray9', 'gray4'], ['gray8', 'gray2'] ]
-
-let s:p.replace.left = [ ['white', 'brightred', 'bold'], ['white', 'gray4'] ]
-let s:p.replace.middle = s:p.visual.middle
-let s:p.replace.right = s:p.visual.right
-
-let s:p.tabline.left = [ [ 'gray9', 'none'] ]
-let s:p.tabline.tabsel = [ [ 'gray10', 'darkestblue'] ]
-let s:p.tabline.middle = [ [ 'none', 'none', 'none', 'none' ] ]
-let s:p.tabline.right = [ [ 'none', 'none' ] ]
-
-let s:p.inactive.right = [ ['gray4', 'gray1'], ['gray4', 'gray0'] ]
-let s:p.inactive.middle = s:p.visual.middle
-let s:p.inactive.left = s:p.inactive.right[1:]
-
-let g:lightline#colorscheme#__custom__#palette = lightline#colorscheme#fill(s:p)
-]])
-
-g.lightline = {
-	colorscheme = "__custom__",
-	component_function = {
-		mode = "LightlineMode",
-		readonly = "LightlineReadonly",
-		fileinfo = "LightlineFileinfo",
-		filename = "LightlineFilename",
-		lineinfo = "LightlineLineinfo",
+require("lualine").setup({
+	options = {
+		icons_enabled = false,
+		theme = "powerline",
+		component_separators = { left = "|", right = "|" },
+		section_separators = {},
 	},
-	active = {
-		left = {{ "mode", "paste" }, { "readonly", "filename", "lsp_errors", "lsp_warnings" }},
-		right = {{ "lineinfo" }, { "fileinfo" }},
+	sections = {
+		lualine_b = { { "filename", path = 1 } },
+		lualine_c = { "diagnostics" },
+		lualine_x = { "encoding", "fileformat", "filetype" },
+		lualine_y = {},
 	},
-	inactive = {
-		left = {{ "filename" }},
-		right = {{}},
-	},
-	tabline = { left = {{ "tabs" }}, right = {{}} },
-	tabline_separator = { left = "", right = "" },
-	tabline_subseparator = { left = "", right = "" },
-}
-g["lightline#lsp#indicator_warnings"] = "W "
-g["lightline#lsp#indicator_errors"] = "E "
-vim.fn["lightline#lsp#register"]()
+})
 
 -- netrw settings
 g.netrw_liststyle = 3
@@ -444,13 +376,11 @@ o.title = true
 -- when to show status line
 o.laststatus = 1
 au("LspAttach", { command = "set laststatus=2" })
+
+o.ruler = false
 au({ "WinEnter", "WinClosed", "OptionSet" }, {
 	pattern = { "*", "laststatus" },
-	callback = function()
-		local val = o.laststatus < 2 and vim.fn.winnr("$") < 2
-		o.showmode = val
-		o.ruler = val
-	end,
+	callback = function() o.showmode = o.laststatus < 2 and vim.fn.winnr("$") < 2 end,
 })
 
 -- reserved number of lines from top and bottom of viewport
@@ -534,8 +464,8 @@ o.signcolumn = "no"
 g.c_syntax_for_h = 1
 
 -- hybrid numbers - relative in normal mode, absolute in insert mode
-l.nu = true
-l.rnu = true
+o.nu = true
+o.rnu = true
 au({ "BufEnter", "InsertLeave", "WinEnter", "FocusGained" }, { command = "if &nu | setlocal rnu" })
 au({ "BufLeave", "InsertEnter", "WinLeave", "FocusLost" },   { command = "setlocal nornu" })
 au("TermOpen", { command = "setlocal nonu nornu" })
