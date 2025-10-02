@@ -30,7 +30,7 @@ vim.pack.add({
 	"https://github.com/norcalli/nvim-colorizer.lua",                                 -- css colors preview
 	"https://github.com/stevearc/conform.nvim",                                       -- ebin meta formatter thingy
 	"https://github.com/nvim-lua/plenary.nvim",                                       -- telescope prerequisite
-	{ src = "https://github.com/nvim-telescope/telescope.nvim", version = "0.1.x" },  -- conveniently search buffers, files & whatever else
+	"https://github.com/nvim-telescope/telescope.nvim",                               -- conveniently search buffers, files & whatever else
 	{ src = "https://github.com/shirosaki/tabular", version = "fix_leading_spaces" }, -- multiline alignment
 })
 
