@@ -26,6 +26,7 @@ au InsertLeave * hi! link MatchParen MatchParenActive
 hi! WinSeparator gui=None guifg=#585858
 hi! clear StatusLine
 hi! clear StatusLineNC
+hi! TabLineSel guifg=#00c7ff guibg=#003f71
 
 hi! Normal			cterm=none ctermfg=254 ctermbg=none gui=none guifg=#d5d5d5 guibg=none
 hi! Keyword			gui=none guifg=#d0d000

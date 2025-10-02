@@ -480,3 +480,33 @@ au("BufEnter", {
 		if vim.fn.empty(l.commentstring) then l.commentstring = "# %s" end
 	end,
 })
+
+-- tab line config
+function SafariTabLine()
+	local tab_count = vim.fn.tabpagenr("$")
+	local tab_width = math.floor(vim.o.columns / tab_count)
+	local s = ""
+	for i = 1, tab_count do
+		if i == vim.fn.tabpagenr() then
+			s = s .. "%#TabLineSel#"
+		else
+			s = s .. "%#TabLine#"
+		end
+		local bufname = vim.fn.bufname(vim.fn.tabpagebuflist(i)[vim.fn.tabpagewinnr(i)])
+		if bufname == "" then
+			bufname = "[No Name]"
+		else
+			bufname = vim.fn.fnamemodify(bufname, ":t")
+		end
+		local label = i .. ":" .. bufname
+		label = " " .. label .. " "
+		if #label < tab_width then
+			label = label .. string.rep(" ", tab_width - #label)
+		else
+			label = string.sub(label, 1, tab_width)
+		end
+		s = s .. label
+	end
+	return s
+end
+vim.o.tabline = "%!v:lua.SafariTabLine()"
