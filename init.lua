@@ -19,26 +19,26 @@ vim.cmd.colorscheme("dook")
 g.smoothie_remapped_commands = { "<C-D>", "<C-U>" }
 
 vim.pack.add({
-	"https://github.com/nvim-lualine/lualine.nvim",                                   -- statusline
-	"https://github.com/nvim-mini/mini.pairs",                                        -- autopair parens, quotes, ...
-	"https://github.com/kylechui/nvim-surround",                                      -- (un)surround stuff
-	"https://github.com/tpope/vim-sleuth",                                            -- automatic indentation mode detection
-	"https://github.com/nvim-treesitter/nvim-treesitter",                             -- a lot of functionality with ASTs
-	"https://github.com/nvim-treesitter/nvim-treesitter-textobjects",                 -- define bindings for actions with AST text objects
-	"https://github.com/nvim-treesitter/nvim-treesitter-context",                     -- show current function name when scrolling
-	"https://github.com/psliwka/vim-smoothie",                                        -- smooth scrolling
-	"https://github.com/norcalli/nvim-colorizer.lua",                                 -- css colors preview
-	"https://github.com/stevearc/conform.nvim",                                       -- ebin meta formatter thingy
-	"https://github.com/nvim-lua/plenary.nvim",                                       -- telescope prerequisite
-	"https://github.com/nvim-telescope/telescope.nvim",                               -- conveniently search buffers, files & whatever else
-	{ src = "https://github.com/shirosaki/tabular", version = "fix_leading_spaces" }, -- multiline alignment
+	"https://github.com/nvim-lualine/lualine.nvim",                                               -- statusline
+	"https://github.com/nvim-mini/mini.pairs",                                                    -- autopair parens, quotes, ...
+	"https://github.com/kylechui/nvim-surround",                                                  -- (un)surround stuff
+	"https://github.com/tpope/vim-sleuth",                                                        -- automatic indentation mode detection
+	"https://github.com/psliwka/vim-smoothie",                                                    -- smooth scrolling
+	"https://github.com/norcalli/nvim-colorizer.lua",                                             -- css colors preview
+	"https://github.com/stevearc/conform.nvim",                                                   -- ebin meta formatter thingy
+	"https://github.com/nvim-lua/plenary.nvim",                                                   -- telescope prerequisite
+	"https://github.com/nvim-telescope/telescope.nvim",                                           -- conveniently search buffers, files & whatever else
+	{ src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },             -- a lot of functionality with ASTs
+	{ src = "https://github.com/nvim-treesitter/nvim-treesitter-textobjects", version = "main" }, -- define bindings for actions with AST text objects
+	"https://github.com/nvim-treesitter/nvim-treesitter-context",                                 -- show current function name when scrolling
+	{ src = "https://github.com/shirosaki/tabular", version = "fix_leading_spaces" },             -- multiline alignment
 })
 
 require("lualine").setup({
 	options = {
 		icons_enabled = false,
 		theme = "powerline",
-		component_separators = { left = "|", right = "|" },
+		component_separators = { left = "│", right = "│" },
 		section_separators = {},
 	},
 	sections = {
@@ -54,54 +54,27 @@ g.netrw_liststyle = 3
 g.netrw_banner = 0
 
 -- treesitter config
-require("nvim-treesitter.configs").setup({
-	ensure_installed = {
-		"c", "cpp", "go", "javascript", "json", "python", "comment",
-		"typescript", "c_sharp", "haskell", "markdown", "markdown_inline",
-		"make", "html", "gitignore", "gitcommit", "arduino", "yaml", "sql",
-		"css", "dockerfile", "bash", "rust", "query", "lua"
-	},
-	sync_install = false,
-	highlight = {
-		enable = true,
-		additional_vim_regex_highlighting = false,
-	},
-	textobjects = {
-		select = {
-			enable = true,
-			lookahead = true,
-			keymaps = {
-				["af"] = "@function.outer",
-				["if"] = "@function.inner",
-				["ac"] = "@class.outer",
-				["ic"] = "@class.inner",
-				["aP"] = "@parameter.outer",
-				["iP"] = "@parameter.inner",
-				["iC"] = "@comment.inner",
-				["aC"] = "@comment.outer",
-			},
-		},
-		move = {
-			enable = true,
-			set_jumps = true, -- jumplist
-			goto_next_start = {
-				["]f"] = "@function.outer",
-				["]c"] = "@class.outer",
-				["]p"] = "@parameter.inner",
-			},
-			goto_next_end = {
-				["]F"] = "@function.outer",
-				["]C"] = "@class.outer",
-			},
-			goto_previous_start = {
-				["[f"] = "@function.outer",
-				["[c"] = "@class.outer",
-				["[p"] = "@parameter.inner",
-			},
-			goto_previous_end = {
-				["[F"] = "@function.outer",
-				["[C"] = "@class.outer",
-			},
+require("nvim-treesitter").install({
+	"c", "cpp", "go", "javascript", "json", "python", "comment",
+	"typescript", "c_sharp", "haskell", "markdown", "markdown_inline",
+	"make", "html", "gitignore", "gitcommit", "arduino", "yaml",
+	"sql", "css", "dockerfile", "bash", "rust", "query", "lua",
+})
+
+-- treesitter highlighting
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "*" },
+	callback = function() pcall(vim.treesitter.start) end,
+})
+
+require("nvim-treesitter-textobjects").setup({
+	select = {
+		lookahead = true,
+		selection_modes = {
+			["@function.outer"] = "V",
+			["@function.inner"] = "V",
+			["@class.outer"] = "V",
+			["@class.inner"] = "V",
 		},
 	},
 })
@@ -169,7 +142,6 @@ au("FileType", {
 
 -- boilerplate
 require("mini.pairs").setup()
-require("treesitter-context").setup({ enable = true })
 require("nvim-surround").setup()
 
 -- ___ KEYBINDS _______________________________________________
@@ -241,7 +213,6 @@ cmap("w!!", "execute 'silent! write !sudo tee % >/dev/null' <bar> edit!")
 map({ "n", "v" }, "<c-t>", ":Tab /")
 
 -- extended regex in searches
-map({ "n", "v", "o" }, "/", "/\\v")
 map({ "n", "v", "o" }, "/", "/\\v")
 
 -- telescope
@@ -338,7 +309,7 @@ nmap("gcA", function() comment("A ") end)
 nmap("J", "mzJ`z:delmarks z<cr>")
 
 -- autocompletion accept
-imap("<c-j>", "<c-y>")
+map({ "i", "c" }, "<c-j>", "<c-y>")
 
 -- remove annoying, unnecessary default behaviour
 map({ "n", "v" }, "<Space>", "<Nop>")
@@ -357,6 +328,20 @@ function! HugoTimeUpdate_f()
 endfunction
 command! HugoTimeUpdate call HugoTimeUpdate_f()
 ]])
+
+local ts_obj_s = require("nvim-treesitter-textobjects.select")
+map({ "x", "o" }, "if", function() ts_obj_s.select_textobject("@function.inner", "textobjects") end)
+map({ "x", "o" }, "af", function() ts_obj_s.select_textobject("@function.outer", "textobjects") end)
+map({ "x", "o" }, "ic", function() ts_obj_s.select_textobject("@class.inner", "textobjects") end)
+map({ "x", "o" }, "ac", function() ts_obj_s.select_textobject("@class.outer", "textobjects") end)
+map({ "x", "o" }, "iP", function() ts_obj_s.select_textobject("@parameter.inner", "textobjects") end)
+map({ "x", "o" }, "aP", function() ts_obj_s.select_textobject("@parameter.outer", "textobjects") end)
+
+local ts_obj_m = require("nvim-treesitter-textobjects.move")
+map({ "n", "x", "o" }, "]f", function() ts_obj_m.goto_next_start("@function.outer", "textobjects") end)
+map({ "n", "x", "o" }, "]F", function() ts_obj_m.goto_next_end("@function.outer", "textobjects") end)
+map({ "n", "x", "o" }, "[f", function() ts_obj_m.goto_previous_start("@function.outer", "textobjects") end)
+map({ "n", "x", "o" }, "[F", function() ts_obj_m.goto_previous_end("@function.outer", "textobjects") end)
 
 -- ___ GENERAL OPTIONS ________________________________________
 
