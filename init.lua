@@ -18,27 +18,30 @@ vim.cmd.colorscheme("dook")
 
 g.smoothie_remapped_commands = { "<C-D>", "<C-U>" }
 
-vim.pack.add({
-	"https://github.com/nvim-lualine/lualine.nvim",                                               -- statusline
-	"https://github.com/nvim-mini/mini.pairs",                                                    -- autopair parens, quotes, ...
-	"https://github.com/kylechui/nvim-surround",                                                  -- (un)surround stuff
-	"https://github.com/tpope/vim-sleuth",                                                        -- automatic indentation mode detection
-	"https://github.com/psliwka/vim-smoothie",                                                    -- smooth scrolling
-	"https://github.com/norcalli/nvim-colorizer.lua",                                             -- css colors preview
-	"https://github.com/stevearc/conform.nvim",                                                   -- ebin meta formatter thingy
-	"https://github.com/nvim-lua/plenary.nvim",                                                   -- telescope prerequisite
-	"https://github.com/nvim-telescope/telescope.nvim",                                           -- conveniently search buffers, files & whatever else
-	{ src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },             -- a lot of functionality with ASTs
-	{ src = "https://github.com/nvim-treesitter/nvim-treesitter-textobjects", version = "main" }, -- define bindings for actions with AST text objects
-	"https://github.com/nvim-treesitter/nvim-treesitter-context",                                 -- show current function name when scrolling
-	{ src = "https://github.com/shirosaki/tabular", version = "fix_leading_spaces" },             -- multiline alignment
-})
+for _, pkg in ipairs({
+	{ src = "nvim-lualine/lualine.nvim" },                                     -- statusline
+	{ src = "nvim-mini/mini.pairs" },                                          -- autopair parens, quotes, ...
+	{ src = "kylechui/nvim-surround" },                                        -- (un)surround stuff
+	{ src = "tpope/vim-sleuth" },                                              -- automatic indentation mode detection
+	{ src = "psliwka/vim-smoothie" },                                          -- smooth scrolling
+	{ src = "norcalli/nvim-colorizer.lua" },                                   -- css colors preview
+	{ src = "stevearc/conform.nvim" },                                         -- ebin meta formatter thingy
+	{ src = "nvim-lua/plenary.nvim" },                                         -- telescope prerequisite
+	{ src = "nvim-telescope/telescope.nvim" },                                 -- conveniently search buffers, files & whatever else
+	{ src = "nvim-treesitter/nvim-treesitter-context" },                       -- show current function name when scrolling
+	{ src = "shirosaki/tabular", version = "fix_leading_spaces" },             -- multiline alignment
+	{ src = "nvim-treesitter/nvim-treesitter", version = "main" },             -- a lot of functionality with ASTs
+	{ src = "nvim-treesitter/nvim-treesitter-textobjects", version = "main" }, -- define bindings for actions with AST text objects
+}) do
+	pkg.src = "https://github.com/" .. pkg.src
+	vim.pack.add({pkg})
+end
 
 require("lualine").setup({
 	options = {
 		icons_enabled = false,
 		theme = "powerline",
-		component_separators = { left = "│", right = "│" },
+		component_separators = "│",
 		section_separators = {},
 	},
 	sections = {
@@ -53,7 +56,6 @@ require("lualine").setup({
 g.netrw_liststyle = 3
 g.netrw_banner = 0
 
--- treesitter config
 require("nvim-treesitter").install({
 	"c", "cpp", "go", "javascript", "json", "python", "comment",
 	"typescript", "c_sharp", "haskell", "markdown", "markdown_inline",
@@ -61,22 +63,13 @@ require("nvim-treesitter").install({
 	"sql", "css", "dockerfile", "bash", "rust", "query", "lua",
 })
 
--- treesitter highlighting
-vim.api.nvim_create_autocmd("FileType", {
-	pattern = { "*" },
+-- enable treesitter highlighting
+au("FileType", {
 	callback = function() pcall(vim.treesitter.start) end,
 })
 
 require("nvim-treesitter-textobjects").setup({
-	select = {
-		lookahead = true,
-		selection_modes = {
-			["@function.outer"] = "V",
-			["@function.inner"] = "V",
-			["@class.outer"] = "V",
-			["@class.inner"] = "V",
-		},
-	},
+	select = { lookahead = true },
 })
 
 -- hex/html colors highlighting
@@ -84,37 +77,7 @@ o.termguicolors = true
 require("colorizer").setup({
 	"css",
 	"javascript",
-	html = {
-		mode = "foreground",
-	},
-})
-
--- lsp diagnostic text
-vim.diagnostic.config({
-	virtual_text = true,
-	-- diagnostic messages are highlighted via line numbers instead of signcolumn
-	signs = {
-		numhl = {
-			[vim.diagnostic.severity.ERROR] = "DiagnosticLineNrError",
-			[vim.diagnostic.severity.WARN] = "DiagnosticLineNrWarn",
-		},
-	},
-})
-
--- lsp conf
-vim.lsp.config("*", {
-	root_markers = { ".git" },
-})
-
--- enable all configured LSP servers
-for name, _ in vim.fs.dir(vim.fn.stdpath("config") .. "/lsp/") do
-	vim.lsp.enable({ name:match("(.+)%.lua$") })
-end
-
-au("LspAttach", {
-	callback = function(ev)
-		vim.lsp.completion.enable(true, ev.data.client_id, ev.buf)
-	end,
+	html = { mode = "foreground", },
 })
 
 require("conform").setup({
@@ -330,18 +293,40 @@ command! HugoTimeUpdate call HugoTimeUpdate_f()
 ]])
 
 local ts_obj_s = require("nvim-treesitter-textobjects.select")
-map({ "x", "o" }, "if", function() ts_obj_s.select_textobject("@function.inner", "textobjects") end)
-map({ "x", "o" }, "af", function() ts_obj_s.select_textobject("@function.outer", "textobjects") end)
-map({ "x", "o" }, "ic", function() ts_obj_s.select_textobject("@class.inner", "textobjects") end)
-map({ "x", "o" }, "ac", function() ts_obj_s.select_textobject("@class.outer", "textobjects") end)
-map({ "x", "o" }, "iP", function() ts_obj_s.select_textobject("@parameter.inner", "textobjects") end)
-map({ "x", "o" }, "aP", function() ts_obj_s.select_textobject("@parameter.outer", "textobjects") end)
+for _, v in ipairs({
+	{ "if", "@function.inner" },
+	{ "af", "@function.outer" },
+	{ "ic", "@class.inner" },
+	{ "ac", "@class.outer" },
+	{ "iP", "@parameter.inner" },
+	{ "aP", "@parameter.outer" },
+	{ "iC", "@comment.inner" },
+	{ "aC", "@comment.outer" },
+}) do
+	map({ "x", "o" }, v[1], function()
+		ts_obj_s.select_textobject(v[2], "textobjects")
+	end)
+end
 
 local ts_obj_m = require("nvim-treesitter-textobjects.move")
-map({ "n", "x", "o" }, "]f", function() ts_obj_m.goto_next_start("@function.outer", "textobjects") end)
-map({ "n", "x", "o" }, "]F", function() ts_obj_m.goto_next_end("@function.outer", "textobjects") end)
-map({ "n", "x", "o" }, "[f", function() ts_obj_m.goto_previous_start("@function.outer", "textobjects") end)
-map({ "n", "x", "o" }, "[F", function() ts_obj_m.goto_previous_end("@function.outer", "textobjects") end)
+for _, v in ipairs({
+	{ "]f", ts_obj_m.goto_next_start },
+	{ "]F", ts_obj_m.goto_next_end },
+	{ "[f", ts_obj_m.goto_previous_start },
+	{ "[F", ts_obj_m.goto_previous_end },
+}) do
+	map({ "n", "x", "o" }, v[1], function() v[2]("@function.outer", "textobjects") end)
+end
+
+-- <c-x><c-f> complete menu stays open as long as you accept tokens
+au("CompleteDone", {
+	callback = function()
+		local e = vim.v.event
+		if e.complete_type == "files" and e.reason == "accept" then
+			vim.cmd.call([[feedkeys("\<c-x>\<c-f>", "n")]])
+		end
+	end,
+})
 
 -- ___ GENERAL OPTIONS ________________________________________
 
@@ -449,16 +434,6 @@ au({ "BufEnter", "InsertLeave", "WinEnter", "FocusGained" }, { command = "if &nu
 au({ "BufLeave", "InsertEnter", "WinLeave", "FocusLost" },   { command = "setlocal nornu" })
 au("TermOpen", { command = "setlocal nonu nornu" })
 
--- <c-x><c-f> complete menu stays open as long as you accept tokens
-au("CompleteDone", {
-	callback = function()
-		local e = vim.v.event
-		if e.complete_type == "files" and e.reason == "accept" then
-			vim.cmd.call([[feedkeys("\<c-x>\<c-f>", "n")]])
-		end
-	end,
-})
-
 -- fallback commentstring
 au("BufEnter", {
 	callback = function()
@@ -469,7 +444,7 @@ au("BufEnter", {
 -- tab line config
 function SafariTabLine()
 	local tab_count = vim.fn.tabpagenr("$")
-	local tab_width = math.floor(vim.o.columns / tab_count)
+	local tab_width = math.floor(o.columns / tab_count)
 	local s = ""
 	for i = 1, tab_count do
 		if i == vim.fn.tabpagenr() then
@@ -494,4 +469,31 @@ function SafariTabLine()
 	end
 	return s
 end
-vim.o.tabline = "%!v:lua.SafariTabLine()"
+o.tabline = "%!v:lua.SafariTabLine()"
+
+-- lsp diagnostic text
+vim.diagnostic.config({
+	virtual_text = true,
+	signs = {
+		numhl = {
+			[vim.diagnostic.severity.ERROR] = "DiagnosticLineNrError",
+			[vim.diagnostic.severity.WARN] = "DiagnosticLineNrWarn",
+		},
+	},
+})
+
+-- lsp conf
+vim.lsp.config("*", {
+	root_markers = { ".git" },
+})
+
+-- enable all configured LSP servers
+for name, _ in vim.fs.dir(vim.fn.stdpath("config") .. "/lsp/") do
+	vim.lsp.enable({ name:match("(.+)%.lua$") })
+end
+
+au("LspAttach", {
+	callback = function(ev)
+		vim.lsp.completion.enable(true, ev.data.client_id, ev.buf, { autotrigger = false })
+	end,
+})
