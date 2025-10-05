@@ -21,13 +21,12 @@ vim.cmd.colorscheme("dook")
 g.smoothie_remapped_commands = { "<C-D>", "<C-U>" }
 
 for _, pkg in ipairs({
+	{ src = "ibhagwan/fzf-lua" },                                              -- conveniently search buffers, files & whatever else
 	{ src = "tpope/vim-sleuth" },                                              -- automatic indentation mode detection
 	{ src = "psliwka/vim-smoothie" },                                          -- smooth scrolling
 	{ src = "stevearc/conform.nvim" },                                         -- ebin meta formatter thingy
 	{ src = "kylechui/nvim-surround" },                                        -- (un)surround stuff
 	{ src = "nvim-lualine/lualine.nvim" },                                     -- statusline
-	{ src = "nvim-lua/plenary.nvim" },                                         -- telescope prerequisite
-	{ src = "nvim-telescope/telescope.nvim" },                                 -- conveniently search buffers, files & whatever else
 	{ src = "shirosaki/tabular", version = "fix_leading_spaces" },             -- multiline alignment
 	{ src = "nvim-treesitter/nvim-treesitter", version = "main" },             -- a lot of functionality with ASTs
 	{ src = "nvim-treesitter/nvim-treesitter-textobjects", version = "main" }, -- define bindings for actions with AST text objects
@@ -168,27 +167,30 @@ map({ "n", "v" }, "<c-t>", ":Tab /")
 -- extended regex in searches
 map({ "n", "v", "o" }, "/", "/\\v")
 
--- telescope
-local tscope = require("telescope.builtin")
+-- fzf
+local fzf = require("fzf-lua")
+local function isgit()
+	return vim.fn.system("git rev-parse --is-inside-work-tree") == "true\n"
+end
 nmap("<leader>ff", function()
-	local is_git_repo = vim.fn.system("git rev-parse --is-inside-work-tree 2>/dev/null") == "true\n"
-	if is_git_repo then
-		tscope.git_files({ show_untracked = true })
+	if isgit() then fzf.git_files() else fzf.files() end
+end)
+nmap("<leader>fg", function()
+	if isgit() then
+		fzf.live_grep({ cmd = "git grep --line-number --column --color" })
 	else
-		tscope.find_files()
+		fzf.live_grep()
 	end
 end)
-nmap("<leader>Ff", "<cmd>Telescope find_files<cr>")
-nmap("<leader>fb", "<cmd>Telescope buffers<cr>")
-nmap("<leader>fg", "<cmd>Telescope live_grep<cr>")
-nmap("<leader>man", function() tscope.man_pages({ sections = { "ALL" } }) end)
-nmap("<leader>help", tscope.help_tags)
+nmap("<leader>fb", FzfLua.buffers)
+nmap("<leader>fm", FzfLua.man_pages)
+nmap("<leader>fh", FzfLua.help_tags)
 
 -- LSP
 nmap("grd", vim.lsp.buf.definition)
 nmap("grD", vim.lsp.buf.declaration)
-nmap("grr", function() tscope.lsp_references({ show_line = false }) end)
-nmap("gre", function() tscope.diagnostics({ bufnr = 0 }) end)
+nmap("grr", FzfLua.lsp_references)
+nmap("gre", FzfLua.diagnostics_document)
 nmap("<c-w>[", "<cmd>vsplit<cr><cmd>lua vim.lsp.buf.definition()<cr>") -- counterpart to <c-w>]
 ucmd("LspStop", function() vim.lsp.stop_client(vim.lsp.get_clients()) end, {})
 ucmd("LspRestart", function(kwargs)
@@ -349,6 +351,7 @@ o.splitright = true
 
 -- persistent undo
 o.undofile = true
+o.swapfile = false
 
 -- search is case insensitive unless upper case character is in the query
 o.ignorecase = true
