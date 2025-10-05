@@ -1,4 +1,5 @@
 set background=dark
+set termguicolors
 hi clear
 
 set termguicolors

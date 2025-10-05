@@ -1,7 +1,9 @@
 local o    = vim.o
-local opt  = vim.opt
 local g    = vim.g
-local l    = vim.opt_local
+local bo   = vim.bo
+local wo   = vim.wo
+local opt  = vim.opt
+
 local au   = vim.api.nvim_create_autocmd
 local ucmd = vim.api.nvim_create_user_command
 
@@ -19,19 +21,17 @@ vim.cmd.colorscheme("dook")
 g.smoothie_remapped_commands = { "<C-D>", "<C-U>" }
 
 for _, pkg in ipairs({
-	{ src = "nvim-lualine/lualine.nvim" },                                     -- statusline
-	{ src = "nvim-mini/mini.pairs" },                                          -- autopair parens, quotes, ...
-	{ src = "kylechui/nvim-surround" },                                        -- (un)surround stuff
 	{ src = "tpope/vim-sleuth" },                                              -- automatic indentation mode detection
 	{ src = "psliwka/vim-smoothie" },                                          -- smooth scrolling
-	{ src = "norcalli/nvim-colorizer.lua" },                                   -- css colors preview
 	{ src = "stevearc/conform.nvim" },                                         -- ebin meta formatter thingy
+	{ src = "kylechui/nvim-surround" },                                        -- (un)surround stuff
+	{ src = "nvim-lualine/lualine.nvim" },                                     -- statusline
 	{ src = "nvim-lua/plenary.nvim" },                                         -- telescope prerequisite
 	{ src = "nvim-telescope/telescope.nvim" },                                 -- conveniently search buffers, files & whatever else
-	{ src = "nvim-treesitter/nvim-treesitter-context" },                       -- show current function name when scrolling
 	{ src = "shirosaki/tabular", version = "fix_leading_spaces" },             -- multiline alignment
 	{ src = "nvim-treesitter/nvim-treesitter", version = "main" },             -- a lot of functionality with ASTs
 	{ src = "nvim-treesitter/nvim-treesitter-textobjects", version = "main" }, -- define bindings for actions with AST text objects
+	{ src = "nvim-treesitter/nvim-treesitter-context" },                       -- show current function name when scrolling
 }) do
 	pkg.src = "https://github.com/" .. pkg.src
 	vim.pack.add({pkg})
@@ -72,14 +72,6 @@ require("nvim-treesitter-textobjects").setup({
 	select = { lookahead = true },
 })
 
--- hex/html colors highlighting
-o.termguicolors = true
-require("colorizer").setup({
-	"css",
-	"javascript",
-	html = { mode = "foreground", },
-})
-
 require("conform").setup({
 	formatters_by_ft = {
 		sh   = { "shfmt", "shellcheck" },
@@ -97,14 +89,12 @@ require("conform").setup({
 -- use conform as gq for filetypes that have a formatter set
 au("FileType", {
 	pattern = vim.tbl_keys(require("conform").formatters_by_ft),
-	group = vim.api.nvim_create_augroup("conform_formatexpr", { clear = true }),
 	callback = function()
-		l.formatexpr = 'v:lua.require("conform").formatexpr()'
+		bo.formatexpr = 'v:lua.require("conform").formatexpr()'
 	end,
 })
 
 -- boilerplate
-require("mini.pairs").setup()
 require("nvim-surround").setup()
 
 -- ___ KEYBINDS _______________________________________________
@@ -437,7 +427,7 @@ au("TermOpen", { command = "setlocal nonu nornu" })
 -- fallback commentstring
 au("BufEnter", {
 	callback = function()
-		if vim.fn.empty(l.commentstring) then l.commentstring = "# %s" end
+		if vim.fn.empty(bo.commentstring) then bo.commentstring = "# %s" end
 	end,
 })
 
@@ -483,11 +473,7 @@ vim.diagnostic.config({
 })
 
 -- lsp conf
-vim.lsp.config("*", {
-	root_markers = { ".git" },
-})
-
--- enable all configured LSP servers
+vim.lsp.config("*", { root_markers = { ".git" }})
 for name, _ in vim.fs.dir(vim.fn.stdpath("config") .. "/lsp/") do
 	vim.lsp.enable({ name:match("(.+)%.lua$") })
 end
