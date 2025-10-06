@@ -117,6 +117,7 @@ hi! DiagnosticUnderlineError cterm=none gui=none
 hi! DiagnosticUnderlineWarn cterm=none gui=none
 hi! DiagnosticLineNrError ctermbg=red guibg=red ctermfg=white guifg=white
 hi! DiagnosticLineNrWarn ctermbg=136 guibg=#af8700 ctermfg=white guifg=white
+hi! clear DiagnosticUnderlineInfo
 
 hi! DiagnosticError guifg=red
 
