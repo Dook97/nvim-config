@@ -85,7 +85,7 @@ require("conform").setup({
 	},
 })
 
--- use conform as gq for filetypes that have a formatter set
+-- use conform as formatexpr for filetypes that have a formatter set
 au("FileType", {
 	pattern = vim.tbl_keys(require("conform").formatters_by_ft),
 	callback = function()
@@ -295,7 +295,7 @@ for _, v in ipairs({
 	{ "iC", "@comment.inner" },
 	{ "aC", "@comment.outer" },
 }) do
-	map({ "x", "o" }, v[1], function()
+	map({ "v", "o" }, v[1], function()
 		ts_obj_s.select_textobject(v[2], "textobjects")
 	end)
 end
@@ -307,7 +307,7 @@ for _, v in ipairs({
 	{ "[f", ts_obj_m.goto_previous_start },
 	{ "[F", ts_obj_m.goto_previous_end },
 }) do
-	map({ "n", "x", "o" }, v[1], function() v[2]("@function.outer", "textobjects") end)
+	map({ "n", "v", "o" }, v[1], function() v[2]("@function.outer", "textobjects") end)
 end
 
 -- <c-x><c-f> complete menu stays open as long as you accept tokens
@@ -380,6 +380,7 @@ o.completeopt = "fuzzy,menuone,noselect,popup"
 o.pumheight = 7
 o.pummaxwidth = 80
 opt.shortmess:prepend("c") -- avoid having to press enter on snippet completion
+au("LspAttach", { command = "set complete=o" })
 
 -- indentation settings
 opt.cinoptions:append({ ":0", "g0", "N-s" })
@@ -470,7 +471,7 @@ vim.diagnostic.config({
 	signs = {
 		numhl = {
 			[vim.diagnostic.severity.ERROR] = "DiagnosticLineNrError",
-			[vim.diagnostic.severity.WARN] = "DiagnosticLineNrWarn",
+			[vim.diagnostic.severity.WARN]  = "DiagnosticLineNrWarn",
 		},
 	},
 })
@@ -483,6 +484,6 @@ end
 
 au("LspAttach", {
 	callback = function(ev)
-		vim.lsp.completion.enable(true, ev.data.client_id, ev.buf, { autotrigger = false })
+		vim.lsp.completion.enable(true, ev.data.client_id, ev.buf)
 	end,
 })
