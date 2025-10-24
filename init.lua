@@ -4,15 +4,9 @@ local bo   = vim.bo
 local wo   = vim.wo
 local opt  = vim.opt
 
+local map  = vim.keymap.set
 local au   = vim.api.nvim_create_autocmd
 local ucmd = vim.api.nvim_create_user_command
-
-local map  = vim.keymap.set
-local nmap = function(...) map("n", ...) end
-local imap = function(...) map("i", ...) end
-local vmap = function(...) map("v", ...) end
-local cmap = function(...) map("c", ...) end
-local omap = function(...) map("o", ...) end
 
 vim.cmd.colorscheme("dook")
 
@@ -101,18 +95,18 @@ require("nvim-surround").setup()
 g.mapleader = " "
 
 -- alternate way to save
-nmap("<leader>w", ":up<cr>")
+map("n", "<leader>w", ":up<cr>")
 
 -- make some backward-jumping operators inclusive
-omap("F", "vF")
-omap("T", "vT")
-omap("b", "vb")
-omap("B", "vB")
-omap("^", "v^")
-omap("0", "v0")
+map("o", "F", "vF")
+map("o", "T", "vT")
+map("o", "b", "vb")
+map("o", "B", "vB")
+map("o", "^", "v^")
+map("o", "0", "v0")
 
 -- smart quit
-nmap("<leader>q", function()
+map("n", "<leader>q", function()
 	if vim.fn.winnr("$") == 1 and vim.fn.tabpagenr("$") == 1 then
 		vim.cmd("qa!")
 		return
@@ -132,34 +126,34 @@ nmap("<leader>q", function()
 end)
 
 -- kill all buffers
-nmap("<leader>Q", ":qa!<cr>")
+map("n", "<leader>Q", ":qa!<cr>")
 
 -- quickly switch/delete/... buffers
-nmap("<c-b>", "<cmd>buffers<cr>:b")
+map("n", "<c-b>", "<cmd>buffers<cr>:b")
 
 -- format
-nmap("Q", "gqq")
-vmap("Q", "gq")
+map("n", "Q", "gqq")
+map("v", "Q", "gq")
 
 -- better tabbing
-vmap("<", "<gv")
-vmap(">", ">gv")
+map("v", "<", "<gv")
+map("v", ">", ">gv")
 
 -- vertical split shortcut
-nmap("<c-w>v", ":vsplit<cr>")
+map("n", "<c-w>v", ":vsplit<cr>")
 
 -- copy to system clipboard
 map({ "n", "v", "o" }, "Y", '"+y')
-nmap("YY", '"+yy')
+map("n", "YY", '"+yy')
 
 -- netrw (file explorer)
-nmap("<leader>n", ":Explore<cr>")
+map("n", "<leader>n", ":Explore<cr>")
 
 -- paste over a selection without changing contents of the unnamed register
-vmap("<leader>p", '"_dP')
+map("v", "<leader>p", '"_dP')
 
 -- save file as sudo on files that require root permission
-cmap("w!!", "execute 'silent! write !sudo tee % >/dev/null' <bar> edit!")
+map("c", "w!!", "execute 'silent! write !sudo tee % >/dev/null' <bar> edit!")
 
 -- tabular plugin shortcut
 map({ "n", "v" }, "<c-t>", ":Tab /")
@@ -168,30 +162,36 @@ map({ "n", "v" }, "<c-t>", ":Tab /")
 map({ "n", "v", "o" }, "/", "/\\v")
 
 -- fzf
-local fzf = require("fzf-lua")
 local function isgit()
 	return vim.fn.system("git rev-parse --is-inside-work-tree") == "true\n"
 end
-nmap("<leader>ff", function()
+
+local fzf = require("fzf-lua")
+fzf.setup({ "telescope" })
+
+map("n", "<leader>ff", function()
 	if isgit() then fzf.git_files() else fzf.files() end
 end)
-nmap("<leader>fg", function()
+
+map("n", "<leader>fg", function()
 	if isgit() then
-		fzf.live_grep({ cmd = "git grep --line-number --column --color" })
+		fzf.live_grep_native({ cmd = "git grep --line-number --column --color" })
 	else
-		fzf.live_grep()
+		fzf.live_grep_native()
 	end
+	vim.cmd.call([[feedkeys("\<c-g>", "n")]])
 end)
-nmap("<leader>fb", FzfLua.buffers)
-nmap("<leader>fm", FzfLua.man_pages)
-nmap("<leader>fh", FzfLua.help_tags)
+
+map("n", "<leader>fb", FzfLua.buffers)
+map("n", "<leader>fm", FzfLua.man_pages)
+map("n", "<leader>fh", FzfLua.help_tags)
 
 -- LSP
-nmap("grd", vim.lsp.buf.definition)
-nmap("grD", vim.lsp.buf.declaration)
-nmap("grr", FzfLua.lsp_references)
-nmap("gre", FzfLua.diagnostics_document)
-nmap("<c-w>[", "<cmd>vsplit<cr><cmd>lua vim.lsp.buf.definition()<cr>") -- counterpart to <c-w>]
+map("n", "grd", vim.lsp.buf.definition)
+map("n", "grD", vim.lsp.buf.declaration)
+map("n", "grr", FzfLua.lsp_references)
+map("n", "gre", FzfLua.diagnostics_document)
+map("n", "<c-w>[", "<cmd>vsplit<cr><cmd>lua vim.lsp.buf.definition()<cr>") -- counterpart to <c-w>]
 ucmd("LspStop", function() vim.lsp.stop_client(vim.lsp.get_clients()) end, {})
 ucmd("LspRestart", function(kwargs)
 	local name = kwargs.fargs[1]
@@ -256,12 +256,12 @@ local function comment(move)
 	vim.fn.feedkeys(move .. lhs .. rhs .. shiftstr, "n")
 end
 -- comment below/above/at the end of current line
-nmap("gco", function() comment("o") end)
-nmap("gcO", function() comment("O") end)
-nmap("gcA", function() comment("A ") end)
+map("n", "gco", function() comment("o") end)
+map("n", "gcO", function() comment("O") end)
+map("n", "gcA", function() comment("A ") end)
 
 -- keep cursor in place when joining lines
-nmap("J", "mzJ`z:delmarks z<cr>")
+map("n", "J", "mzJ`z:delmarks z<cr>")
 
 -- autocompletion accept
 map({ "i", "c" }, "<c-j>", "<c-y>")
@@ -380,7 +380,7 @@ o.completeopt = "fuzzy,menuone,noselect,popup"
 o.pumheight = 7
 o.pummaxwidth = 80
 opt.shortmess:prepend("c") -- avoid having to press enter on snippet completion
-au("LspAttach", { command = "set complete=o" })
+au("LspAttach", { command = "setlocal complete=o" })
 
 -- indentation settings
 opt.cinoptions:append({ ":0", "g0", "N-s" })
