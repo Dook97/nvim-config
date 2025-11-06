@@ -429,11 +429,7 @@ au({ "BufLeave", "InsertEnter", "WinLeave", "FocusLost" },   { command = "setloc
 au("TermOpen", { command = "setlocal nonu nornu" })
 
 -- fallback commentstring
-au("BufEnter", {
-	callback = function()
-		if vim.fn.empty(bo.commentstring) then bo.commentstring = "# %s" end
-	end,
-})
+au("BufEnter", { command = "if empty(&cms) | setlocal cms=#\\ %s" })
 
 -- tab line config
 function SafariTabLine()
