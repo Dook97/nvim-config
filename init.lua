@@ -1,5 +1,6 @@
 local o    = vim.o
 local g    = vim.g
+local v    = vim.v
 local bo   = vim.bo
 local wo   = vim.wo
 local opt  = vim.opt
@@ -313,7 +314,7 @@ end
 -- <c-x><c-f> complete menu stays open as long as you accept tokens
 au("CompleteDone", {
 	callback = function()
-		local e = vim.v.event
+		local e = v.event
 		if e.complete_type == "files" and e.reason == "accept" then
 			vim.cmd.call([[feedkeys("\<c-x>\<c-f>", "n")]])
 		end
@@ -460,6 +461,16 @@ function SafariTabLine()
 	return s
 end
 o.tabline = "%!v:lua.SafariTabLine()"
+
+-- fold appearence config
+function MyFoldText()
+	local bufnr = vim.api.nvim_get_current_buf()
+	local line = vim.api.nvim_buf_get_lines(bufnr, v.foldstart - 1, v.foldstart, false)[1]
+	local ts = bo[bufnr].tabstop or 8
+	local expanded = line:gsub("\t", string.rep(" ", ts))
+	return expanded .. " ⋅⋅⋅ (" .. v.foldend - v.foldstart + 1 .. " lines) "
+end
+o.foldtext = "v:lua.MyFoldText()"
 
 -- lsp diagnostic text
 vim.diagnostic.config({
