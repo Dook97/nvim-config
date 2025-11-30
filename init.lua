@@ -66,6 +66,8 @@ require("nvim-treesitter-textobjects").setup({
 	select = { lookahead = true },
 })
 
+au("PackChanged", { command = "TSUpdate" })
+
 require("conform").setup({
 	formatters_by_ft = {
 		sh   = { "shfmt", "shellcheck" },
@@ -176,9 +178,12 @@ end)
 
 map("n", "<leader>fg", function()
 	if isgit() then
-		fzf.live_grep_native({ cmd = "git grep --line-number --column --color" })
+		fzf.live_grep_native({
+			search = "",
+			files = function() return vim.fn.systemlist("git ls-files") end,
+		})
 	else
-		fzf.live_grep_native()
+		fzf.grep_project({ search = "" })
 	end
 	vim.cmd.call([[feedkeys("\<c-g>", "n")]])
 end)
@@ -492,5 +497,17 @@ end
 au("LspAttach", {
 	callback = function(ev)
 		vim.lsp.completion.enable(true, ev.data.client_id, ev.buf)
+	end,
+})
+
+-- Interactive textual undotree:
+vim.cmd.packadd 'nvim.undotree'
+
+-- Enable the new experimental command-line features.
+require('vim._extui').enable {}
+
+au("VimEnter", {
+	callback = function()
+		vim.fs.rm(vim.fn.stdpath("config") .. "/nvim-pack-lock.json", { force = true })
 	end,
 })
