@@ -16,12 +16,13 @@ vim.cmd.colorscheme("dook")
 g.smoothie_remapped_commands = { "<C-D>", "<C-U>" }
 
 for _, pkg in ipairs({
-	{ src = "ibhagwan/fzf-lua" },                                              -- conveniently search buffers, files & whatever else
 	{ src = "tpope/vim-sleuth" },                                              -- automatic indentation mode detection
 	{ src = "psliwka/vim-smoothie" },                                          -- smooth scrolling
 	{ src = "stevearc/conform.nvim" },                                         -- ebin meta formatter thingy
 	{ src = "kylechui/nvim-surround" },                                        -- (un)surround stuff
 	{ src = "nvim-lualine/lualine.nvim" },                                     -- statusline
+	{ src = "nvim-lua/plenary.nvim" },                                         -- telescope prerequisite
+	{ src = "nvim-telescope/telescope.nvim" },                                 -- conveniently search buffers, files & whatever else
 	{ src = "shirosaki/tabular", version = "fix_leading_spaces" },             -- multiline alignment
 	{ src = "nvim-treesitter/nvim-treesitter", version = "main" },             -- a lot of functionality with ASTs
 	{ src = "nvim-treesitter/nvim-treesitter-textobjects", version = "main" }, -- define bindings for actions with AST text objects
@@ -164,40 +165,27 @@ map({ "n", "v" }, "<c-t>", ":Tab /")
 -- extended regex in searches
 map({ "n", "v", "o" }, "/", "/\\v")
 
--- fzf
-local function isgit()
-	return vim.fn.system("git rev-parse --is-inside-work-tree") == "true\n"
-end
-
-local fzf = require("fzf-lua")
-fzf.setup({ "telescope" })
-
+-- telescope
+local tscope = require("telescope.builtin")
 map("n", "<leader>ff", function()
-	if isgit() then fzf.git_files() else fzf.files() end
-end)
-
-map("n", "<leader>fg", function()
-	if isgit() then
-		fzf.live_grep_native({
-			search = "",
-			files = function() return vim.fn.systemlist("git ls-files") end,
-		})
+	local is_git_repo = vim.fn.system("git rev-parse --is-inside-work-tree 2>/dev/null") == "true\n"
+	if is_git_repo then
+		tscope.git_files({ show_untracked = true })
 	else
-		fzf.grep_project({ search = "" })
+		tscope.find_files()
 	end
-	vim.cmd.call([[feedkeys("\<c-g>", "n")]])
 end)
-
-map("n", "<leader>fb", FzfLua.buffers)
-map("n", "<leader>fm", FzfLua.man_pages)
-map("n", "<leader>fh", FzfLua.help_tags)
+map("n", "<leader>fb", "<cmd>Telescope buffers<cr>")
+map("n", "<leader>fg", "<cmd>Telescope live_grep<cr>")
+map("n", "<leader>fm", function() tscope.man_pages({ sections = { "ALL" } }) end)
+map("n", "<leader>fh", tscope.help_tags)
 
 -- LSP
 map("n", "grd", vim.lsp.buf.definition)
 map("n", "grD", vim.lsp.buf.declaration)
-map("n", "grr", FzfLua.lsp_references)
-map("n", "gre", FzfLua.diagnostics_document)
 map("n", "<c-w>[", "<cmd>vsplit<cr><cmd>lua vim.lsp.buf.definition()<cr>") -- counterpart to <c-w>]
+map("n", "grr", function() tscope.lsp_references({ show_line = false }) end)
+map("n", "gre", function() tscope.diagnostics({ bufnr = 0 }) end)
 ucmd("LspStop", function() vim.lsp.stop_client(vim.lsp.get_clients()) end, {})
 ucmd("LspRestart", function(kwargs)
 	local name = kwargs.fargs[1]
@@ -501,13 +489,15 @@ au("LspAttach", {
 })
 
 -- Interactive textual undotree:
-vim.cmd.packadd 'nvim.undotree'
+vim.cmd.packadd("nvim.undotree")
 
 -- Enable the new experimental command-line features.
-require('vim._extui').enable {}
+require("vim._extui").enable({})
 
 au("VimEnter", {
 	callback = function()
 		vim.fs.rm(vim.fn.stdpath("config") .. "/nvim-pack-lock.json", { force = true })
 	end,
 })
+
+au("WinLeave", { command = 'if &ft == "TelescopePrompt" | set ac' })
