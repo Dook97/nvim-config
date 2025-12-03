@@ -126,3 +126,6 @@ hi! @markup.heading.1.delimiter.vimdoc gui=none
 hi! @markup.raw.vimdoc guifg=#5fbb25
 hi! @markup.link.vimdoc gui=italic guifg=#59d0fd
 hi! link @string.special.url.vimdoc @markup.link.vimdoc
+
+hi! qfLineNr gui=bold guifg=red
+hi! qfFileName gui=bold guifg=Magenta

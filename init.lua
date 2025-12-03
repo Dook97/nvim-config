@@ -32,6 +32,12 @@ for _, pkg in ipairs({
 	vim.pack.add({pkg})
 end
 
+-- interactive textual undotree
+vim.cmd.packadd("nvim.undotree")
+
+-- experimental new command-line features
+require("vim._extui").enable({})
+
 require("lualine").setup({
 	options = {
 		icons_enabled = false,
@@ -133,7 +139,7 @@ end)
 map("n", "<leader>Q", ":qa!<cr>")
 
 -- quickly switch/delete/... buffers
-map("n", "<c-b>", "<cmd>buffers<cr>:b")
+-- map("n", "<c-b>", "<cmd>ls<cr>:b")
 
 -- format
 map("n", "Q", "gqq")
@@ -314,6 +320,12 @@ au("CompleteDone", {
 	end,
 })
 
+-- hide autocompletion when trying to view signature help
+map("i", "<c-s>", function()
+	vim.cmd.call([[feedkeys("\<c-e>", "n")]])
+	vim.lsp.buf.signature_help()
+end)
+
 -- ___ GENERAL OPTIONS ________________________________________
 
 vim.cmd("filetype plugin on")
@@ -393,6 +405,7 @@ au("BufWritePre", {
 })
 
 -- remove line highlighting on defocus
+o.cursorline = false -- to prevent cursorline showing in multiple splits when started with -o/-O
 au({ "BufEnter", "WinEnter", "FocusGained" }, { command = "setlocal cursorline" })
 au({ "BufLeave", "WinLeave", "FocusLost" },   { command = "setlocal nocursorline" })
 
@@ -417,13 +430,37 @@ g.c_syntax_for_h = 1
 
 -- hybrid numbers - relative in normal mode, absolute in insert mode
 o.nu = true
-o.rnu = true
+o.rnu = false -- to prevent relative numbers in multiple splits when started with -o/-O
 au({ "BufEnter", "InsertLeave", "WinEnter", "FocusGained" }, { command = "if &nu | setlocal rnu" })
 au({ "BufLeave", "InsertEnter", "WinLeave", "FocusLost" },   { command = "setlocal nornu" })
 au("TermOpen", { command = "setlocal nonu nornu" })
 
 -- fallback commentstring
 au("BufEnter", { command = "if empty(&cms) | setlocal cms=#\\ %s" })
+
+-- lsp diagnostic text
+vim.diagnostic.config({
+	virtual_text = true,
+	signs = {
+		numhl = {
+			[vim.diagnostic.severity.ERROR] = "DiagnosticLineNrError",
+			[vim.diagnostic.severity.WARN]  = "DiagnosticLineNrWarn",
+		},
+	},
+})
+
+-- load lsp servers' confs
+vim.lsp.config("*", { root_markers = { ".git" }})
+for name, _ in vim.fs.dir(vim.fn.stdpath("config") .. "/lsp/") do
+	vim.lsp.enable({ name:match("(.+)%.lua$") })
+end
+
+-- enable lsp completion (snippets etc)
+au("LspAttach", {
+	callback = function(ev)
+		vim.lsp.completion.enable(true, ev.data.client_id, ev.buf)
+	end,
+})
 
 -- tab line config
 function SafariTabLine()
@@ -465,39 +502,33 @@ function MyFoldText()
 end
 o.foldtext = "v:lua.MyFoldText()"
 
--- lsp diagnostic text
-vim.diagnostic.config({
-	virtual_text = true,
-	signs = {
-		numhl = {
-			[vim.diagnostic.severity.ERROR] = "DiagnosticLineNrError",
-			[vim.diagnostic.severity.WARN]  = "DiagnosticLineNrWarn",
-		},
-	},
-})
-
--- lsp conf
-vim.lsp.config("*", { root_markers = { ".git" }})
-for name, _ in vim.fs.dir(vim.fn.stdpath("config") .. "/lsp/") do
-	vim.lsp.enable({ name:match("(.+)%.lua$") })
+-- quickfix list appearence config
+function my_qftf(info)
+  local out = {}
+  local items = vim.fn.getqflist()
+  for i, item in ipairs(items) do
+    local filename = item.filename
+    if (not filename or filename == '') and item.bufnr and tonumber(item.bufnr) ~= 0 then
+      filename = vim.fn.bufname(item.bufnr)
+    end
+    filename = filename ~= '' and filename or "[NoFile]"
+    local lnum = item.lnum or 0
+    local msg = item.text or item.pattern or ''
+    table.insert(out, string.format("%s|%d| %s", filename, tonumber(lnum), msg))
+  end
+  return out
 end
+o.qftf = "v:lua.my_qftf"
 
-au("LspAttach", {
-	callback = function(ev)
-		vim.lsp.completion.enable(true, ev.data.client_id, ev.buf)
-	end,
-})
-
--- Interactive textual undotree:
-vim.cmd.packadd("nvim.undotree")
-
--- Enable the new experimental command-line features.
-require("vim._extui").enable({})
-
-au("VimEnter", {
+-- yank ring
+-- last yanked/deleted text goes to "1, the previous contents of "2 go to "3 and so on
+au("TextYankPost", {
 	callback = function()
-		vim.fs.rm(vim.fn.stdpath("config") .. "/nvim-pack-lock.json", { force = true })
+		local evt = v.event
+		for i = 9, 2, -1 do
+			local prev = tostring(i - 1)
+			vim.fn.setreg(tostring(i), vim.fn.getreg(prev), vim.fn.getregtype(prev))
+		end
+		vim.fn.setreg("1", evt.regcontents, evt.regtype)
 	end,
 })
-
-au("WinLeave", { command = 'if &ft == "TelescopePrompt" | set ac' })
