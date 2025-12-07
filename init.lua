@@ -532,3 +532,8 @@ au("TextYankPost", {
 		vim.fn.setreg("1", evt.regcontents, evt.regtype)
 	end,
 })
+
+-- cmdline autocompletion
+au("CmdlineChanged", { pattern = ":", command = "call wildtrigger()" })
+o.wildmode = "noselect:lastused,full"
+o.wildoptions = "pum"
