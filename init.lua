@@ -51,6 +51,9 @@ require("lualine").setup({
 		lualine_x = { "encoding", "fileformat", "filetype" },
 		lualine_y = {},
 	},
+	inactive_sections = {
+		lualine_c = { { "filename", path = 1 } },
+	},
 })
 
 -- netrw settings
