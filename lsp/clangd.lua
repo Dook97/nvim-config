@@ -1,5 +1,5 @@
 return {
-	cmd = { "clangd", "--background-index" },
+	cmd = { "clangd", "--background-index", "--header-insertion=never" },
 	root_markers = {
 		".clangd",
 		".clang-tidy",

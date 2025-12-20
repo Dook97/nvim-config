@@ -16,6 +16,7 @@ vim.cmd.colorscheme("dook")
 g.smoothie_remapped_commands = { "<C-D>", "<C-U>" }
 
 for _, pkg in ipairs({
+	{ src = "phanen/vbi.nvim" },                                               -- visual block realtime insert
 	{ src = "tpope/vim-sleuth" },                                              -- automatic indentation mode detection
 	{ src = "psliwka/vim-smoothie" },                                          -- smooth scrolling
 	{ src = "stevearc/conform.nvim" },                                         -- ebin meta formatter thingy
@@ -25,7 +26,7 @@ for _, pkg in ipairs({
 	{ src = "nvim-telescope/telescope.nvim" },                                 -- conveniently search buffers, files & whatever else
 	{ src = "shirosaki/tabular", version = "fix_leading_spaces" },             -- multiline alignment
 	{ src = "nvim-treesitter/nvim-treesitter", version = "main" },             -- a lot of functionality with ASTs
-	{ src = "nvim-treesitter/nvim-treesitter-textobjects", version = "main" }, -- define bindings for actions with AST text objects
+	-- { src = "nvim-treesitter/nvim-treesitter-textobjects", version = "main" }, -- define bindings for actions with AST text objects
 	{ src = "nvim-treesitter/nvim-treesitter-context" },                       -- show current function name when scrolling
 }) do
 	pkg.src = "https://github.com/" .. pkg.src
@@ -34,9 +35,6 @@ end
 
 -- interactive textual undotree
 vim.cmd.packadd("nvim.undotree")
-
--- experimental new command-line features
-require("vim._extui").enable({})
 
 require("lualine").setup({
 	options = {
@@ -58,7 +56,7 @@ require("lualine").setup({
 
 -- netrw settings
 g.netrw_liststyle = 3
-g.netrw_banner = 0
+-- g.netrw_banner = 0
 
 require("nvim-treesitter").install({
 	"c", "cpp", "go", "javascript", "json", "python", "comment",
@@ -67,7 +65,7 @@ require("nvim-treesitter").install({
 	"sql", "css", "dockerfile", "bash", "rust", "query", "lua",
 })
 
--- enable treesitter highlighting
+-- highlighting
 au("FileType", {
 	callback = function() pcall(vim.treesitter.start) end,
 })
@@ -78,6 +76,7 @@ require("nvim-treesitter-textobjects").setup({
 
 au("PackChanged", { command = "TSUpdate" })
 
+-- for some langs use external formatters with range formatting provided by conform
 require("conform").setup({
 	formatters_by_ft = {
 		sh   = { "shfmt", "shellcheck" },
@@ -92,7 +91,7 @@ require("conform").setup({
 	},
 })
 
--- use conform as formatexpr for filetypes that have a formatter set
+-- use conform's formatexpr for filetypes that have a formatter set
 au("FileType", {
 	pattern = vim.tbl_keys(require("conform").formatters_by_ft),
 	callback = function()
@@ -169,7 +168,7 @@ map("v", "<leader>p", '"_dP')
 map("c", "w!!", "execute 'silent! write !sudo tee % >/dev/null' <bar> edit!")
 
 -- tabular plugin shortcut
-map({ "n", "v" }, "<c-t>", ":Tab /")
+map({ "n", "v" }, "<c-t>", ":Tab /\\v")
 
 -- extended regex in searches
 map({ "n", "v", "o" }, "/", "/\\v")
@@ -195,28 +194,8 @@ map("n", "grD", vim.lsp.buf.declaration)
 map("n", "<c-w>[", "<cmd>vsplit<cr><cmd>lua vim.lsp.buf.definition()<cr>") -- counterpart to <c-w>]
 map("n", "grr", function() tscope.lsp_references({ show_line = false }) end)
 map("n", "gre", function() tscope.diagnostics({ bufnr = 0 }) end)
-ucmd("LspStop", function() vim.lsp.stop_client(vim.lsp.get_clients()) end, {})
-ucmd("LspRestart", function(kwargs)
-	local name = kwargs.fargs[1]
-	for _, client in ipairs(vim.lsp.get_clients({ name = name })) do
-		local bufs = vim.lsp.get_buffers_by_client_id(client.id)
-		client:stop()
-		vim.wait(30000, function()
-			return vim.lsp.get_client_by_id(client.id) == nil
-		end)
-		local client_id = vim.lsp.start(client.config, { attach = false })
-		if client_id then
-			for _, buf in ipairs(bufs) do
-				vim.lsp.buf_attach_client(buf, client_id)
-			end
-		end
-	end
-end, {
-	nargs = "?",
-	complete = function() return vim.tbl_map(function(c) return c.name end, vim.lsp.get_clients()) end,
-})
 
--- stolen from neovim runtime
+-- get current commenstring based on treesitter; stolen from neovim runtime
 local function comment(move)
 	local lhs, rhs = (function()
 		local ref_position = vim.api.nvim_win_get_cursor(0)
@@ -258,6 +237,7 @@ local function comment(move)
 	local shiftstr = string.rep(vim.keycode("<Left>"), #rhs)
 	vim.fn.feedkeys(move .. lhs .. rhs .. shiftstr, "n")
 end
+
 -- comment below/above/at the end of current line
 map("n", "gco", function() comment("o") end)
 map("n", "gcO", function() comment("O") end)
@@ -265,12 +245,6 @@ map("n", "gcA", function() comment("A ") end)
 
 -- keep cursor in place when joining lines
 map("n", "J", "mzJ`z:delmarks z<cr>")
-
--- autocompletion accept
-map({ "i", "c" }, "<c-j>", "<c-y>")
-
--- remove annoying, unnecessary default behaviour
-map({ "n", "v" }, "<Space>", "<Nop>")
 
 -- update hugo content dates
 vim.cmd([[
@@ -287,31 +261,24 @@ endfunction
 command! HugoTimeUpdate call HugoTimeUpdate_f()
 ]])
 
-local ts_obj_s = require("nvim-treesitter-textobjects.select")
-for _, v in ipairs({
-	{ "if", "@function.inner" },
-	{ "af", "@function.outer" },
-	{ "ic", "@class.inner" },
-	{ "ac", "@class.outer" },
-	{ "iP", "@parameter.inner" },
-	{ "aP", "@parameter.outer" },
-	{ "iC", "@comment.inner" },
-	{ "aC", "@comment.outer" },
-}) do
-	map({ "v", "o" }, v[1], function()
-		ts_obj_s.select_textobject(v[2], "textobjects")
-	end)
-end
-
-local ts_obj_m = require("nvim-treesitter-textobjects.move")
-for _, v in ipairs({
-	{ "]f", ts_obj_m.goto_next_start },
-	{ "]F", ts_obj_m.goto_next_end },
-	{ "[f", ts_obj_m.goto_previous_start },
-	{ "[F", ts_obj_m.goto_previous_end },
-}) do
-	map({ "n", "v", "o" }, v[1], function() v[2]("@function.outer", "textobjects") end)
-end
+-- treesitter textobjects mappings
+local tssel = require("nvim-treesitter-textobjects.select").select_textobject
+local tsmov = require("nvim-treesitter-textobjects.move")
+local tsswp = require("nvim-treesitter-textobjects.swap")
+map("n", "<leader>s", function() tsswp.swap_next("@parameter.inner") end)
+map("n", "<leader>a", function() tsswp.swap_previous("@parameter.inner") end)
+map({ "v", "o" }, "if", function() tssel("@function.inner", "textobjects") end)
+map({ "v", "o" }, "af", function() tssel("@function.outer", "textobjects") end)
+map({ "v", "o" }, "ic", function() tssel("@class.inner", "textobjects") end)
+map({ "v", "o" }, "ac", function() tssel("@class.outer", "textobjects") end)
+map({ "v", "o" }, "ia", function() tssel("@parameter.inner", "textobjects") end)
+map({ "v", "o" }, "aa", function() tssel("@parameter.outer", "textobjects") end)
+map({ "v", "o" }, "ic", function() tssel("@comment.inner", "textobjects") end)
+map({ "v", "o" }, "ac", function() tssel("@comment.outer", "textobjects") end)
+map({ "n", "v", "o" }, "]f", function() tsmov.goto_next_start("@function.outer") end)
+map({ "n", "v", "o" }, "]F", function() tsmov.goto_next_end("@function.outer") end)
+map({ "n", "v", "o" }, "[f", function() tsmov.goto_previous_start("@function.outer") end)
+map({ "n", "v", "o" }, "[F", function() tsmov.goto_previous_end("@function.outer") end)
 
 -- <c-x><c-f> complete menu stays open as long as you accept tokens
 au("CompleteDone", {
@@ -348,8 +315,9 @@ au({ "WinEnter", "WinClosed", "OptionSet" }, {
 	callback = function() o.showmode = o.laststatus < 2 and vim.fn.winnr("$") < 2 end,
 })
 
--- reserved number of lines from top and bottom of viewport
-o.scrolloff = 5
+-- keep some space betwwen cursor and window edges
+o.scrolloff = 2
+o.sidescrolloff = 5
 
 -- don't wrap long lines
 o.wrap = false
@@ -384,12 +352,12 @@ o.winborder = "rounded"
 
 -- insert mode completion options
 o.autocomplete = true
-o.complete = "o,.,w,b,u"
+o.complete = "o,.,w,f"
 o.completeopt = "fuzzy,menuone,noselect,popup"
 o.pumheight = 7
 o.pummaxwidth = 80
 opt.shortmess:prepend("c") -- avoid having to press enter on snippet completion
-au("LspAttach", { command = "setlocal complete=o" })
+-- au("LspAttach", { command = "setlocal complete^=o" })
 
 -- indentation settings
 opt.cinoptions:append({ ":0", "g0", "N-s" })
@@ -465,7 +433,7 @@ au("LspAttach", {
 	end,
 })
 
--- tab line config
+-- tab line
 function SafariTabLine()
 	local tab_count = vim.fn.tabpagenr("$")
 	local tab_width = math.floor(o.columns / tab_count)
@@ -495,7 +463,7 @@ function SafariTabLine()
 end
 o.tabline = "%!v:lua.SafariTabLine()"
 
--- fold appearence config
+-- fold appearence
 function MyFoldText()
 	local bufnr = vim.api.nvim_get_current_buf()
 	local line = vim.api.nvim_buf_get_lines(bufnr, v.foldstart - 1, v.foldstart, false)[1]
@@ -505,7 +473,7 @@ function MyFoldText()
 end
 o.foldtext = "v:lua.MyFoldText()"
 
--- quickfix list appearence config
+-- quickfix list appearence
 function my_qftf(info)
   local out = {}
   local items = vim.fn.getqflist()
@@ -540,3 +508,6 @@ au("TextYankPost", {
 au("CmdlineChanged", { pattern = ":", command = "call wildtrigger()" })
 o.wildmode = "noselect:lastused,full"
 o.wildoptions = "pum"
+
+-- experimental new command-line features
+require("vim._extui").enable({})
