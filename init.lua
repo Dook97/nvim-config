@@ -102,7 +102,7 @@ require("mini.extra").setup()
 
 -- mini.pick without gay icons
 local pick = require("mini.pick")
-pick.setup({ source = { show = pick.default_show } })
+pick.setup({ source = { show = pick.default_show }, mappings = { choose_marked = "<C-q>" } })
 
 -- ___ KEYBINDS _______________________________________________
 
@@ -175,8 +175,8 @@ map({ "n", "v", "o" }, "/", "/\\v")
 -- picker
 map("n", "<leader>ff", "<cmd>Pick files<cr>")
 map("n", "<leader>fb", "<cmd>Pick buffers<cr>")
-map("n", "<leader>fg", "<cmd>Pick live_grep<cr>")
--- map("n", "<leader>fm", function() tscope.man_pages({ sections = { "ALL" } }) end)
+map("n", "<leader>fg", "<cmd>Pick grep_live<cr>")
+map("n", "<leader>fm", "<cmd>Pick man<cr>")
 map("n", "<leader>fh", "<cmd>Pick help<cr>")
 
 -- LSP
