@@ -186,8 +186,9 @@ map("n", "<c-w>[", "<cmd>vsplit<cr><cmd>lua vim.lsp.buf.definition()<cr>") -- co
 map("n", "gre", "<cmd>Pick diagnostic<cr>")
 map("n", "grr", "<cmd>Pick lsp scope=\"references\"<cr>")
 
--- get current commenstring based on treesitter; stolen from neovim runtime
+-- comment below/above/at the end of current line
 local function comment(move)
+	-- get current commenstring based on treesitter; stolen from neovim runtime
 	local lhs, rhs = (function()
 		local ref_position = vim.api.nvim_win_get_cursor(0)
 		local buf_cs = vim.bo.commentstring
@@ -228,8 +229,6 @@ local function comment(move)
 	local shiftstr = string.rep(vim.keycode("<Left>"), #rhs)
 	vim.fn.feedkeys(move .. lhs .. rhs .. shiftstr, "n")
 end
-
--- comment below/above/at the end of current line
 map("n", "gco", function() comment("o") end)
 map("n", "gcO", function() comment("O") end)
 map("n", "gcA", function() comment("A ") end)
@@ -446,6 +445,30 @@ au("LspAttach", {
 	end,
 })
 
+-- yank ring
+-- last yanked/deleted text goes to "1, the previous contents of "2 go to "3 and so on
+au("TextYankPost", {
+	callback = function()
+		local evt = v.event
+		for i = 9, 2, -1 do
+			local prev = tostring(i - 1)
+			vim.fn.setreg(tostring(i), vim.fn.getreg(prev), vim.fn.getregtype(prev))
+		end
+		vim.fn.setreg("1", evt.regcontents, evt.regtype)
+	end,
+})
+
+-- cmdline autocompletion
+au("CmdlineChanged", { pattern = ":", command = "call wildtrigger()" })
+o.wildmode = "noselect:lastused,full"
+o.wildoptions = "pum"
+
+-- experimental new command-line features
+require("vim._extui").enable({})
+
+-- interactive textual undotree
+vim.cmd.packadd("nvim.undotree")
+
 -- tab line
 function SafariTabLine()
 	local tab_count = vim.fn.tabpagenr("$")
@@ -503,27 +526,3 @@ function my_qftf(info)
   return out
 end
 o.qftf = "v:lua.my_qftf"
-
--- yank ring
--- last yanked/deleted text goes to "1, the previous contents of "2 go to "3 and so on
-au("TextYankPost", {
-	callback = function()
-		local evt = v.event
-		for i = 9, 2, -1 do
-			local prev = tostring(i - 1)
-			vim.fn.setreg(tostring(i), vim.fn.getreg(prev), vim.fn.getregtype(prev))
-		end
-		vim.fn.setreg("1", evt.regcontents, evt.regtype)
-	end,
-})
-
--- cmdline autocompletion
-au("CmdlineChanged", { pattern = ":", command = "call wildtrigger()" })
-o.wildmode = "noselect:lastused,full"
-o.wildoptions = "pum"
-
--- experimental new command-line features
-require("vim._extui").enable({})
-
--- interactive textual undotree
-vim.cmd.packadd("nvim.undotree")
