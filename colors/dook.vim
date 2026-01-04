@@ -108,6 +108,8 @@ hi! PmenuSel        guifg=black guibg=cyan gui=bold
 hi! PmenuThumb      guibg=#738589
 hi! FloatBorder     guibg=#262626
 hi! link PmenuSbar  Normal
+hi! FloatTitle guibg=#d5d5d5 guifg=black gui=bold
+hi! MiniPickPrompt gui=bold guifg=Cyan guibg=#262626
 
 " as far as I can tell this is just annoying in LSP windows and doesn't do
 " anything useful
