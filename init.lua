@@ -16,7 +16,6 @@ vim.cmd.colorscheme("dook")
 g.smoothie_remapped_commands = { "<C-D>", "<C-U>" }
 
 for _, pkg in ipairs({
-	{ src = "phanen/vbi.nvim" },                                               -- visual block realtime insert
 	{ src = "tpope/vim-sleuth" },                                              -- automatic indentation mode detection
 	{ src = "psliwka/vim-smoothie" },                                          -- smooth scrolling
 	{ src = "stevearc/conform.nvim" },                                         -- ebin meta formatter thingy
