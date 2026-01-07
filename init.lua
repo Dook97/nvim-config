@@ -21,11 +21,11 @@ for _, pkg in ipairs({
 	{ src = "stevearc/conform.nvim" },                                         -- ebin meta formatter thingy
 	{ src = "kylechui/nvim-surround" },                                        -- (un)surround stuff
 	{ src = "nvim-lualine/lualine.nvim" },                                     -- statusline
-	{ src = "nvim-mini/mini.extra" },                                          -- extra pickers for mini.pick
+	-- { src = "nvim-mini/mini.extra" },                                          -- extra pickers for mini.pick
 	{ src = "nvim-mini/mini.pick" },                                           -- general pickers
 	{ src = "shirosaki/tabular", version = "fix_leading_spaces" },             -- multiline alignment
 	{ src = "nvim-treesitter/nvim-treesitter", version = "main" },             -- a lot of functionality with ASTs
-	{ src = "nvim-treesitter/nvim-treesitter-textobjects", version = "main" }, -- define bindings for actions with AST text objects
+	-- { src = "nvim-treesitter/nvim-treesitter-textobjects", version = "main" }, -- define bindings for actions with AST text objects
 	{ src = "nvim-treesitter/nvim-treesitter-context" },                       -- show current function name when scrolling
 }) do
 	pkg.src = "https://github.com/" .. pkg.src
@@ -306,6 +306,8 @@ map({"n", "v"}, "<leader>gb", function()
     end
   end
 end)
+
+ucmd("Restart", "mksession! /tmp/nvim-restart-session.vim | restart source /tmp/nvim-restart-session.vim", {})
 
 -- ___ GENERAL OPTIONS ________________________________________
 
