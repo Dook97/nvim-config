@@ -307,6 +307,8 @@ map({"n", "v"}, "<leader>gb", function()
   end
 end)
 
+ucmd("Restart", "mksession! /tmp/nvim-restart-session.vim | restart source /tmp/nvim-restart-session.vim", {})
+
 -- ___ GENERAL OPTIONS ________________________________________
 
 vim.cmd("filetype plugin on")
