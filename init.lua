@@ -309,6 +309,16 @@ end)
 
 ucmd("Restart", "mksession! /tmp/nvim-restart-session.vim | restart source /tmp/nvim-restart-session.vim", {})
 
+-- disable smoothie in diff buffers (doesnt play well with folds)
+au("BufEnter", {
+	callback = function()
+		if vim.wo.diff then
+			map({ "n", "v" }, "<c-d>", "<c-d>", { buffer = true })
+			map({ "n", "v" }, "<c-u>", "<c-u>", { buffer = true })
+		end
+	end,
+})
+
 -- ___ GENERAL OPTIONS ________________________________________
 
 vim.cmd("filetype plugin on")
