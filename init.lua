@@ -319,6 +319,12 @@ au("BufEnter", {
 	end,
 })
 
+ucmd("Grep", function(opts)
+  vim.cmd("silent! cclose")
+  vim.cmd("silent grep! " .. opts.args)
+  vim.cmd("copen")
+end, { nargs = "+" })
+
 -- ___ GENERAL OPTIONS ________________________________________
 
 vim.cmd("filetype plugin on")
