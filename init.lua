@@ -440,7 +440,9 @@ au("BufEnter", { command = "if empty(&cms) | setlocal cms=#\\ %s" })
 
 -- lsp diagnostic text
 vim.diagnostic.config({
-	virtual_text = true,
+	virtual_text = {
+		severity = { min = vim.diagnostic.severity.WARN },
+	},
 	signs = {
 		numhl = {
 			[vim.diagnostic.severity.ERROR] = "DiagnosticLineNrError",
