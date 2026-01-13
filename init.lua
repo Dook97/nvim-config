@@ -357,7 +357,7 @@ o.splitright = true
 
 -- persistent undo
 o.undofile = true
-o.swapfile = false
+-- o.swapfile = false
 
 -- search is case insensitive unless upper case character is in the query
 o.ignorecase = true
