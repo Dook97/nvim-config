@@ -327,6 +327,9 @@ end, { nargs = "+" })
 map("c", "<c-p>", "<up>")
 map("c", "<c-n>", "<down>")
 
+-- easier completion accept
+map({ "i", "c" }, "<c-j>", "<c-y>")
+
 -- ___ GENERAL OPTIONS ________________________________________
 
 vim.cmd("filetype plugin on")
