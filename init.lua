@@ -307,8 +307,6 @@ map({"n", "v"}, "<leader>gb", function()
   end
 end)
 
-ucmd("Restart", "mksession! /tmp/nvim-restart-session.vim | restart source /tmp/nvim-restart-session.vim", {})
-
 -- disable smoothie in diff buffers (doesnt play well with folds)
 au("BufEnter", {
 	callback = function()
