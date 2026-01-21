@@ -323,6 +323,10 @@ ucmd("Grep", function(opts)
   vim.cmd("copen")
 end, { nargs = "+" })
 
+-- take current command prefix into account when using <c-p>/<c-n>
+map("c", "<c-p>", "<up>")
+map("c", "<c-n>", "<down>")
+
 -- ___ GENERAL OPTIONS ________________________________________
 
 vim.cmd("filetype plugin on")
