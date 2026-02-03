@@ -182,7 +182,7 @@ map("n", "grd", vim.lsp.buf.definition)
 map("n", "grD", vim.lsp.buf.declaration)
 map("n", "<c-w>[", "<cmd>vsplit<cr><cmd>lua vim.lsp.buf.definition()<cr>") -- counterpart to <c-w>]
 map("n", "gre", "<cmd>Pick diagnostic<cr>")
-map("n", "grr", "<cmd>Pick lsp scope=\"references\"<cr>")
+map("n", "grr", [[<cmd>Pick lsp scope="references"<cr>]])
 
 -- comment below/above/at the end of current line
 local function comment(move)
@@ -331,8 +331,6 @@ map({ "i", "c" }, "<c-j>", "<c-y>")
 
 -- ___ GENERAL OPTIONS ________________________________________
 
-vim.cmd("filetype plugin on")
-
 o.smartindent = true
 
 -- set window title
@@ -440,7 +438,7 @@ au({ "BufLeave", "InsertEnter", "WinLeave", "FocusLost" },   { command = "setloc
 au("TermOpen", { command = "setlocal nonu nornu" })
 
 -- fallback commentstring
-au("BufEnter", { command = "if empty(&cms) | setlocal cms=#\\ %s" })
+au("BufEnter", { command = [[if empty(&cms) | setlocal cms=#\ %s]] })
 
 -- lsp diagnostic text
 vim.diagnostic.config({
@@ -493,7 +491,7 @@ require("vim._extui").enable({})
 vim.cmd.packadd("nvim.undotree")
 
 -- tab line
-function SafariTabLine()
+function safari_tabline()
 	local tab_count = vim.fn.tabpagenr("$")
 	local tab_width = math.floor(o.columns / tab_count)
 	local s = ""
@@ -520,17 +518,17 @@ function SafariTabLine()
 	end
 	return s
 end
-o.tabline = "%!v:lua.SafariTabLine()"
+o.tabline = "%!v:lua.safari_tabline()"
 
 -- fold appearence
-function MyFoldText()
+function my_fold_text()
 	local bufnr = vim.api.nvim_get_current_buf()
 	local line = vim.api.nvim_buf_get_lines(bufnr, v.foldstart - 1, v.foldstart, false)[1]
 	local ts = bo[bufnr].tabstop or 8
 	local expanded = line:gsub("\t", string.rep(" ", ts))
 	return expanded .. " ⋅⋅⋅ (" .. v.foldend - v.foldstart + 1 .. " lines) "
 end
-o.foldtext = "v:lua.MyFoldText()"
+o.foldtext = "v:lua.my_fold_text()"
 
 -- quickfix list appearence
 function my_qftf(info)
