@@ -15,7 +15,7 @@ vim.cmd.colorscheme("dook")
 
 g.smoothie_remapped_commands = { "<C-D>", "<C-U>" }
 
-for _, pkg in ipairs({
+local pkgs = {
 	{ src = "tpope/vim-sleuth" },                                  -- automatic indentation mode detection
 	{ src = "psliwka/vim-smoothie" },                              -- smooth scrolling
 	{ src = "stevearc/conform.nvim" },                             -- ebin meta formatter thingy
@@ -27,10 +27,9 @@ for _, pkg in ipairs({
 	{ src = "nvim-treesitter/nvim-treesitter" },                   -- a lot of functionality with ASTs
 	{ src = "nvim-treesitter/nvim-treesitter-textobjects" },       -- define bindings for actions with AST text objects
 	{ src = "nvim-treesitter/nvim-treesitter-context" },           -- show current function name when scrolling
-}) do
-	pkg.src = "https://github.com/" .. pkg.src
-	vim.pack.add({pkg})
-end
+}
+for _, pkg in ipairs(pkgs) do pkg.src = "https://github.com/" .. pkg.src end
+vim.pack.add(pkgs)
 
 require("lualine").setup({
 	options = {
