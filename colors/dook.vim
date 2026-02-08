@@ -1,7 +1,3 @@
-set background=dark
-set termguicolors
-hi clear
-
 set termguicolors
 
 " Hide stupid lsp highlights
@@ -13,34 +9,40 @@ EOF
 
 " highlight current line
 set cursorline
-hi! LineNr       gui=none guifg=#6c6c6c
-hi! CursorLine   gui=none guibg=#333333
-hi! CursorLineNr gui=none guifg=#fffe00
+hi! LineNr       gui=none guifg=#6c6c6c cterm=none ctermfg=8
+hi! CursorLine   gui=none guibg=#333333 cterm=none ctermbg=236
+hi! CursorLineNr gui=none guifg=#fffe00 cterm=none ctermfg=11
 
 " matching paren highlighting
-hi! MatchParenActive gui=bold guibg=#5fd7ff guifg=#08080a
+hi! MatchParenActive gui=bold guibg=#5fd7ff guifg=#08080a ctermbg=14 ctermfg=black
 hi! link MatchParen MatchParenActive
 au InsertEnter * hi clear MatchParen
 au InsertLeave * hi! link MatchParen MatchParenActive
 
 " style vertical split line
-hi! WinSeparator gui=None guifg=#585858
-hi! clear StatusLine
-hi! clear StatusLineNC
-hi! TabLineSel guifg=#00c7ff guibg=#003f71
+hi! WinSeparator gui=None guifg=#585858 cterm=none ctermfg=239
+hi! TabLineSel guifg=#00c7ff guibg=#003f71 ctermbg=25 ctermfg=14
+hi TabLine guibg=none gui=bold ctermbg=none cterm=bold
 
-hi! Normal                      cterm=none ctermfg=254 ctermbg=none gui=none guifg=#d5d5d5 guibg=none
-hi! Keyword                     gui=none guifg=#d0d000
-hi! Type                        gui=none guifg=#919191
+hi! StatusLineNC guibg=#222222 guifg=#aaaaaa gui=bold
+             \ ctermfg=250 ctermbg=235 cterm=bold
+hi! StatusLine guibg=#444444 guifg=#cccccc gui=bold
+             \ ctermbg=239 cterm=bold
+
+hi! Normal                      cterm=none ctermfg=252 ctermbg=none
+                              \ gui=none guifg=#d5d5d5 guibg=none
+hi! Keyword                     gui=none guifg=#d0d000 ctermfg=3
+hi! Type                        gui=none guifg=#919191 ctermfg=246
 hi! Title                       gui=none guifg=#ff00ff
 hi! @text.emphasis              gui=italic
 hi! @text.strong                gui=bold
 hi! Folded                      guibg=#383838 guifg=#59d0fd
 hi! Todo                        guibg=#ffff00 guifg=black
 hi! String                      guibg=none guifg=#5fbb25
+                              \ ctermbg=none ctermfg=34
 hi! @comment.note               guifg=magenta
 hi! Search                      guibg=Yellow guifg=black
-hi! TreesitterContext           guibg=#265601
+hi! TreesitterContext           guibg=#265601 ctermbg=22
 hi! manSubHeading               guifg=Magenta
 hi! Added                       guifg=#19d50c
 hi! Removed                     guifg=Red
@@ -132,4 +134,6 @@ hi! @markup.link.vimdoc gui=italic guifg=#59d0fd
 hi! link @string.special.url.vimdoc @markup.link.vimdoc
 
 hi! qfLineNr gui=bold guifg=red
+      \ cterm=bold ctermfg=red
 hi! qfFileName gui=bold guifg=Magenta
+      \ cterm=bold ctermfg=Magenta
