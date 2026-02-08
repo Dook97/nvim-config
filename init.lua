@@ -40,6 +40,7 @@ require("nvim-treesitter").install({
 	"make", "html", "gitignore", "gitcommit", "arduino", "yaml",
 	"sql", "css", "dockerfile", "bash", "rust", "query", "lua",
 })
+au("PackChanged", { command = "TSUpdate" })
 
 -- highlighting
 au("FileType", {
@@ -49,8 +50,6 @@ au("FileType", {
 require("nvim-treesitter-textobjects").setup({
 	select = { lookahead = true, set_jumps = true },
 })
-
-au("PackChanged", { command = "TSUpdate" })
 
 -- for some langs use external formatters with range formatting provided by conform
 require("conform").setup({
@@ -143,7 +142,7 @@ map("n", "<leader>n", ":Explore<cr>")
 map("v", "<leader>p", '"_dP')
 
 -- save file as sudo on files that require root permission
-map("c", "w!!", "execute 'silent! write !sudo tee % >/dev/null' <bar> edit!")
+vim.cmd.cabbr([[w!! execute 'silent! write !sudo tee %' <bar> edit!]])
 
 -- tabular plugin shortcut
 map({ "n", "v" }, "<c-t>", ":Tab /\\v")
@@ -249,16 +248,6 @@ map({ "n", "v", "o" }, "]F", function() tsmov.goto_next_end("@function.outer") e
 map({ "n", "v", "o" }, "[f", function() tsmov.goto_previous_start("@function.outer") end)
 map({ "n", "v", "o" }, "[F", function() tsmov.goto_previous_end("@function.outer") end)
 
--- <c-x><c-f> complete menu stays open as long as you accept tokens
-au("CompleteDone", {
-	callback = function()
-		local e = v.event
-		if e.complete_type == "files" and e.reason == "accept" then
-			vim.cmd.call([[feedkeys("\<c-x>\<c-f>", "n")]])
-		end
-	end,
-})
-
 -- hide autocompletion when trying to view signature help
 map("i", "<c-s>", function()
 	vim.cmd.call([[feedkeys("\<c-e>", "n")]])
@@ -267,40 +256,30 @@ end)
 
 -- show git blame for current line(s)
 map({"n", "v"}, "<leader>gb", function()
-  local start_line, end_line
-  if vim.fn.mode() == "v" or vim.fn.mode() == "V" then
-    start_line = vim.fn.line("v")
-    end_line = vim.fn.line(".")
-  else
-    start_line = vim.fn.line(".")
-    end_line = start_line
-  end
-  local file = vim.fn.expand("%")
-  local cmd = string.format("git blame -c -L %d,%d -- %s |& tr '\t' ' '", start_line, end_line, file)
-  local out = vim.fn.systemlist(cmd)
-  if start_line == end_line then
-    vim.api.nvim_echo({{out[1], "Normal"}}, false, {})
-  else
-    for _, line in ipairs(out) do
-      vim.api.nvim_echo({{line, "Normal"}}, false, {})
-    end
-  end
+	local start_line, end_line
+	if vim.fn.mode() == "v" or vim.fn.mode() == "V" then
+		start_line = vim.fn.line("v")
+		end_line = vim.fn.line(".")
+	else
+		start_line = vim.fn.line(".")
+		end_line = start_line
+	end
+	local file = vim.fn.expand("%")
+	local cmd = string.format("git blame -c -L %d,%d -- %s |& tr '\t' ' '", start_line, end_line, file)
+	local out = vim.fn.systemlist(cmd)
+	if start_line == end_line then
+		vim.api.nvim_echo({{out[1], "Normal"}}, false, {})
+	else
+		for _, line in ipairs(out) do
+			vim.api.nvim_echo({{line, "Normal"}}, false, {})
+		end
+	end
 end)
 
--- disable smoothie in diff buffers (doesnt play well with folds)
-au("BufEnter", {
-	callback = function()
-		if vim.wo.diff then
-			map({ "n", "v" }, "<c-d>", "<c-d>", { buffer = true })
-			map({ "n", "v" }, "<c-u>", "<c-u>", { buffer = true })
-		end
-	end,
-})
-
 ucmd("Grep", function(opts)
-  vim.cmd("silent! cclose")
-  vim.cmd("silent grep! " .. opts.args)
-  vim.cmd("copen")
+	vim.cmd("silent! cclose")
+	vim.cmd("silent grep! " .. opts.args)
+	vim.cmd("copen")
 end, { nargs = "+" })
 
 -- take current command prefix into account when using <c-p>/<c-n>
@@ -318,10 +297,9 @@ o.smartindent = true
 o.title = true
 
 -- when to show status line
+o.ruler = false
 o.laststatus = 1
 au("LspAttach", { command = "set laststatus=2" })
-o.ruler = false
-o.showmode = true
 
 -- keep some space betwwen cursor and window edges
 o.scrolloff = 2
@@ -336,7 +314,6 @@ o.splitright = true
 
 -- persistent undo
 o.undofile = true
--- o.swapfile = false
 
 -- search is case insensitive unless upper case character is in the query
 o.ignorecase = true
@@ -365,7 +342,6 @@ o.completeopt = "fuzzy,menuone,noselect,popup"
 o.pumheight = 7
 o.pummaxwidth = 80
 opt.shortmess:prepend("c") -- avoid having to press enter on snippet completion
--- au("LspAttach", { command = "setlocal complete^=o" })
 
 -- indentation settings
 opt.cinoptions:append({ ":0", "g0", "N-s" })
@@ -443,29 +419,23 @@ au("LspAttach", {
 	end,
 })
 
--- yank ring
--- last yanked/deleted text goes to "1, the previous contents of "2 go to "3 and so on
-au("TextYankPost", {
-	callback = function()
-		local evt = v.event
-		for i = 9, 2, -1 do
-			local prev = tostring(i - 1)
-			vim.fn.setreg(tostring(i), vim.fn.getreg(prev), vim.fn.getregtype(prev))
-		end
-		vim.fn.setreg("1", evt.regcontents, evt.regtype)
-	end,
-})
-
 -- cmdline autocompletion
 au("CmdlineChanged", { pattern = ":", command = "call wildtrigger()" })
 o.wildmode = "noselect:lastused,full"
 o.wildoptions = "pum"
 
+-- <c-x><c-f> complete menu stays open as long as you accept tokens
+au("CompleteDone", {
+	callback = function()
+		local e = v.event
+		if e.complete_type == "files" and e.reason == "accept" then
+			vim.cmd.call([[feedkeys("\<c-x>\<c-f>", "n")]])
+		end
+	end,
+})
+
 -- experimental new command-line features
 require("vim._extui").enable({})
-
--- interactive textual undotree
-vim.cmd.packadd("nvim.undotree")
 
 -- tab line
 function safari_tabline()
@@ -509,19 +479,19 @@ o.foldtext = "v:lua.my_fold_text()"
 
 -- quickfix list appearence
 function my_qftf(info)
-  local out = {}
-  local items = vim.fn.getqflist()
-  for i, item in ipairs(items) do
-    local filename = item.filename
-    if (not filename or filename == '') and item.bufnr and tonumber(item.bufnr) ~= 0 then
-      filename = vim.fn.bufname(item.bufnr)
-    end
-    filename = filename ~= '' and filename or "[NoFile]"
-    local lnum = item.lnum or 0
-    local msg = item.text or item.pattern or ''
-    table.insert(out, string.format("%s|%d| %s", filename, tonumber(lnum), msg))
-  end
-  return out
+	local out = {}
+	local items = vim.fn.getqflist()
+	for i, item in ipairs(items) do
+		local filename = item.filename
+		if (not filename or filename == '') and item.bufnr and tonumber(item.bufnr) ~= 0 then
+			filename = vim.fn.bufname(item.bufnr)
+		end
+		filename = filename ~= '' and filename or "[NoFile]"
+		local lnum = item.lnum or 0
+		local msg = item.text or item.pattern or ''
+		table.insert(out, string.format("%s|%d| %s", filename, tonumber(lnum), msg))
+	end
+	return out
 end
 o.qftf = "v:lua.my_qftf"
 
