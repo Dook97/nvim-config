@@ -20,7 +20,6 @@ local pkgs = {
 	{ src = "psliwka/vim-smoothie" },                              -- smooth scrolling
 	{ src = "stevearc/conform.nvim" },                             -- ebin meta formatter thingy
 	{ src = "kylechui/nvim-surround" },                            -- (un)surround stuff
-	{ src = "nvim-lualine/lualine.nvim" },                         -- statusline
 	{ src = "nvim-mini/mini.extra" },                              -- extra pickers for mini.pick
 	{ src = "nvim-mini/mini.pick" },                               -- general pickers
 	{ src = "shirosaki/tabular", version = "fix_leading_spaces" }, -- multiline alignment
@@ -30,24 +29,6 @@ local pkgs = {
 }
 for _, pkg in ipairs(pkgs) do pkg.src = "https://github.com/" .. pkg.src end
 vim.pack.add(pkgs)
-
-require("lualine").setup({
-	options = {
-		icons_enabled = false,
-		theme = "powerline",
-		component_separators = "│",
-		section_separators = {},
-	},
-	sections = {
-		lualine_b = { { "filename", path = 1 } },
-		lualine_c = { "diagnostics" },
-		lualine_x = { "encoding", "fileformat", "filetype" },
-		lualine_y = {},
-	},
-	inactive_sections = {
-		lualine_c = { { "filename", path = 1 } },
-	},
-})
 
 -- netrw settings
 g.netrw_liststyle = 3
@@ -339,12 +320,8 @@ o.title = true
 -- when to show status line
 o.laststatus = 1
 au("LspAttach", { command = "set laststatus=2" })
-
 o.ruler = false
-au({ "WinEnter", "WinClosed", "OptionSet" }, {
-	pattern = { "*", "laststatus" },
-	callback = function() o.showmode = o.laststatus < 2 and vim.fn.winnr("$") < 2 end,
-})
+o.showmode = true
 
 -- keep some space betwwen cursor and window edges
 o.scrolloff = 2
@@ -547,3 +524,7 @@ function my_qftf(info)
   return out
 end
 o.qftf = "v:lua.my_qftf"
+
+o.statusline  = " %<%f %h%w%m%r "
+             .. "%{% luaeval('vim.diagnostic.status()') %} "
+             .. "%=%{ &ft } %{ &ff } "
