@@ -82,6 +82,11 @@ require("mini.extra").setup()
 local pick = require("mini.pick")
 pick.setup({ source = { show = pick.default_show }, mappings = { choose_marked = "<C-q>" } })
 
+vim.cmd([[
+packadd cfilter       " :Cfilter to filter quickfix list items
+packadd nvim.difftool " :DiffTool over directories using quickfix list
+]])
+
 -- ___ KEYBINDS _______________________________________________
 
 g.mapleader = " "
