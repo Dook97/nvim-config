@@ -440,7 +440,7 @@ au("CompleteDone", {
 })
 
 -- experimental new command-line features
-require("vim._extui").enable({})
+require("vim._core.ui2").enable({})
 
 -- tab line
 function safari_tabline()
