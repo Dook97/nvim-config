@@ -272,13 +272,15 @@ map({"n", "v"}, "<leader>gb", function()
 	local file = vim.fn.expand("%")
 	local cmd = string.format("git blame -c -L %d,%d -- %s |& tr '\t' ' '", start_line, end_line, file)
 	local out = vim.fn.systemlist(cmd)
+	res = ""
 	if start_line == end_line then
-		vim.api.nvim_echo({{out[1], "Normal"}}, false, {})
+		res = out[1]
 	else
 		for _, line in ipairs(out) do
-			vim.api.nvim_echo({{line, "Normal"}}, false, {})
+			res = res .. line .. "\n"
 		end
 	end
+	vim.api.nvim_echo({ { res, "Normal" } }, false, {})
 end)
 
 ucmd("Grep", function(opts)
