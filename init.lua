@@ -13,7 +13,7 @@ vim.cmd.colorscheme("dook")
 
 -- ___ PLUGINS ________________________________________________
 
-g.smoothie_remapped_commands = { "<C-D>", "<C-U>" }
+g.smoothie_remapped_commands = { "<C-D>", "<C-U>", "<C-F>", "<C-B>" }
 
 local pkgs = {
 	{ src = "tpope/vim-sleuth" },                                  -- automatic indentation mode detection
