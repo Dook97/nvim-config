@@ -16,16 +16,16 @@ vim.cmd.colorscheme("dook")
 g.smoothie_remapped_commands = { "<C-D>", "<C-U>", "<C-F>", "<C-B>" }
 
 local pkgs = {
-	{ src = "tpope/vim-sleuth" },                                  -- automatic indentation mode detection
-	{ src = "psliwka/vim-smoothie" },                              -- smooth scrolling
-	{ src = "stevearc/conform.nvim" },                             -- ebin meta formatter thingy
-	{ src = "kylechui/nvim-surround" },                            -- (un)surround stuff
-	{ src = "nvim-mini/mini.extra" },                              -- extra pickers for mini.pick
-	{ src = "nvim-mini/mini.pick" },                               -- general pickers
-	{ src = "shirosaki/tabular", version = "fix_leading_spaces" }, -- multiline alignment
-	{ src = "nvim-treesitter/nvim-treesitter" },                   -- a lot of functionality with ASTs
-	{ src = "nvim-treesitter/nvim-treesitter-textobjects" },       -- define bindings for actions with AST text objects
-	{ src = "nvim-treesitter/nvim-treesitter-context" },           -- show current function name when scrolling
+	{ src = "tpope/vim-sleuth" },                                           -- automatic indentation mode detection
+	{ src = "psliwka/vim-smoothie" },                                       -- smooth scrolling
+	{ src = "stevearc/conform.nvim" },                                      -- ebin meta formatter thingy
+	{ src = "kylechui/nvim-surround" },                                     -- (un)surround stuff
+	{ src = "nvim-mini/mini.extra" },                                       -- extra pickers for mini.pick
+	{ src = "nvim-mini/mini.pick" },                                        -- general pickers
+	{ src = "shirosaki/tabular", version = "fix_leading_spaces" },          -- multiline alignment
+	{ src = "nvim-treesitter/nvim-treesitter" },                            -- a lot of functionality with ASTs
+	{ src = "dook97/nvim-treesitter-textobjects", version = 'dook-fixes' }, -- define bindings for actions with AST text objects
+	{ src = "nvim-treesitter/nvim-treesitter-context" },                    -- show current function name when scrolling
 }
 for _, pkg in ipairs(pkgs) do pkg.src = "https://github.com/" .. pkg.src end
 vim.pack.add(pkgs)
